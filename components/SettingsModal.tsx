@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { UserSettings, ViewState } from '../types';
-import { ArrowLeft, Sun, Moon, Trash2, ShieldCheck, FileText, ExternalLink, Heart, Bell, Lock, Bot, Phone } from 'lucide-react';
+import { ArrowLeft, Sun, Moon, Trash2, ShieldCheck, FileText, ExternalLink, Heart, Bell, Lock, Bot, Phone, Cloud } from 'lucide-react';
 import { APP_NAME, DISCLAIMER } from '../constants';
+import { isFirebaseConfigured } from '../services/firebase';
 
 interface Props {
   onBack: () => void;
@@ -83,6 +84,16 @@ const SettingsModal: React.FC<Props> = ({ onBack, settings, onUpdate, onWipeData
               Permitir que mensagens enviadas no chat sejam processadas por provedor externo para gerar resposta.
             </span>
           </label>
+
+          {isFirebaseConfigured() && (
+            <label className="flex items-start gap-3 cursor-pointer py-3 border-t border-slate-100 dark:border-slate-700">
+              <input type="checkbox" checked={!!settings.cloudSyncEnabled} onChange={e => toggle('cloudSyncEnabled', e.target.checked)} className="mt-1 w-4 h-4 accent-sky-500" />
+              <span className="text-sm text-slate-700 dark:text-slate-200 flex-1">
+                <span className="flex items-center gap-2 font-semibold"><Cloud className="w-4 h-4" /> Sincronizar com a nuvem</span>
+                Faz backup criptografado dos seus check-ins, diário e progresso na sua conta. Útil para usar em outros aparelhos. Pode ser desativado a qualquer momento.
+              </span>
+            </label>
+          )}
 
           <label className="flex items-start gap-3 cursor-pointer py-3 border-t border-slate-100 dark:border-slate-700">
             <input type="checkbox" checked={settings.appLockEnabled} onChange={e => toggle('appLockEnabled', e.target.checked)} className="mt-1 w-4 h-4 accent-emerald-500" />

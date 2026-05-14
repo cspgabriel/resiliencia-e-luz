@@ -93,6 +93,8 @@ export interface UserSettings {
   allowAiProcessing: boolean;
   appLockEnabled: boolean;
   locale: SupportedLocale;
+  cloudSyncEnabled?: boolean;
+  cloudUserId?: string;
 }
 
 export interface TrailProgress {

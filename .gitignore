@@ -29,3 +29,11 @@ dist-ssr
 .env.local
 .env.*.local
 .claude/launch.json
+
+# Firebase — NUNCA commitar credenciais
+*firebase-adminsdk*.json
+serviceAccountKey*.json
+.firebase/
+firebase-debug.log
+worker/.dev.vars
+worker/.dev.vars.*

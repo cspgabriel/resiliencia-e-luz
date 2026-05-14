@@ -1,0 +1,20 @@
+// Serenamente - Firestore Security Rules
+// Cada usuário só lê/escreve em users/{seu-uid}/*
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      match /{collection}/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // Tudo o mais é negado por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

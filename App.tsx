@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ViewState, UserSettings, CheckIn as CheckInT, ChatMessage, Exercise, DiaryEntry, TrailProgress, ExerciseLog } from './types';
 import { EXERCISES, PAYWALL_REASONS } from './constants';
 import {
@@ -9,6 +9,9 @@ import {
 } from './services/storage';
 import { today } from './services/date';
 import { trackSafeEvent } from './services/analytics';
+import { isFirebaseConfigured } from './services/firebase';
+import { ensureAnonymousUser, watchUser } from './services/firebaseAuth';
+import { backfillAll, wipeCloudData } from './services/cloudSync';
 
 import LandingPage from './components/LandingPage';
 import OnboardingModal from './components/OnboardingModal';
@@ -54,6 +57,28 @@ const App: React.FC = () => {
       setView(ViewState.HOME);
     }
   }, []);
+
+  // Firebase: sign-in anônimo + tracking do uid no settings
+  useEffect(() => {
+    if (!isFirebaseConfigured()) return;
+    let mounted = true;
+    ensureAnonymousUser().catch(() => {});
+    const unsub = watchUser(user => {
+      if (!mounted) return;
+      const uid = user?.uid;
+      setSettings(prev => prev.cloudUserId === uid ? prev : { ...prev, cloudUserId: uid });
+    });
+    return () => { mounted = false; unsub(); };
+  }, []);
+
+  // Backfill ao ativar cloud sync pela primeira vez
+  const prevCloudSync = useRef<boolean | undefined>(settings.cloudSyncEnabled);
+  useEffect(() => {
+    if (!prevCloudSync.current && settings.cloudSyncEnabled) {
+      backfillAll(settings, checkins, diary, messages, trailProgress, exerciseLog);
+    }
+    prevCloudSync.current = settings.cloudSyncEnabled;
+  }, [settings.cloudSyncEnabled]);
 
   const handleStart = () => {
     if (settings.onboarded) setView(ViewState.HOME);
@@ -131,6 +156,7 @@ const App: React.FC = () => {
   };
 
   const handleWipeData = () => {
+    wipeCloudData(settings);
     wipeAllData();
     setSettings(loadSettings());
     setCheckins([]);
