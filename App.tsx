@@ -42,6 +42,8 @@ import Buddy from './components/Buddy';
 import Wrapped from './components/Wrapped';
 import Achievements from './components/Achievements';
 import AuthModal from './components/AuthModal';
+import PWAManager from './components/PWAManager';
+import { consumeStartupAction } from './services/pwa';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>(ViewState.LANDING);
@@ -149,6 +151,22 @@ const App: React.FC = () => {
         const r = await redeemInviteCode(ref, settings);
         if (r.ok) { setSettings(r.settings); showToast('🎁 Plus ativado pelo convite!'); }
       })();
+    }
+
+    // Deep links dos shortcuts da PWA (?action=checkin|sos|chat|breathe) e share target
+    const { action, shareText } = consumeStartupAction();
+    if (action === 'checkin') setView(ViewState.CHECKIN);
+    else if (action === 'sos') setView(ViewState.SOS);
+    else if (action === 'chat') setView(ViewState.CHAT);
+    else if (action === 'breathe') {
+      const breath = EXERCISES.find(e => e.id === 'resp-478');
+      if (breath) handleSelectExercise(breath);
+    }
+    if (shareText) {
+      // Conteúdo compartilhado de outro app cai no diário rascunho
+      setView(ViewState.DIARY);
+      showToast('📝 Conteúdo recebido no diário');
+      try { sessionStorage.setItem('serenamente_share_draft', shareText); } catch {}
     }
   }, []);
 
@@ -419,6 +437,9 @@ const App: React.FC = () => {
           {toast}
         </div>
       )}
+
+      {/* PWA: install prompt + update toast + offline indicator */}
+      <PWAManager />
     </div>
   );
 };

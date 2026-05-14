@@ -29,6 +29,22 @@ cp .env.example .env.local
 npm run dev
 ```
 
+## 📱 PWA
+
+App é instalável como PWA (iOS, Android, desktop). Veja [docs/PWA.md](docs/PWA.md).
+
+```bash
+# Build de produção (gera SW + manifest)
+npm run build
+
+# Preview local com SW ativo
+npm run preview
+
+# Gerar ícones PNG a partir do SVG (opcional)
+npm install --no-save sharp
+node scripts/generate-icons.mjs
+```
+
 App em http://localhost:3000
 
 > ⚠️ Em produção, não use chave Gemini no client. Use o Cloudflare Worker em `worker/` ou outro backend proxy com rate limit.
