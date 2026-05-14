@@ -33,7 +33,7 @@ import SOS from './components/SOS';
 import SettingsModal from './components/SettingsModal';
 import LegalPage from './components/LegalPage';
 import Sidebar from './components/Sidebar';
-import Companion from './components/Companion';
+import LevelProgress from './components/LevelProgress';
 import Letters from './components/Letters';
 import Invite from './components/Invite';
 import Colectiva from './components/Colectiva';
@@ -41,6 +41,7 @@ import AnonFeed from './components/AnonFeed';
 import Buddy from './components/Buddy';
 import Wrapped from './components/Wrapped';
 import Achievements from './components/Achievements';
+import AuthModal from './components/AuthModal';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>(ViewState.LANDING);
@@ -54,6 +55,8 @@ const App: React.FC = () => {
   const [paywallReason, setPaywallReason] = useState<string | undefined>();
   const [letters, setLetters] = useState<FutureLetter[]>(loadLetters);
   const [toast, setToast] = useState<string | null>(null);
+  const [authModal, setAuthModal] = useState<null | 'signin' | 'signup'>(null);
+  const [previousView, setPreviousView] = useState<ViewState>(ViewState.HOME);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -180,8 +183,14 @@ const App: React.FC = () => {
   };
 
   const handleSelectExercise = (e: Exercise) => {
+    setPreviousView(view);
     setActiveExercise(e);
     setView(ViewState.EXERCISE_DETAIL);
+  };
+
+  const closeExerciseModal = () => {
+    setActiveExercise(null);
+    setView(previousView);
   };
 
   const handleSaveDiary = (e: DiaryEntry) => {
@@ -243,7 +252,7 @@ const App: React.FC = () => {
 
   const handleStartSosBreathing = () => {
     const breath = EXERCISES.find(e => e.id === 'resp-478');
-    if (breath) { setActiveExercise(breath); setView(ViewState.EXERCISE_DETAIL); }
+    if (breath) handleSelectExercise(breath);
   };
 
   const handleCompleteExercise = (exercise: Exercise) => {
@@ -272,22 +281,20 @@ const App: React.FC = () => {
     return <OnboardingModal onComplete={handleOnboardingComplete} />;
   }
 
+  // Sidebar aparece em quase tudo, exceto fluxos pré-auth e o modal de exercício
   const showSidebar = ![
-    ViewState.EXERCISE_DETAIL,
-    ViewState.PAYWALL,
     ViewState.ONBOARDING,
     ViewState.LANDING,
-    ViewState.PRIVACY,
-    ViewState.TERMS,
-    ViewState.WRAPPED,
-    ViewState.COLECTIVA,
   ].includes(view);
+
+  // Renderiza a view "de fundo" quando o exercício abre como modal
+  const bgView = view === ViewState.EXERCISE_DETAIL ? previousView : view;
 
   return (
     <div className="md:flex">
       {showSidebar && <Sidebar current={view} onNavigate={setView} settings={settings} />}
       <main className="flex-1 min-h-screen">
-        {view === ViewState.HOME && (
+        {bgView === ViewState.HOME && (
           <HomeDashboard
             onNavigate={setView}
             onSelectExercise={handleSelectExercise}
@@ -297,38 +304,38 @@ const App: React.FC = () => {
             onXpGain={(xp) => gainXp(xp)}
           />
         )}
-        {view === ViewState.COMPANION && (
-          <Companion onBack={() => setView(ViewState.HOME)} settings={settings} />
+        {bgView === ViewState.COMPANION && (
+          <LevelProgress onBack={() => setView(ViewState.HOME)} settings={settings} />
         )}
-        {view === ViewState.LETTERS && (
+        {bgView === ViewState.LETTERS && (
           <Letters onBack={() => setView(ViewState.HOME)} settings={settings}
                    onXpGain={(src) => gainXp(src)} />
         )}
-        {view === ViewState.WRAPPED && (
+        {bgView === ViewState.WRAPPED && (
           <Wrapped onBack={() => setView(ViewState.HOME)} settings={settings}
                    checkins={checkins} diary={diary} exerciseLog={exerciseLog} />
         )}
-        {view === ViewState.COLECTIVA && (
+        {bgView === ViewState.COLECTIVA && (
           <Colectiva onBack={() => setView(ViewState.HOME)} settings={settings}
                      onCompleted={handleColectivaCompleted} />
         )}
-        {view === ViewState.ANON_FEED && (
+        {bgView === ViewState.ANON_FEED && (
           <AnonFeed onBack={() => setView(ViewState.HOME)} settings={settings} />
         )}
-        {view === ViewState.BUDDY && (
+        {bgView === ViewState.BUDDY && (
           <Buddy onBack={() => setView(ViewState.HOME)} settings={settings} />
         )}
-        {view === ViewState.INVITE && (
+        {bgView === ViewState.INVITE && (
           <Invite onBack={() => setView(ViewState.HOME)} settings={settings} onUpdate={setSettings} />
         )}
-        {view === ViewState.ACHIEVEMENTS && (
+        {bgView === ViewState.ACHIEVEMENTS && (
           <Achievements onBack={() => setView(ViewState.HOME)} settings={settings} />
         )}
-        {view === ViewState.CHECKIN && (
+        {bgView === ViewState.CHECKIN && (
           <CheckIn onBack={() => setView(ViewState.HOME)} onSave={handleSaveCheckin}
                    existing={checkins.find(c => c.date === today())} />
         )}
-        {view === ViewState.CHAT && (
+        {bgView === ViewState.CHAT && (
           <ChatInterface
             onBack={() => setView(ViewState.HOME)}
             messages={messages}
@@ -338,17 +345,11 @@ const App: React.FC = () => {
             onIncrementUsage={handleIncrementUsage}
           />
         )}
-        {view === ViewState.EXERCISES && (
+        {bgView === ViewState.EXERCISES && (
           <ExercisesList onBack={() => setView(ViewState.HOME)} onSelect={handleSelectExercise}
                          onUpgrade={handleUpgradeFromExercise} settings={settings} />
         )}
-        {view === ViewState.EXERCISE_DETAIL && activeExercise && (
-          <ExerciseDetail exercise={activeExercise}
-                          onBack={() => setView(ViewState.EXERCISES)}
-                          onComplete={handleCompleteExercise}
-                          onSaveDiary={handleSaveDiary} />
-        )}
-        {view === ViewState.TRAILS && (
+        {bgView === ViewState.TRAILS && (
           <Trails
             onBack={() => setView(ViewState.HOME)}
             settings={settings}
@@ -357,7 +358,7 @@ const App: React.FC = () => {
             onUpgrade={handleUpgradeFromTrail}
           />
         )}
-        {view === ViewState.INSIGHTS && (
+        {bgView === ViewState.INSIGHTS && (
           <Insights
             onBack={() => setView(ViewState.HOME)}
             checkins={checkins}
@@ -366,26 +367,52 @@ const App: React.FC = () => {
             settings={settings}
           />
         )}
-        {view === ViewState.DIARY && (
+        {bgView === ViewState.DIARY && (
           <Diary onBack={() => setView(ViewState.HOME)} entries={diary} checkins={checkins} settings={settings}
                  onSave={handleSaveDiary} onDelete={handleDeleteDiary} onUpgrade={handleUpgradeFromDiary} />
         )}
-        {view === ViewState.PAYWALL && (
+        {bgView === ViewState.PAYWALL && (
           <Paywall onBack={() => setView(ViewState.HOME)} onSubscribe={handleSubscribe} reason={paywallReason} />
         )}
-        {view === ViewState.SOS && (
+        {bgView === ViewState.SOS && (
           <SOS onBack={() => setView(ViewState.HOME)} onStartBreathing={handleStartSosBreathing} settings={settings} />
         )}
-        {view === ViewState.SETTINGS && (
-          <SettingsModal onBack={() => setView(ViewState.HOME)} settings={settings} onUpdate={setSettings} onWipeData={handleWipeData} onNavigate={setView} />
+        {bgView === ViewState.SETTINGS && (
+          <SettingsModal onBack={() => setView(ViewState.HOME)} settings={settings} onUpdate={setSettings} onWipeData={handleWipeData} onNavigate={setView} onOpenAuth={(m) => setAuthModal(m)} />
         )}
-        {view === ViewState.PRIVACY && (
+        {bgView === ViewState.PRIVACY && (
           <LegalPage kind="privacy" onBack={() => setView(ViewState.SETTINGS)} />
         )}
-        {view === ViewState.TERMS && (
+        {bgView === ViewState.TERMS && (
           <LegalPage kind="terms" onBack={() => setView(ViewState.SETTINGS)} />
         )}
       </main>
+
+      {/* EXERCISE MODAL — abre por cima de qualquer view */}
+      {view === ViewState.EXERCISE_DETAIL && activeExercise && (
+        <div className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-6" onClick={closeExerciseModal}>
+          <div className="bg-white dark:bg-slate-900 w-full md:max-w-2xl md:rounded-3xl rounded-t-3xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
+            <ExerciseDetail
+              exercise={activeExercise}
+              onBack={closeExerciseModal}
+              onComplete={(ex) => { handleCompleteExercise(ex); closeExerciseModal(); }}
+              onSaveDiary={handleSaveDiary}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* AUTH MODAL */}
+      {authModal && (
+        <AuthModal
+          initialMode={authModal}
+          onClose={() => setAuthModal(null)}
+          onSuccess={(email) => {
+            setSettings(prev => ({ ...prev, name: prev.name || email.split('@')[0] }));
+            showToast('Conta vinculada ✓');
+          }}
+        />
+      )}
 
       {toast && (
         <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl text-sm max-w-sm">

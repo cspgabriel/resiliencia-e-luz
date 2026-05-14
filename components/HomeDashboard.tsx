@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { ViewState, CheckIn, MOOD_META, UserSettings, ExerciseLog, Exercise } from '../types';
-import { MessageCircle, Wind, BookOpen, AlertCircle, ArrowRight, Sparkles, TrendingUp, Calendar, Map, BarChart3, Target, Mail, Heart, Waves, Trophy, Flame } from 'lucide-react';
-import { APP_NAME, FREE_LIMITS, getDailyPlan, EXERCISES, COMPANION_STAGES, MINI_TRAILS, XP_EVENTS } from '../constants';
+import { MessageCircle, Wind, BookOpen, AlertCircle, ArrowRight, Sparkles, TrendingUp, Calendar, Map, BarChart3, Target, Mail, Heart, Waves, Trophy, Flame, Star } from 'lucide-react';
+import { APP_NAME, FREE_LIMITS, getDailyPlan, EXERCISES, MINI_TRAILS, XP_EVENTS } from '../constants';
 import { today } from '../services/date';
-import { stageForXp, computeLevel } from '../services/gamification';
+import { computeLevel } from '../services/gamification';
 import DailyAffirmationCard from './DailyAffirmationCard';
 
 interface Props {
@@ -24,9 +24,9 @@ const greeting = (): string => {
 };
 
 const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins, exerciseLog, settings, onXpGain }) => {
-  const companionStage = COMPANION_STAGES[stageForXp(settings.companion?.totalXp || 0)];
   const level = computeLevel(settings.totalXp || 0);
   const streak = settings.streak;
+  const xpPct = level.xpToNext > 0 ? Math.min(100, (level.xpInLevel / level.xpToNext) * 100) : 100;
   const todayStr = today();
   const todayCheck = checkins.find(c => c.date === todayStr);
   const todayExercises = exerciseLog.filter(e => e.date === todayStr);
@@ -60,9 +60,18 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins
               {settings.name ? `Como você tá, ${settings.name}?` : 'Como você tá hoje?'}
             </h1>
           </div>
-          <button onClick={() => onNavigate(ViewState.COMPANION)} className="flex flex-col items-center gap-1 text-center group">
-            <div className="text-4xl group-active:scale-90 transition">{companionStage.emoji}</div>
-            <span className="text-[10px] text-slate-500">Nv {level.level}</span>
+          <button onClick={() => onNavigate(ViewState.COMPANION)} className="group flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-indigo-500 to-violet-500 text-white rounded-2xl shadow-md shadow-violet-500/20 active:scale-95 transition">
+            <div className="relative">
+              <Star className="w-7 h-7 text-yellow-300" fill="currentColor" strokeWidth={2} />
+              <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-slate-900">{level.level}</span>
+            </div>
+            <div className="text-left">
+              <p className="text-[10px] opacity-90 leading-none">Nível</p>
+              <p className="text-sm font-bold leading-tight">{level.title}</p>
+              <div className="w-16 h-1 bg-white/30 rounded-full mt-1 overflow-hidden">
+                <div className="h-full bg-yellow-300" style={{ width: `${xpPct}%` }} />
+              </div>
+            </div>
           </button>
         </header>
 

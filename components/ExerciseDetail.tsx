@@ -97,8 +97,8 @@ const ExerciseDetail: React.FC<Props> = ({ exercise, onBack, onComplete, onSaveD
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24">
-      <header className="max-w-2xl mx-auto px-5 pt-6 flex items-center gap-3">
+    <div className="bg-slate-50 dark:bg-slate-950 pb-8 overflow-y-auto flex-1">
+      <header className="max-w-2xl mx-auto px-5 pt-5 flex items-center gap-3 sticky top-0 bg-slate-50 dark:bg-slate-950 z-10 pb-3">
         <button onClick={onBack} className="p-2 -ml-2 text-slate-600 dark:text-slate-300"><ArrowLeft /></button>
         <div className="flex-1">
           <h1 className="font-bold text-slate-900 dark:text-white">{exercise.title}</h1>

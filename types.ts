@@ -99,6 +99,7 @@ export interface UserSettings {
   streak?: StreakState;
   achievements?: string[];
   totalXp?: number;
+  xpHistory?: { date: string; xp: number }[];
   publicProfile?: boolean;
   reminderLearned?: { hour: number; confidence: number };
   inviteCodeUsed?: string;

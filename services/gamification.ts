@@ -137,9 +137,18 @@ export const applyXp = (
 
   const totalXp = (settings.totalXp || 0) + gained + firstOfDayBonus;
 
+  // Histórico para o gráfico de evolução (últimos 30 dias)
+  const t = today();
+  const history = [...(settings.xpHistory || [])];
+  const todayEntry = history.find(h => h.date === t);
+  const addedXp = gained + firstOfDayBonus;
+  if (todayEntry) todayEntry.xp += addedXp;
+  else history.push({ date: t, xp: addedXp });
+  const trimmed = history.slice(-30);
+
   trackSafeEvent('xp_gained', { source, amount: gained, total_xp: totalXp });
 
-  return { ...settings, companion: comp, streak, totalXp };
+  return { ...settings, companion: comp, streak, totalXp, xpHistory: trimmed };
 };
 
 // ---------------- ACHIEVEMENTS ----------------

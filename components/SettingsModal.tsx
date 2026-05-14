@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserSettings, ViewState } from '../types';
-import { ArrowLeft, Sun, Moon, Trash2, ShieldCheck, FileText, ExternalLink, Heart, Bell, Lock, Bot, Phone, Cloud } from 'lucide-react';
+import { ArrowLeft, Sun, Moon, Trash2, ShieldCheck, FileText, ExternalLink, Heart, Bell, Lock, Bot, Phone, Cloud, LogIn, LogOut, UserCircle2 } from 'lucide-react';
 import { APP_NAME, DISCLAIMER } from '../constants';
-import { isFirebaseConfigured } from '../services/firebase';
+import { isFirebaseConfigured, getFirebaseAuth } from '../services/firebase';
+import { signOut, watchUser } from '../services/firebaseAuth';
 
 interface Props {
   onBack: () => void;
@@ -10,10 +11,25 @@ interface Props {
   onUpdate: (s: UserSettings) => void;
   onWipeData: () => void;
   onNavigate: (v: ViewState) => void;
+  onOpenAuth?: (mode: 'signin' | 'signup') => void;
 }
 
-const SettingsModal: React.FC<Props> = ({ onBack, settings, onUpdate, onWipeData, onNavigate }) => {
+const SettingsModal: React.FC<Props> = ({ onBack, settings, onUpdate, onWipeData, onNavigate, onOpenAuth }) => {
   const [confirm, setConfirm] = useState(false);
+  const [authState, setAuthState] = useState<{ email?: string; anonymous: boolean; signedIn: boolean }>({ anonymous: true, signedIn: false });
+
+  useEffect(() => {
+    const unsub = watchUser(u => {
+      setAuthState({
+        email: u?.email || undefined,
+        anonymous: !!u?.isAnonymous,
+        signedIn: !!u,
+      });
+    });
+    return () => unsub();
+  }, []);
+
+  const handleSignOut = async () => { await signOut(); };
 
   const toggle = (key: keyof UserSettings, value: any) => onUpdate({ ...settings, [key]: value });
 
@@ -26,7 +42,10 @@ const SettingsModal: React.FC<Props> = ({ onBack, settings, onUpdate, onWipeData
 
       <div className="max-w-2xl mx-auto px-5 mt-6 space-y-4">
         <section className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
-          <h2 className="font-semibold text-slate-900 dark:text-white mb-3">Conta</h2>
+          <h2 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+            <UserCircle2 className="w-4 h-4 text-emerald-500" /> Conta
+          </h2>
+
           <div className="flex items-center justify-between py-2">
             <span className="text-sm text-slate-600 dark:text-slate-300">Nome</span>
             <input
@@ -35,7 +54,34 @@ const SettingsModal: React.FC<Props> = ({ onBack, settings, onUpdate, onWipeData
               placeholder="Sem nome"
             />
           </div>
+
           <div className="flex items-center justify-between py-2 border-t border-slate-100 dark:border-slate-700">
+            <span className="text-sm text-slate-600 dark:text-slate-300">Login</span>
+            <span className="text-sm text-slate-500">
+              {!isFirebaseConfigured() ? 'desativado' : authState.email ? authState.email : authState.anonymous ? 'anônimo' : 'sem sessão'}
+            </span>
+          </div>
+
+          {isFirebaseConfigured() && (
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {!authState.email ? (
+                <>
+                  <button onClick={() => onOpenAuth?.('signup')} className="py-2.5 bg-emerald-500 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5">
+                    <LogIn className="w-4 h-4" /> Criar conta
+                  </button>
+                  <button onClick={() => onOpenAuth?.('signin')} className="py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5">
+                    <LogIn className="w-4 h-4" /> Entrar
+                  </button>
+                </>
+              ) : (
+                <button onClick={handleSignOut} className="col-span-2 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5">
+                  <LogOut className="w-4 h-4" /> Sair desta conta
+                </button>
+              )}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between py-2 border-t border-slate-100 dark:border-slate-700 mt-3">
             <span className="text-sm text-slate-600 dark:text-slate-300">Plano</span>
             <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{settings.isPro ? 'Plus ✨' : 'Grátis'}</span>
           </div>

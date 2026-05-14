@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewState, UserSettings } from '../types';
-import { Home, MessageCircle, Wind, BookOpen, Settings, AlertCircle, Sparkles, Map, BarChart3, Heart, Mail, Trophy, UserPlus, Waves, Users, Gift } from 'lucide-react';
+import { Home, MessageCircle, Wind, BookOpen, Settings, AlertCircle, Sparkles, Map, BarChart3, Mail, Trophy, UserPlus, Waves, Users, Gift, Star } from 'lucide-react';
 import { APP_NAME } from '../constants';
 
 interface Props {
@@ -13,7 +13,7 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
   const items = [
     { v: ViewState.HOME,         label: 'Início',     icon: Home },
     { v: ViewState.CHAT,         label: 'Conversar',  icon: MessageCircle },
-    { v: ViewState.COMPANION,    label: 'Sereninho',  icon: Heart },
+    { v: ViewState.COMPANION,    label: 'Meu nível',  icon: Star },
     { v: ViewState.EXERCISES,    label: 'Exercícios', icon: Wind },
     { v: ViewState.TRAILS,       label: 'Trilhas',    icon: Map },
     { v: ViewState.LETTERS,      label: 'Cartas',     icon: Mail },
