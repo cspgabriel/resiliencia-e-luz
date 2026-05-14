@@ -90,75 +90,83 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
   };
 
   return (
-    <div className="h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
-      <header className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-3">
-        <button onClick={onBack} className="p-2 -ml-2 text-slate-600 dark:text-slate-300"><ArrowLeft /></button>
-        <div className="flex-1">
-          <h1 className="font-semibold text-slate-900 dark:text-white">Conversa com Sereno</h1>
-          <p className="text-xs text-slate-500">{settings.isPro ? 'Plus · ampliado' : `${remaining} mensagens hoje`} · IA {settings.allowAiProcessing ? 'ativa' : 'desativada'}</p>
+    <div className="flex flex-col bg-slate-50 dark:bg-slate-950 h-[calc(100dvh-72px)] md:h-screen">
+      <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+          <button onClick={onBack} className="p-2 -ml-2 text-slate-600 dark:text-slate-300 md:hidden"><ArrowLeft /></button>
+          <div className="flex-1">
+            <h1 className="font-semibold text-slate-900 dark:text-white">Conversa com Sereno</h1>
+            <p className="text-xs text-slate-500">{settings.isPro ? 'Plus · ampliado' : `${remaining} mensagens hoje`} · IA {settings.allowAiProcessing ? 'ativa' : 'desativada'}</p>
+          </div>
+          <button onClick={() => setShowEmergency(true)} title="Ajuda emergencial" className="p-2 text-red-500">
+            <Phone className="w-5 h-5" />
+          </button>
         </div>
-        <button onClick={() => setShowEmergency(true)} title="Ajuda emergencial" className="p-2 text-red-500">
-          <Phone className="w-5 h-5" />
-        </button>
       </header>
 
       {!settings.allowAiProcessing && (
-        <div className="mx-4 mt-3 bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900 rounded-2xl p-3 flex gap-2 text-xs text-sky-900 dark:text-sky-100">
-          <Shield className="w-4 h-4 shrink-0 mt-0.5" />
-          <p>Privacidade reforçada: o chat com IA está desligado. Nada digitado aqui é enviado para provedor externo enquanto essa opção estiver desativada.</p>
+        <div className="max-w-3xl mx-auto w-full px-4 mt-3">
+          <div className="bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900 rounded-2xl p-3 flex gap-2 text-xs text-sky-900 dark:text-sky-100">
+            <Shield className="w-4 h-4 shrink-0 mt-0.5" />
+            <p>Privacidade reforçada: o chat com IA está desligado. Nada digitado aqui é enviado para provedor externo enquanto essa opção estiver desativada.</p>
+          </div>
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-        {messages.map(m => (
-          <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm ${
-              m.role === 'user'
-                ? 'bg-emerald-500 text-white rounded-br-sm'
-                : m.flagged
-                  ? 'bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-900 dark:text-red-100 rounded-bl-sm'
-                  : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-sm border border-slate-200 dark:border-slate-700'
-            }`}>
-              <div className="prose prose-sm max-w-none dark:prose-invert prose-p:my-1">
-                <ReactMarkdown>{m.text}</ReactMarkdown>
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-3xl mx-auto px-4 py-4 space-y-3">
+          {messages.map(m => (
+            <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm ${
+                m.role === 'user'
+                  ? 'bg-emerald-500 text-white rounded-br-sm'
+                  : m.flagged
+                    ? 'bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-900 dark:text-red-100 rounded-bl-sm'
+                    : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-sm border border-slate-200 dark:border-slate-700'
+              }`}>
+                <div className="prose prose-sm max-w-none dark:prose-invert prose-p:my-1">
+                  <ReactMarkdown>{m.text}</ReactMarkdown>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-        {busy && (
-          <div className="flex justify-start">
-            <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700">
-              <div className="flex gap-1">
-                <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" />
-                <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0.15s' }} />
-                <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0.3s' }} />
+          ))}
+          {busy && (
+            <div className="flex justify-start">
+              <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <div className="flex gap-1">
+                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" />
+                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0.15s' }} />
+                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0.3s' }} />
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        <div ref={endRef} />
+          )}
+          <div ref={endRef} />
+        </div>
       </div>
 
-      <div className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3">
-        <div className="flex gap-2 items-end">
-          <textarea
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-            placeholder={canSend ? "Escreve o que tá sentindo..." : "Você atingiu o limite de hoje"}
-            disabled={!canSend || busy}
-            rows={1}
-            className="flex-1 px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-sm text-slate-900 dark:text-white resize-none max-h-32 disabled:opacity-50"
-          />
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || !canSend || busy}
-            className="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center disabled:opacity-40"
-          >
-            <Send className="w-5 h-5" />
-          </button>
+      <div className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="max-w-3xl mx-auto px-3 py-3">
+          <div className="flex gap-2 items-end">
+            <textarea
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+              placeholder={canSend ? "Escreve o que tá sentindo..." : "Você atingiu o limite de hoje"}
+              disabled={!canSend || busy}
+              rows={1}
+              className="flex-1 px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-sm text-slate-900 dark:text-white resize-none max-h-32 disabled:opacity-50"
+            />
+            <button
+              onClick={handleSend}
+              disabled={!input.trim() || !canSend || busy}
+              className="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center disabled:opacity-40"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
+          <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 text-center">{DISCLAIMER}</p>
         </div>
-        <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 text-center">{DISCLAIMER}</p>
       </div>
 
       {showEmergency && (

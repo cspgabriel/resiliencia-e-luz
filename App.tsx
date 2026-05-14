@@ -192,7 +192,6 @@ const App: React.FC = () => {
   }
 
   const showSidebar = ![
-    ViewState.CHAT,
     ViewState.EXERCISE_DETAIL,
     ViewState.PAYWALL,
     ViewState.ONBOARDING,
