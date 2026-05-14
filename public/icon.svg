@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5eb8b3"/>
+      <stop offset="100%" stop-color="#1a6b73"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#ffffff"/>
+  <circle cx="256" cy="256" r="180" fill="none" stroke="url(#brand)" stroke-width="14"/>
+  <!-- Onda superior (mente/ar) -->
+  <path d="M 110 220 Q 170 170, 230 220 T 350 220 T 410 200"
+        fill="none" stroke="url(#brand)" stroke-width="16" stroke-linecap="round"/>
+  <!-- Onda média -->
+  <path d="M 120 270 Q 190 230, 260 270 T 400 270"
+        fill="none" stroke="url(#brand)" stroke-width="14" stroke-linecap="round" opacity="0.85"/>
+  <!-- Folha/base (crescimento) -->
+  <path d="M 130 340 Q 256 410, 382 340"
+        fill="none" stroke="url(#brand)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 256 360 Q 256 380, 256 405"
+        fill="none" stroke="url(#brand)" stroke-width="8" stroke-linecap="round" opacity="0.7"/>
+</svg>

@@ -1,159 +1,101 @@
-
 import { GoogleGenAI } from "@google/genai";
-import { ModelConfig } from "../types";
+import { ChatMessage, ModelConfig } from "../types";
+import { CHAT_SYSTEM_PROMPT, CRISIS_RESPONSE, PRECACHED_RESPONSES } from "../constants";
+import { checkCrisis, isOffTopic, OFF_TOPIC_RESPONSE } from "./safety";
 
-// API keys must be supplied by environment variables. Never hardcode keys in the client.
-const DEFAULT_API_KEY = "";
+const getApiKey = () => (typeof process !== 'undefined' && process.env?.API_KEY) || (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
 
-const getApiKey = () => process.env.API_KEY || DEFAULT_API_KEY;
+const MODEL_NAME = 'gemini-2.5-flash-lite';
 
-// Helper function to check if API key exists
-const checkApiKey = () => {
-  if (!getApiKey()) {
-    throw new Error("API Key is missing.");
+const normalize = (s: string) => s.toLowerCase().trim().replace(/[.!?,]/g, '');
+
+const tryPrecache = (text: string): string | null => {
+  const n = normalize(text);
+  if (n.length > 30) return null;
+  for (const [k, v] of Object.entries(PRECACHED_RESPONSES)) {
+    if (n === k || n.startsWith(k)) return v;
   }
+  return null;
 };
 
-/**
- * Generates a text response using Gemini models.
- */
-export const generateResponse = async (_apiKey: string, prompt: string, config: ModelConfig): Promise<string> => {
-  checkApiKey();
+export interface ChatResponse {
+  text: string;
+  flagged: boolean;
+  bypassedAI: boolean;
+}
+
+export const sendChatMessage = async (
+  userText: string,
+  history: ChatMessage[],
+  config?: ModelConfig
+): Promise<ChatResponse> => {
+
+  const crisis = checkCrisis(userText);
+  if (crisis.isCrisis) {
+    return { text: CRISIS_RESPONSE, flagged: true, bypassedAI: true };
+  }
+
+  if (isOffTopic(userText)) {
+    return { text: OFF_TOPIC_RESPONSE, flagged: false, bypassedAI: true };
+  }
+
+  const cached = tryPrecache(userText);
+  if (cached) {
+    return { text: cached, flagged: false, bypassedAI: true };
+  }
+
   const apiKey = getApiKey();
+  if (!apiKey) {
+    return {
+      text: "O assistente está em modo demo. Para conversar, configure a API. Enquanto isso, que tal tentar um exercício de respiração?",
+      flagged: false,
+      bypassedAI: true,
+    };
+  }
 
   try {
-    // Use the resolved API key
     const ai = new GoogleGenAI({ apiKey });
-    let modelName = config.modelName || 'gemini-3-flash-preview'; 
-    
-    const generationConfig: any = {};
-    const tools: any[] = [];
+    const recentHistory = history.slice(-6);
+    const contextText = recentHistory
+      .map(m => `${m.role === 'user' ? 'Usuário' : 'Sereno'}: ${m.text}`)
+      .join('\n');
 
-    const lowerPrompt = prompt.toLowerCase();
-    const needsSearch = lowerPrompt.includes('pesquisa') || 
-                        lowerPrompt.includes('atual') ||
-                        lowerPrompt.includes('google') ||
-                        lowerPrompt.includes('busca') ||
-                        lowerPrompt.includes('notícia');
+    const prompt = `${contextText}\n\nUsuário: ${userText}\n\nSereno:`;
 
-    if (needsSearch) {
-       tools.push({ googleSearch: {} });
-    }
-    
-    if (config.useThinking) {
-      modelName = 'gemini-3-pro-preview'; 
-      generationConfig.thinkingConfig = { thinkingBudget: config.thinkingBudget || 1024 };
-    }
+    const response = await ai.models.generateContent({
+      model: MODEL_NAME,
+      contents: prompt,
+      config: {
+        systemInstruction: config?.systemInstruction || CHAT_SYSTEM_PROMPT,
+        temperature: config?.temperature ?? 0.75,
+        maxOutputTokens: config?.maxTokens ?? 600,
+      },
+    });
 
-    if (config.systemInstruction) {
-      generationConfig.systemInstruction = config.systemInstruction;
-    }
+    let text = response.text || "Tô aqui. Pode me contar mais?";
 
-    try {
-        const response = await ai.models.generateContent({
-          model: modelName,
-          contents: prompt,
-          config: {
-            ...generationConfig,
-            tools: tools.length > 0 ? tools : undefined
-          },
-        });
-        
-        let text = response.text || "Sem resposta gerada.";
-        const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-        
-        if (groundingChunks && groundingChunks.length > 0) {
-            let sourcesMarkdown = "\n\n**Fontes Consultadas:**\n";
-            let hasSources = false;
-            groundingChunks.forEach((chunk: any, index: number) => {
-                if (chunk.web?.uri) {
-                    sourcesMarkdown += `- [${chunk.web.title || 'Fonte ' + (index + 1)}](${chunk.web.uri})\n`;
-                    hasSources = true;
-                }
-            });
-            if (hasSources) text += sourcesMarkdown;
-        }
-        
-        return text;
-
-    } catch (innerError: any) {
-        // Fallback to gemini-3-flash-preview if the requested model is unavailable
-        const fallbackResponse = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview', 
-            contents: prompt
-        });
-        return fallbackResponse.text || "Sem resposta.";
+    const outCrisis = checkCrisis(text);
+    if (outCrisis.isCrisis) {
+      return { text: CRISIS_RESPONSE, flagged: true, bypassedAI: false };
     }
 
-  } catch (error: any) {
-    console.error("Gemini API Error:", error);
-    throw new Error(error.message || "Erro ao gerar resposta.");
+    return { text, flagged: false, bypassedAI: false };
+  } catch (err: any) {
+    console.error('IA error:', err);
+    return {
+      text: "Tive um soluço aqui. Tenta de novo daqui a pouco? Enquanto isso, que tal respirar fundo 3 vezes?",
+      flagged: false,
+      bypassedAI: true,
+    };
   }
 };
 
-/**
- * Generates an image using gemini-2.5-flash-image.
- */
-export const generateImage = async (_apiKey: string, prompt: string): Promise<string> => {
-  checkApiKey();
-  const apiKey = getApiKey();
-  const ai = new GoogleGenAI({ apiKey });
-  
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash-image',
-    contents: {
-      parts: [
-        {
-          text: prompt,
-        },
-      ],
-    },
-    config: {
-      imageConfig: {
-        aspectRatio: "1:1"
-      }
-    }
-  });
-
-  // Iterate through parts to find the generated image data
-  for (const part of response.candidates?.[0]?.content?.parts || []) {
-    if (part.inlineData) {
-      const base64EncodeString: string = part.inlineData.data;
-      return `data:${part.inlineData.mimeType};base64,${base64EncodeString}`;
-    }
-  }
-
-  throw new Error("Nenhuma imagem foi gerada pelo modelo.");
-};
-
-/**
- * Generates a video using veo-3.1-fast-generate-preview.
- */
-export const generateVideo = async (_apiKey: string, prompt: string): Promise<{ uri: string }> => {
-  checkApiKey();
-  const apiKey = getApiKey();
-  const ai = new GoogleGenAI({ apiKey });
-
-  let operation = await ai.models.generateVideos({
-    model: 'veo-3.1-fast-generate-preview',
-    prompt: prompt,
-    config: {
-      numberOfVideos: 1,
-      resolution: '720p',
-      aspectRatio: '16:9'
-    }
-  });
-
-  // Poll the operation status until it is done
-  while (!operation.done) {
-    await new Promise(resolve => setTimeout(resolve, 10000));
-    operation = await ai.operations.getVideosOperation({ operation: operation });
-  }
-
-  const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
-  if (!downloadLink) {
-    throw new Error("Falha ao obter o link de download do vídeo.");
-  }
-
-  return { uri: downloadLink };
+// Mantém compatibilidade com chamadas antigas (caso alguma sobrou)
+export const generateResponse = async (
+  _apiKey: string,
+  prompt: string,
+  config: ModelConfig
+): Promise<string> => {
+  const r = await sendChatMessage(prompt, [], config);
+  return r.text;
 };

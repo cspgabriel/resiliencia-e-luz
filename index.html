@@ -1,143 +1,74 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#1a6b73" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="IA Mágica" />
-    <link rel="apple-touch-icon" href="/vite.svg" />
+    <meta name="apple-mobile-web-app-title" content="Serenamente" />
+    <meta name="description" content="Apoio emocional diário com IA para reduzir ansiedade, melhorar sono e cuidar de você mesmo." />
+    <link rel="apple-touch-icon" href="/icon.svg" />
     <link rel="manifest" href="/manifest.json" />
-    
-    <title>IA Mágica - Seu Assistente de Prompts</title>
+
+    <title>Serenamente — Sua mente em paz, todo dia</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <script>
       tailwind.config = {
         darkMode: 'class',
         theme: {
           extend: {
-            fontFamily: {
-              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            },
-            colors: {
-              primary: {
-                50: '#f0f9ff',
-                100: '#e0f2fe',
-                500: '#0ea5e9', // Sky blue for a tech feel
-                600: '#0284c7',
-                700: '#0369a1',
-                900: '#0c4a6e',
-              },
-              violet: {
-                500: '#8b5cf6',
-                600: '#7c3aed',
-              },
-              dark: {
-                800: '#1e293b',
-                900: '#0f172a',
-                950: '#020617', // Deep space blue
-              }
-            },
-            backgroundImage: {
-              'tech-grid': "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(15 23 42 / 0.04)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e\")",
-              'tech-grid-dark': "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.03)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e\")",
-            }
+            fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
           }
         }
       }
     </script>
+
     <style>
       :root {
         --sat: env(safe-area-inset-top);
-        --sar: env(safe-area-inset-right);
         --sab: env(safe-area-inset-bottom);
-        --sal: env(safe-area-inset-left);
       }
       body {
-        background-color: #f8fafc; 
+        background-color: #f8fafc;
         -webkit-tap-highlight-color: transparent;
-        user-select: none;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
       }
-      .dark body {
-        background-color: #020617;
-      }
-      
-      /* Tech Grid Background Class */
-      .bg-grid-pattern {
-        background-image: var(--tech-grid);
-      }
-      .dark .bg-grid-pattern {
-        background-image: var(--tech-grid-dark);
-      }
+      .dark body { background-color: #020617; }
 
-      /* Modern Scrollbar */
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 3px;
-      }
-      .dark ::-webkit-scrollbar-thumb {
-        background: #334155;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-      }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+      .dark ::-webkit-scrollbar-thumb { background: #334155; }
 
-      .safe-area-pb { padding-bottom: var(--sab); }
-      .safe-area-pt { padding-top: var(--sat); }
-      
-      html, body {
-        height: 100%;
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-      }
-      #root {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
+      .safe-pb { padding-bottom: max(var(--sab), 1rem); }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
-    "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-    "firebase/analytics": "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js",
-    "firebase/": "https://esm.sh/firebase@^12.7.0/"
-  }
-}
-</script>
-</head>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+        "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+        "react-markdown": "https://esm.sh/react-markdown@^10.1.0"
+      }
+    }
+    </script>
+  </head>
   <body>
     <div id="root"></div>
-    <!-- Removido o '/' inicial para garantir compatibilidade com o Vite no Vercel -->
     <script type="module" src="index.tsx"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(registration => {
-            console.log('SW registrado com sucesso:', registration.scope);
-          }).catch(err => {
-            console.log('SW falhou:', err);
-          });
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
         });
       }
     </script>

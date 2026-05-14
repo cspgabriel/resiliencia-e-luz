@@ -1,96 +1,96 @@
-
 import React, { useState } from 'react';
-import { Profession } from '../types';
-import { Sparkles, Check, X } from 'lucide-react';
-import { APP_NAME } from '../constants';
+import { Shield, AlertTriangle, Check, Heart } from 'lucide-react';
+import { APP_NAME, DISCLAIMER } from '../constants';
 
-interface OnboardingModalProps {
-  isOpen: boolean;
-  onComplete: (profession: string) => void;
+interface Props {
+  onComplete: (data: { name: string; consentLGPD: boolean; ageConfirmed: boolean }) => void;
 }
 
-const OnboardingModal: React.FC<OnboardingModalProps> = ({ isOpen, onComplete }) => {
-  const [selected, setSelected] = useState<string | null>(null);
+const OnboardingModal: React.FC<Props> = ({ onComplete }) => {
+  const [step, setStep] = useState(1);
+  const [name, setName] = useState('');
+  const [age, setAge] = useState(false);
+  const [consent, setConsent] = useState(false);
+  const [acceptDisclaimer, setAcceptDisclaimer] = useState(false);
 
-  if (!isOpen) return null;
-
-  const handleConfirm = () => {
-    if (selected) {
-      onComplete(selected);
-    }
-  };
-
-  const handleSkip = () => {
-    onComplete('Outro');
-  };
-
-  const categories = Object.values(Profession).filter(p => p !== Profession.ALL && p !== Profession.CUSTOM);
+  const canFinish = age && consent && acceptDisclaimer;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        
-        <div className="p-8 text-center bg-gradient-to-b from-primary-50 to-white dark:from-primary-900/20 dark:to-slate-900 border-b border-slate-100 dark:border-slate-800 relative">
-          <button 
-            onClick={handleSkip}
-            className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-            title="Pular"
-          >
-            <X className="w-5 h-5" />
-          </button>
-          
-          <div className="inline-flex items-center justify-center p-4 rounded-2xl bg-primary-600 mb-4 shadow-xl shadow-primary-500/30">
-             <Sparkles className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Bem-vindo à {APP_NAME}</h2>
-          <p className="text-slate-500 dark:text-slate-400">Personalize sua experiência: qual sua área?</p>
-        </div>
+    <div className="fixed inset-0 bg-gradient-to-b from-emerald-50 to-sky-50 dark:from-slate-950 dark:to-slate-900 z-50 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-6 md:p-8">
+        <img src="/icon.svg" alt="" className="w-20 h-20 mx-auto mb-4" />
 
-        <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-             {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelected(cat)}
-                  className={`p-4 rounded-xl border text-left transition-all relative ${
-                     selected === cat 
-                     ? 'bg-primary-600 border-primary-500 text-white shadow-lg' 
-                     : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:border-primary-400'
-                  }`}
-                >
-                   <span className="font-medium text-sm">{cat}</span>
-                   {selected === cat && <div className="absolute top-2 right-2"><Check className="w-4 h-4" /></div>}
-                </button>
-             ))}
-             <button
-                onClick={() => setSelected('Outro')}
-                className={`p-4 rounded-xl border text-left transition-all ${
-                    selected === 'Outro' 
-                    ? 'bg-primary-600 border-primary-500 text-white shadow-lg' 
-                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:border-primary-400'
-                 }`}
-             >
-                <span className="font-medium text-sm">Geral / Múltiplos</span>
-             </button>
-          </div>
-        </div>
+        {step === 1 && (
+          <>
+            <h1 className="text-2xl font-bold text-center text-slate-900 dark:text-white mb-2">Bem-vindo ao {APP_NAME}</h1>
+            <p className="text-center text-slate-600 dark:text-slate-300 mb-6 text-sm">Antes de começar, quero te apresentar algumas coisas importantes pra você se sentir seguro(a).</p>
+            <div className="space-y-3 mb-6">
+              <div className="flex items-start gap-3">
+                <Shield className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                <p className="text-sm text-slate-700 dark:text-slate-200">Seus dados ficam no SEU celular. Não vendemos, não compartilhamos.</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <Heart className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
+                <p className="text-sm text-slate-700 dark:text-slate-200">Eu sou apoio emocional, não substituo psicólogo nem terapeuta.</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                <p className="text-sm text-slate-700 dark:text-slate-200">Em crise grave: ligue <strong>CVV 188</strong> ou <strong>SAMU 192</strong>.</p>
+              </div>
+            </div>
+            <button onClick={() => setStep(2)} className="w-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold py-3 rounded-2xl">Entendi, continuar</button>
+          </>
+        )}
 
-        <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col md:flex-row items-center justify-between gap-4">
-           <button 
-             onClick={handleSkip}
-             className="text-sm font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors order-2 md:order-1"
-           >
-             Pular por enquanto
-           </button>
-           
-           <button 
-             onClick={handleConfirm}
-             disabled={!selected}
-             className="w-full md:w-auto px-10 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-500 transition-all shadow-lg shadow-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed order-1 md:order-2"
-           >
-             Começar a Criar
-           </button>
-        </div>
+        {step === 2 && (
+          <>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Como devo te chamar?</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">Pode ser um apelido. Fica só no seu celular.</p>
+            <input
+              autoFocus
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Seu nome ou apelido"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white mb-5"
+            />
+            <button onClick={() => setStep(3)} disabled={!name.trim()} className="w-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold py-3 rounded-2xl disabled:opacity-40">
+              Continuar
+            </button>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Consentimento</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-5">
+              Pra usar o {APP_NAME}, você precisa concordar com:
+            </p>
+
+            <label className="flex items-start gap-3 cursor-pointer mb-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800">
+              <input type="checkbox" checked={age} onChange={e => setAge(e.target.checked)} className="mt-1 w-4 h-4 accent-emerald-500" />
+              <span className="text-sm text-slate-700 dark:text-slate-200">Tenho <strong>18 anos ou mais</strong>.</span>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer mb-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800">
+              <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} className="mt-1 w-4 h-4 accent-emerald-500" />
+              <span className="text-sm text-slate-700 dark:text-slate-200">Autorizo o tratamento de dados conforme a <strong>LGPD</strong>. Posso apagar tudo a qualquer momento nas configurações.</span>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer mb-5 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800">
+              <input type="checkbox" checked={acceptDisclaimer} onChange={e => setAcceptDisclaimer(e.target.checked)} className="mt-1 w-4 h-4 accent-emerald-500" />
+              <span className="text-sm text-slate-700 dark:text-slate-200">Entendo que <strong>este app não substitui psicoterapia</strong> e que devo procurar profissional em caso de crise.</span>
+            </label>
+
+            <button
+              onClick={() => onComplete({ name: name.trim(), consentLGPD: consent, ageConfirmed: age })}
+              disabled={!canFinish}
+              className="w-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold py-3 rounded-2xl disabled:opacity-40 flex items-center justify-center gap-2"
+            >
+              <Check className="w-4 h-4" /> Começar
+            </button>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-3 text-center">{DISCLAIMER}</p>
+          </>
+        )}
       </div>
     </div>
   );

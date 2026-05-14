@@ -1,7 +1,8 @@
 {
-  "name": "ia-magica-psicologia-bem-estar",
+  "name": "serenamente",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Apoio emocional diário com IA - app de bem-estar (PWA)",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,11 +14,12 @@
     "react-dom": "^19.2.3",
     "lucide-react": "^0.562.0",
     "@google/genai": "^1.34.0",
-    "react-markdown": "^10.1.0",
-    "firebase": "^12.7.0"
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"

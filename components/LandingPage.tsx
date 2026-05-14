@@ -1,188 +1,141 @@
-
 import React from 'react';
-import { Sparkles, CheckCircle2, ArrowRight, Smartphone, Zap, BrainCircuit, ShieldCheck, Clock, Layers, BarChart } from 'lucide-react';
-import { APP_NAME } from '../constants';
+import { Wind, Moon, Sparkles, ShieldCheck, ArrowRight, CheckCircle2, Brain, MessageCircle, Sun } from 'lucide-react';
+import { APP_NAME, APP_TAGLINE, PRICING, DISCLAIMER } from '../constants';
 
-interface LandingPageProps {
+interface Props {
   onStart: () => void;
-  onInstall: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onStart, onInstall }) => {
+const LandingPage: React.FC<Props> = ({ onStart }) => {
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-sans selection:bg-indigo-500/30 overflow-x-hidden">
-      
-      {/* Background FX - Subtle */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-900/10 rounded-full blur-[150px]"></div>
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
-      </div>
-
-      {/* Navbar Glass */}
-      <nav className="fixed w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <Sparkles className="text-white w-4 h-4" />
-             </div>
-             <span className="font-semibold text-lg tracking-tight text-white">{APP_NAME}</span>
-          </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
-             <a href="#features" className="hover:text-white transition-colors">Funcionalidades</a>
-             <button onClick={onInstall} className="hover:text-white transition-colors">Aplicativo</button>
-          </div>
-          <button 
-             onClick={onStart}
-             className="px-6 py-2 bg-white text-slate-950 hover:bg-slate-200 rounded-lg text-sm font-semibold transition-all"
-          >
-             Acessar Plataforma
-          </button>
+    <div className="min-h-screen bg-gradient-to-b from-teal-50 via-cyan-50 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950">
+      {/* HEADER */}
+      <header className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <img src="/icon.svg" alt="Serenamente" className="w-10 h-10" />
+          <span className="font-bold text-[#1a6b73] dark:text-teal-200 text-lg tracking-tight">{APP_NAME}</span>
         </div>
-      </nav>
+        <button onClick={onStart} className="text-sm font-semibold text-[#1a6b73] dark:text-teal-300 hover:underline">
+          Entrar
+        </button>
+      </header>
 
-      {/* Hero Section */}
-      <section className="pt-40 pb-20 px-6 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold uppercase tracking-widest mb-8">
-              <span className="relative flex h-2 w-2">
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-              </span>
-              Plataforma de Produtividade
-           </div>
-           
-           <h1 className="text-4xl md:text-7xl font-bold tracking-tight mb-6 leading-tight text-white">
-              Inteligência Artificial <br />
-              <span className="text-slate-400">aplicada ao seu negócio.</span>
-           </h1>
-           
-           <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-              Uma suíte de ferramentas projetada para profissionais que buscam precisão. Utilize prompts estruturados e modelos de linguagem avançados para eliminar tarefas repetitivas com segurança.
-           </p>
-           
-           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button 
-                onClick={onStart}
-                className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-base font-semibold transition-all flex items-center justify-center gap-2"
-              >
-                Iniciar Sessão
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <button 
-                onClick={onInstall}
-                className="w-full sm:w-auto px-8 py-4 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white rounded-xl text-base font-medium transition-all flex items-center justify-center gap-2"
-              >
-                <Smartphone className="w-4 h-4 text-slate-400" /> Instalar App
-              </button>
-           </div>
+      {/* HERO */}
+      <section className="max-w-4xl mx-auto px-6 pt-12 pb-16 text-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-800/70 backdrop-blur text-xs font-medium text-emerald-700 dark:text-emerald-300 mb-6">
+          <Sparkles className="w-3.5 h-3.5" /> Apoio emocional com IA · feito no Brasil
+        </div>
+        <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white leading-tight mb-5">
+          {APP_TAGLINE}
+        </h1>
+        <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
+          Converse, respire, organize seus pensamentos. Um espaço só seu pra cuidar da mente, sem julgamento.
+        </p>
+        <button
+          onClick={onStart}
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-[#5eb8b3] to-[#1a6b73] hover:from-[#4ea8a3] hover:to-[#155b62] text-white font-semibold px-7 py-3.5 rounded-full shadow-lg shadow-emerald-500/30 transition"
+        >
+          Começar grátis <ArrowRight className="w-4 h-4" />
+        </button>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">Sem cartão. Sem compromisso. Funciona offline.</p>
+      </section>
+
+      {/* DIFERENCIAL */}
+      <section className="max-w-5xl mx-auto px-6 pb-16">
+        <div className="grid md:grid-cols-3 gap-4">
+          {[
+            { icon: MessageCircle, title: 'Conversa acolhedora', text: 'IA treinada pra te ouvir, não pra te dar sermão.' },
+            { icon: Wind,          title: 'Exercícios guiados',   text: '12 práticas de TCC, mindfulness e respiração.' },
+            { icon: Brain,         title: 'Diário inteligente',   text: 'Acompanha seu humor e revela padrões.' },
+            { icon: Moon,          title: 'Trilhas de bem-estar', text: 'Programas de 7, 14 ou 21 dias com IA.' },
+            { icon: ShieldCheck,   title: 'Seus dados, suas regras', text: 'Tudo no seu device. Sem vender pra ninguém.' },
+            { icon: Sun,           title: 'Funciona offline',     text: 'PWA leve. Use no celular, sem app gigante.' },
+          ].map((f, i) => (
+            <div key={i} className="bg-white/70 dark:bg-slate-800/50 backdrop-blur rounded-2xl p-5 border border-white/50 dark:border-slate-700/50 shadow-sm">
+              <f.icon className="w-6 h-6 text-emerald-600 dark:text-emerald-400 mb-3" />
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-1">{f.title}</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300">{f.text}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Feature Cards - Informative */}
-      <section className="py-20 px-6 relative z-10 bg-slate-900/30 border-t border-white/5" id="features">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Por que utilizar a {APP_NAME}?</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">Nossa plataforma oferece uma camada de organização sobre os modelos de IA (LLMs), garantindo resultados mais consistentes e profissionais.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                  { 
-                    icon: Layers, 
-                    title: "Biblioteca de Prompts", 
-                    desc: "Acesso a centenas de templates pré-configurados e testados para diversas indústrias (Marketing, Jurídico, TI, Saúde).", 
-                  },
-                  { 
-                    icon: BrainCircuit, 
-                    title: "Modelos Avançados", 
-                    desc: "Integração direta com o Google Gemini. Escolha entre velocidade (Flash) ou raciocínio complexo (Pro) conforme a necessidade.", 
-                  },
-                  { 
-                    icon: BarChart, 
-                    title: "Consistência de Dados", 
-                    desc: "Transforme prompts em formulários estruturados. Garanta que sua equipe utilize os mesmos parâmetros para gerar resultados padronizados.", 
-                  }
-              ].map((feature, i) => (
-                  <div key={i} className="bg-slate-900 border border-slate-800 p-8 rounded-2xl hover:border-slate-700 transition-colors">
-                      <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center mb-6 text-indigo-400">
-                          <feature.icon className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-lg font-bold mb-3 text-white">{feature.title}</h3>
-                      <p className="text-slate-400 leading-relaxed text-sm">{feature.desc}</p>
-                  </div>
-              ))}
+      {/* DIFERENCIAL VS CHATGPT */}
+      <section className="max-w-4xl mx-auto px-6 pb-16">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white text-center mb-8">
+          Por que não usar ChatGPT pra isso?
+        </h2>
+        <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur rounded-2xl p-6 md:p-8 border border-white/50 dark:border-slate-700/50">
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="font-semibold text-slate-500 dark:text-slate-400 mb-3">ChatGPT</p>
+              <ul className="space-y-2 text-slate-600 dark:text-slate-300">
+                <li>Tom corporativo</li>
+                <li>Esquece sua semana</li>
+                <li>Sem detecção de crise</li>
+                <li>Não tem rituais nem trilhas</li>
+                <li>Treina IA com seu desabafo</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-semibold text-emerald-700 dark:text-emerald-300 mb-3">{APP_NAME}</p>
+              <ul className="space-y-2 text-slate-700 dark:text-slate-200">
+                <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> Acolhedor, em pt-BR</li>
+                <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> Lembra do seu humor</li>
+                <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> Direciona CVV 188 em crise</li>
+                <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> Trilhas de 7/14/21 dias</li>
+                <li className="flex gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> Seu dado fica no celular</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Tech Specs / App Section */}
-      <section className="py-20 px-6 border-t border-white/5">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-1/2 space-y-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold uppercase tracking-widest">
-                    <Smartphone className="w-3 h-3" />
-                    Tecnologia PWA
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold leading-tight">Acesse de qualquer lugar. <br /><span className="text-slate-500">Sem instalações complexas.</span></h2>
-                <p className="text-lg text-slate-400 font-light">
-                    Nossa aplicação utiliza tecnologia Progressive Web App. Isso significa que você tem a performance de um aplicativo nativo diretamente no navegador, compatível com iOS e Android.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                    {[
-                      'Funcionamento Offline', 
-                      'Sincronização em Nuvem', 
-                      'Interface Otimizada', 
-                      'Segurança de Dados'
-                    ].map(item => (
-                        <div key={item} className="flex items-center gap-3 text-sm font-medium text-slate-300">
-                            <CheckCircle2 className="text-indigo-500 w-4 h-4" />
-                            {item}
-                        </div>
-                    ))}
-                </div>
-            </div>
-            
-            {/* Visual Representation */}
-            <div className="lg:w-1/2 flex justify-center">
-                <div className="relative w-full max-w-sm aspect-[9/16] bg-slate-900 rounded-[2.5rem] border-4 border-slate-800 shadow-2xl overflow-hidden flex flex-col">
-                    <div className="h-full w-full bg-slate-950 relative p-6 flex flex-col items-center justify-center text-center space-y-6">
-                        <div className="w-20 h-20 bg-indigo-600/20 rounded-2xl flex items-center justify-center mb-4">
-                            <Zap className="w-10 h-10 text-indigo-500" />
-                        </div>
-                        <div>
-                            <h4 className="text-xl font-bold text-white mb-2">Painel de Controle</h4>
-                            <p className="text-sm text-slate-500">Monitoramento em tempo real</p>
-                        </div>
-                        <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-indigo-500 w-2/3"></div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 w-full mt-8">
-                             <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                                <div className="w-8 h-2 bg-slate-800 rounded mb-2"></div>
-                                <div className="w-12 h-2 bg-slate-700 rounded"></div>
-                             </div>
-                             <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                                <div className="w-8 h-2 bg-slate-800 rounded mb-2"></div>
-                                <div className="w-12 h-2 bg-slate-700 rounded"></div>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      {/* PREÇO */}
+      <section className="max-w-3xl mx-auto px-6 pb-16">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white text-center mb-2">
+          Comece grátis. Cresça no seu tempo.
+        </h2>
+        <p className="text-center text-slate-600 dark:text-slate-300 mb-8">Sem mensalidade abusiva. Sem pegadinha.</p>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-white/70 dark:bg-slate-800/50 backdrop-blur rounded-2xl p-6 border border-white/50 dark:border-slate-700/50">
+            <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Grátis</p>
+            <p className="text-3xl font-bold text-slate-900 dark:text-white mb-4">R$ 0</p>
+            <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+              <li>✓ Check-in diário</li>
+              <li>✓ 5 exercícios essenciais</li>
+              <li>✓ Chat com IA (8 msgs/dia)</li>
+              <li>✓ Diário dos últimos 7 dias</li>
+              <li>✓ 1 trilha (Calma em 7 dias)</li>
+            </ul>
+          </div>
+
+          <div className="bg-gradient-to-br from-[#5eb8b3] to-[#1a6b73] text-white rounded-2xl p-6 shadow-xl shadow-teal-500/30 relative overflow-hidden">
+            <span className="absolute top-3 right-3 text-[10px] font-bold bg-white/25 backdrop-blur px-2 py-1 rounded-full">{PRICING.yearly.savings}</span>
+            <p className="text-xs font-semibold uppercase mb-2 opacity-90">Plus</p>
+            <p className="text-3xl font-bold mb-1">R$ {PRICING.monthly.price.toFixed(2).replace('.', ',')}<span className="text-base font-normal opacity-80">{PRICING.monthly.suffix}</span></p>
+            <p className="text-xs opacity-90 mb-4">ou R$ {PRICING.yearly.price.toFixed(2).replace('.', ',')}{PRICING.yearly.suffix}</p>
+            <ul className="space-y-2 text-sm opacity-95">
+              <li>✓ Tudo do grátis</li>
+              <li>✓ Chat ilimitado</li>
+              <li>✓ 12 exercícios completos</li>
+              <li>✓ Diário ilimitado + gráficos</li>
+              <li>✓ 4 trilhas guiadas</li>
+              <li>✓ Exportar PDF pro psicólogo</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 border-t border-white/5 bg-slate-950 text-center">
-         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
-            <div className="flex items-center gap-2 mb-6">
-               <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
-                 <Sparkles className="w-3 h-3 text-white" />
-               </div>
-               <span className="font-semibold text-white">{APP_NAME}</span>
-            </div>
-            <p className="text-slate-500 text-sm mb-6">&copy; {new Date().getFullYear()} {APP_NAME}. Ferramentas de IA para profissionais.</p>
-         </div>
+      {/* FOOTER */}
+      <footer className="max-w-4xl mx-auto px-6 pb-10 text-center">
+        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+          {DISCLAIMER}
+        </p>
+        <p className="text-xs text-slate-400 dark:text-slate-500 mt-3">
+          © {new Date().getFullYear()} {APP_NAME} · Feito com cuidado no Brasil
+        </p>
       </footer>
     </div>
   );

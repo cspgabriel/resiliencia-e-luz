@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" font-family="'Plus Jakarta Sans', system-ui, sans-serif">
+  <defs>
+    <linearGradient id="brand2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5eb8b3"/>
+      <stop offset="100%" stop-color="#1a6b73"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(40, 40)">
+    <circle cx="80" cy="80" r="76" fill="none" stroke="url(#brand2)" stroke-width="6"/>
+    <path d="M 18 64 Q 50 44, 82 64 T 142 64" fill="none" stroke="url(#brand2)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 22 88 Q 56 70, 90 88 T 144 88" fill="none" stroke="url(#brand2)" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+    <path d="M 26 118 Q 80 146, 134 118" fill="none" stroke="url(#brand2)" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <text x="220" y="148" font-size="92" font-weight="600" fill="#1a6b73" letter-spacing="-1">Serenamente</text>
+</svg>
