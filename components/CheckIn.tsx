@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Mood, MOOD_META, CheckIn as CheckInT } from '../types';
+import { CHECKIN_TRIGGER_TAGS } from '../constants';
+import { today } from '../services/date';
 import { ArrowLeft, Check } from 'lucide-react';
 
 interface Props {
@@ -14,15 +16,24 @@ const CheckIn: React.FC<Props> = ({ onBack, onSave, existing }) => {
   const [sleep, setSleep] = useState(existing?.sleep ?? 7);
   const [note, setNote] = useState(existing?.note ?? '');
   const [trigger, setTrigger] = useState(existing?.trigger ?? '');
+  const [triggerTags, setTriggerTags] = useState<string[]>(existing?.triggerTags ?? []);
+
+  const toggleTag = (tag: string) => {
+    setTriggerTags(tags => tags.includes(tag) ? tags.filter(t => t !== tag) : [...tags, tag]);
+  };
 
   const handleSave = () => {
     if (!mood) return;
     const c: CheckInT = {
       id: existing?.id ?? `ci-${Date.now()}`,
-      date: new Date().toISOString().split('T')[0],
+      date: today(),
       timestamp: Date.now(),
-      mood, energy, sleep, note: note.trim() || undefined,
+      mood,
+      energy,
+      sleep,
+      note: note.trim() || undefined,
       trigger: trigger.trim() || undefined,
+      triggerTags,
     };
     onSave(c);
   };
@@ -72,11 +83,26 @@ const CheckIn: React.FC<Props> = ({ onBack, onSave, existing }) => {
         </section>
 
         <section>
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">O que pegou hoje? <span className="text-xs text-slate-400 font-normal">(opcional)</span></p>
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">O que pode ter influenciado? <span className="text-xs text-slate-400 font-normal">(opcional)</span></p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {CHECKIN_TRIGGER_TAGS.map(tag => {
+              const active = triggerTags.includes(tag);
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => toggleTag(tag)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${active ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'}`}
+                >
+                  {tag}
+                </button>
+              );
+            })}
+          </div>
           <input
             value={trigger}
             onChange={e => setTrigger(e.target.value)}
-            placeholder="trabalho, relacionamento, dinheiro..."
+            placeholder="Outra coisa? Escreva livre..."
             className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm text-slate-900 dark:text-white"
           />
         </section>

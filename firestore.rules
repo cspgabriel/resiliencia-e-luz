@@ -1,0 +1,92 @@
+// Serenamente - Firestore Security Rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===== USUÁRIO: cada user só lê/escreve no próprio nó =====
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      match /{collection}/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+        match /{sub}/{subId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+      }
+
+      // Mood público para a dupla — só o dono escreve, qualquer dupla autenticada lê
+      match /public/mood {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // Pings (envio cruzado): usuário pode RECEBER de qualquer auth, mas só ele lê
+      match /pings/{pingId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null
+          && request.resource.data.fromUid == request.auth.uid
+          && request.resource.data.keys().hasOnly(['fromUid','fromName','kind','createdAt','read']);
+        allow update, delete: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // Rewards (referral): qualquer auth pode gravar para o owner; só o owner lê
+      match /rewards/{rewardId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null;
+      }
+    }
+
+    // ===== INVITES =====
+    match /invites/{code} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.ownerUid == request.auth.uid;
+      // Permite resgate por outro usuário (gravar redeemedBy)
+      allow update: if request.auth != null
+        && (
+          // dono pode atualizar
+          resource.data.ownerUid == request.auth.uid
+          // ou alguém marcando como resgatado pela primeira vez
+          || (resource.data.redeemedBy == null
+              && request.resource.data.redeemedBy == request.auth.uid)
+        );
+      allow delete: if request.auth != null && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // ===== MURAL ANÔNIMO =====
+    match /public/anon_feed/posts/{postId} {
+      allow read: if resource.data.approved == true;
+      allow create: if request.auth != null
+        && request.resource.data.text is string
+        && request.resource.data.text.size() <= 140
+        && request.resource.data.approved == false
+        && request.resource.data.authorUid == request.auth.uid;
+      // Só admins/moderadores aprovam (via console). Hearts: incremento autenticado.
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).changedKeys().hasOnly(['hearts']);
+      allow delete: if false;
+    }
+
+    // ===== CALMA COLETIVA =====
+    match /public/colectiva/sessions/{sessionId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+
+      match /participants/{uid} {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    // ===== MÉTRICAS (write-only do client) =====
+    match /metrics/events/all/{eventId} {
+      allow read: if false;       // só backend/console lê
+      allow create: if request.auth != null;
+    }
+
+    // Tudo o mais é negado por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
