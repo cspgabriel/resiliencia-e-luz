@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ViewState, UserSettings, CheckIn as CheckInT, ChatMessage, Exercise, DiaryEntry, TrailProgress, ExerciseLog } from './types';
-import { EXERCISES, PAYWALL_REASONS } from './constants';
+import { ViewState, UserSettings, CheckIn as CheckInT, ChatMessage, Exercise, DiaryEntry, TrailProgress, ExerciseLog, FutureLetter } from './types';
+import { EXERCISES, PAYWALL_REASONS, XP_EVENTS } from './constants';
 import {
   loadSettings, saveSettings, loadCheckins, saveCheckin,
   loadDiary, saveDiaryEntry, deleteDiaryEntry,
@@ -11,7 +11,12 @@ import { today } from './services/date';
 import { trackSafeEvent } from './services/analytics';
 import { isFirebaseConfigured } from './services/firebase';
 import { ensureAnonymousUser, watchUser } from './services/firebaseAuth';
-import { backfillAll, wipeCloudData } from './services/cloudSync';
+import { backfillAll, wipeCloudData, syncCompanion, syncAchievements } from './services/cloudSync';
+import { applyXp, checkUnlocks, XpSource } from './services/gamification';
+import { recordDailyRetention, recordFunnelStep } from './services/metrics';
+import { loadLetters, dueLetters } from './services/futureLetter';
+import { consumeRefFromUrl, redeemInviteCode } from './services/referral';
+import { publishMoodToBuddies } from './services/buddy';
 
 import LandingPage from './components/LandingPage';
 import OnboardingModal from './components/OnboardingModal';
@@ -28,6 +33,14 @@ import SOS from './components/SOS';
 import SettingsModal from './components/SettingsModal';
 import LegalPage from './components/LegalPage';
 import Sidebar from './components/Sidebar';
+import Companion from './components/Companion';
+import Letters from './components/Letters';
+import Invite from './components/Invite';
+import Colectiva from './components/Colectiva';
+import AnonFeed from './components/AnonFeed';
+import Buddy from './components/Buddy';
+import Wrapped from './components/Wrapped';
+import Achievements from './components/Achievements';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>(ViewState.LANDING);
@@ -39,6 +52,42 @@ const App: React.FC = () => {
   const [exerciseLog, setExerciseLog] = useState<ExerciseLog[]>(loadExerciseLog);
   const [activeExercise, setActiveExercise] = useState<Exercise | null>(null);
   const [paywallReason, setPaywallReason] = useState<string | undefined>();
+  const [letters, setLetters] = useState<FutureLetter[]>(loadLetters);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  // ===== GAMIFICAÇÃO =====
+  const gainXp = (source: XpSource | number) => {
+    setSettings(prev => {
+      const next = typeof source === 'number'
+        ? { ...prev, totalXp: (prev.totalXp || 0) + source, companion: prev.companion ? { ...prev.companion, totalXp: prev.companion.totalXp + source, xp: prev.companion.xp + source, lastCareAt: Date.now() } : prev.companion }
+        : applyXp(prev, source);
+      // Conquistas
+      const ctx = {
+        checkinsCount: checkins.length,
+        diaryCount: diary.length,
+        exerciseCount: exerciseLog.length,
+        streakCurrent: next.streak?.current || 0,
+        hasLetter: letters.length > 0,
+        hasShared: false,
+        hasBuddy: false,
+        hasColectiva: typeof source === 'string' && source === 'colectiva_joined',
+        hourOfDay: new Date().getHours(),
+        returnedAfterPause: false,
+      };
+      const newly = checkUnlocks(next.achievements || [], ctx);
+      if (newly.length) {
+        const merged = Array.from(new Set([...(next.achievements || []), ...newly]));
+        showToast(`🎉 Conquista desbloqueada: ${newly.length} nova${newly.length > 1 ? 's' : ''}`);
+        return { ...next, achievements: merged };
+      }
+      return next;
+    });
+  };
 
   // Aplica tema
   useEffect(() => {
@@ -75,10 +124,30 @@ const App: React.FC = () => {
   const prevCloudSync = useRef<boolean | undefined>(settings.cloudSyncEnabled);
   useEffect(() => {
     if (!prevCloudSync.current && settings.cloudSyncEnabled) {
-      backfillAll(settings, checkins, diary, messages, trailProgress, exerciseLog);
+      backfillAll(settings, checkins, diary, messages, trailProgress, exerciseLog, letters);
     }
     prevCloudSync.current = settings.cloudSyncEnabled;
   }, [settings.cloudSyncEnabled]);
+
+  // Sync companion + achievements quando mudam
+  useEffect(() => { if (settings.companion) syncCompanion(settings); }, [settings.companion?.totalXp, settings.cloudSyncEnabled]);
+  useEffect(() => { if (settings.achievements) syncAchievements(settings.achievements, settings); }, [settings.achievements, settings.cloudSyncEnabled]);
+
+  // Retenção: registra app_open uma vez por dia
+  useEffect(() => { recordDailyRetention(settings); }, []);
+
+  // Cartas devidas + ref code da URL
+  useEffect(() => {
+    const due = dueLetters();
+    if (due.length) showToast(`📬 Você tem ${due.length} carta${due.length > 1 ? 's' : ''} para abrir`);
+    const ref = consumeRefFromUrl();
+    if (ref) {
+      (async () => {
+        const r = await redeemInviteCode(ref, settings);
+        if (r.ok) { setSettings(r.settings); showToast('🎁 Plus ativado pelo convite!'); }
+      })();
+    }
+  }, []);
 
   const handleStart = () => {
     if (settings.onboarded) setView(ViewState.HOME);
@@ -104,6 +173,9 @@ const App: React.FC = () => {
     saveCheckin(c);
     setCheckins(loadCheckins());
     trackSafeEvent('checkin_saved', { tags: c.triggerTags?.length || 0 });
+    recordFunnelStep('checkin_completed', settings);
+    gainXp('checkin');
+    publishMoodToBuddies(c.mood, settings);
     setView(ViewState.HOME);
   };
 
@@ -115,6 +187,7 @@ const App: React.FC = () => {
   const handleSaveDiary = (e: DiaryEntry) => {
     saveDiaryEntry(e);
     setDiary(loadDiary());
+    gainXp('diary_entry');
   };
 
   const handleDeleteDiary = (id: string) => {
@@ -146,6 +219,7 @@ const App: React.FC = () => {
   const handleIncrementUsage = () => {
     const s = incrementMessageCount();
     setSettings(s);
+    gainXp('chat_message');
   };
 
   const handleSubscribe = (plan: 'monthly' | 'yearly') => {
@@ -175,12 +249,19 @@ const App: React.FC = () => {
   const handleCompleteExercise = (exercise: Exercise) => {
     setExerciseLog(saveExerciseCompletion(exercise, exercise.category === 'SOS Ansiedade' ? 'sos' : 'exercise'));
     trackSafeEvent('exercise_completed', { exercise_id: exercise.id });
+    gainXp('exercise_complete');
     setView(ViewState.HOME);
   };
 
   const handleCompleteTrailDay = (trailId: string, day: number) => {
     setTrailProgress(completeTrailDay(trailId, day));
     trackSafeEvent('trail_day_completed', { trail_id: trailId, day });
+    gainXp('trail_day');
+  };
+
+  const handleColectivaCompleted = () => {
+    gainXp('colectiva_joined');
+    showToast('🌊 Você respirou junto com a comunidade');
   };
 
   // ============ RENDER ============
@@ -198,6 +279,8 @@ const App: React.FC = () => {
     ViewState.LANDING,
     ViewState.PRIVACY,
     ViewState.TERMS,
+    ViewState.WRAPPED,
+    ViewState.COLECTIVA,
   ].includes(view);
 
   return (
@@ -211,7 +294,35 @@ const App: React.FC = () => {
             checkins={checkins}
             exerciseLog={exerciseLog}
             settings={settings}
+            onXpGain={(xp) => gainXp(xp)}
           />
+        )}
+        {view === ViewState.COMPANION && (
+          <Companion onBack={() => setView(ViewState.HOME)} settings={settings} />
+        )}
+        {view === ViewState.LETTERS && (
+          <Letters onBack={() => setView(ViewState.HOME)} settings={settings}
+                   onXpGain={(src) => gainXp(src)} />
+        )}
+        {view === ViewState.WRAPPED && (
+          <Wrapped onBack={() => setView(ViewState.HOME)} settings={settings}
+                   checkins={checkins} diary={diary} exerciseLog={exerciseLog} />
+        )}
+        {view === ViewState.COLECTIVA && (
+          <Colectiva onBack={() => setView(ViewState.HOME)} settings={settings}
+                     onCompleted={handleColectivaCompleted} />
+        )}
+        {view === ViewState.ANON_FEED && (
+          <AnonFeed onBack={() => setView(ViewState.HOME)} settings={settings} />
+        )}
+        {view === ViewState.BUDDY && (
+          <Buddy onBack={() => setView(ViewState.HOME)} settings={settings} />
+        )}
+        {view === ViewState.INVITE && (
+          <Invite onBack={() => setView(ViewState.HOME)} settings={settings} onUpdate={setSettings} />
+        )}
+        {view === ViewState.ACHIEVEMENTS && (
+          <Achievements onBack={() => setView(ViewState.HOME)} settings={settings} />
         )}
         {view === ViewState.CHECKIN && (
           <CheckIn onBack={() => setView(ViewState.HOME)} onSave={handleSaveCheckin}
@@ -275,6 +386,12 @@ const App: React.FC = () => {
           <LegalPage kind="terms" onBack={() => setView(ViewState.SETTINGS)} />
         )}
       </main>
+
+      {toast && (
+        <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl text-sm max-w-sm">
+          {toast}
+        </div>
+      )}
     </div>
   );
 };

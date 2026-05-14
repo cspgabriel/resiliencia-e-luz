@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
 import { ViewState, CheckIn, MOOD_META, UserSettings, ExerciseLog, Exercise } from '../types';
-import { MessageCircle, Wind, BookOpen, AlertCircle, ArrowRight, Sparkles, TrendingUp, Calendar, Map, BarChart3, Target } from 'lucide-react';
-import { APP_NAME, FREE_LIMITS, getDailyPlan, EXERCISES } from '../constants';
+import { MessageCircle, Wind, BookOpen, AlertCircle, ArrowRight, Sparkles, TrendingUp, Calendar, Map, BarChart3, Target, Mail, Heart, Waves, Trophy, Flame } from 'lucide-react';
+import { APP_NAME, FREE_LIMITS, getDailyPlan, EXERCISES, COMPANION_STAGES, MINI_TRAILS, XP_EVENTS } from '../constants';
 import { today } from '../services/date';
+import { stageForXp, computeLevel } from '../services/gamification';
+import DailyAffirmationCard from './DailyAffirmationCard';
 
 interface Props {
   onNavigate: (v: ViewState) => void;
@@ -10,6 +12,7 @@ interface Props {
   checkins: CheckIn[];
   exerciseLog: ExerciseLog[];
   settings: UserSettings;
+  onXpGain?: (xp: number) => void;
 }
 
 const greeting = (): string => {
@@ -20,7 +23,10 @@ const greeting = (): string => {
   return 'Boa noite';
 };
 
-const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins, exerciseLog, settings }) => {
+const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins, exerciseLog, settings, onXpGain }) => {
+  const companionStage = COMPANION_STAGES[stageForXp(settings.companion?.totalXp || 0)];
+  const level = computeLevel(settings.totalXp || 0);
+  const streak = settings.streak;
   const todayStr = today();
   const todayCheck = checkins.find(c => c.date === todayStr);
   const todayExercises = exerciseLog.filter(e => e.date === todayStr);
@@ -47,12 +53,35 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 to-sky-50/40 dark:from-slate-950 dark:to-slate-900 pb-24">
       <div className="max-w-4xl mx-auto px-5 pt-8">
-        <header className="mb-6">
-          <p className="text-sm text-slate-500 dark:text-slate-400">{greeting()}</p>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
-            {settings.name ? `Como você tá, ${settings.name}?` : 'Como você tá hoje?'}
-          </h1>
+        <header className="mb-6 flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{greeting()}</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+              {settings.name ? `Como você tá, ${settings.name}?` : 'Como você tá hoje?'}
+            </h1>
+          </div>
+          <button onClick={() => onNavigate(ViewState.COMPANION)} className="flex flex-col items-center gap-1 text-center group">
+            <div className="text-4xl group-active:scale-90 transition">{companionStage.emoji}</div>
+            <span className="text-[10px] text-slate-500">Nv {level.level}</span>
+          </button>
         </header>
+
+        {/* AFIRMAÇÃO DIÁRIA */}
+        <div className="mb-5">
+          <DailyAffirmationCard settings={settings} onXpGain={onXpGain || (() => {})} />
+        </div>
+
+        {/* STREAK */}
+        {(streak?.current || 0) > 0 && (
+          <button onClick={() => onNavigate(ViewState.ACHIEVEMENTS)} className="w-full bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 border border-orange-200 dark:border-orange-900 rounded-2xl p-4 mb-5 flex items-center gap-3">
+            <Flame className="w-6 h-6 text-orange-500" />
+            <div className="flex-1 text-left">
+              <p className="font-semibold text-slate-900 dark:text-white text-sm">{streak!.current} dias seguidos 🔥</p>
+              <p className="text-xs text-slate-500">{streak!.freezesAvailable} freezes disponíveis este mês</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-slate-400" />
+          </button>
+        )}
 
         {/* CHECK-IN STATUS */}
         {!todayCheck ? (
@@ -130,11 +159,42 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins
             <p className="text-xs text-slate-500 dark:text-slate-400">Padrões, sem diagnóstico</p>
           </button>
 
+          <button onClick={() => onNavigate(ViewState.LETTERS)} className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left active:scale-[0.97] transition">
+            <Mail className="w-6 h-6 text-rose-500 mb-2" />
+            <p className="font-semibold text-slate-900 dark:text-white text-sm">Cartas para o futuro</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Escreva pra você</p>
+          </button>
+
+          <button onClick={() => onNavigate(ViewState.COLECTIVA)} className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left active:scale-[0.97] transition">
+            <Waves className="w-6 h-6 text-cyan-600 mb-2" />
+            <p className="font-semibold text-slate-900 dark:text-white text-sm">Calma coletiva</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Respirar junto às 22h</p>
+          </button>
+
+          <button onClick={() => onNavigate(ViewState.ACHIEVEMENTS)} className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left active:scale-[0.97] transition">
+            <Trophy className="w-6 h-6 text-yellow-500 mb-2" />
+            <p className="font-semibold text-slate-900 dark:text-white text-sm">Conquistas</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Nível {level.level} · {level.title}</p>
+          </button>
+
           <button onClick={() => onNavigate(ViewState.SOS)} className="bg-red-50 dark:bg-red-950/30 p-4 rounded-2xl border border-red-200 dark:border-red-900 text-left active:scale-[0.97] transition">
             <AlertCircle className="w-6 h-6 text-red-500 mb-2" />
             <p className="font-semibold text-red-900 dark:text-red-200 text-sm">SOS Ansiedade</p>
             <p className="text-xs text-red-700/80 dark:text-red-300/80">Ajuda agora</p>
           </button>
+        </div>
+
+        {/* MINI-TRILHAS DE 3 DIAS */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 mb-5">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Para começar pequeno (3 dias)</h3>
+          <div className="space-y-2">
+            {MINI_TRAILS.map(t => (
+              <button key={t.id} onClick={() => onNavigate(ViewState.TRAILS)} className="w-full text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-700/40 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+                <p className="font-semibold text-sm text-slate-900 dark:text-white">{t.title}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{t.description}</p>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* HUMOR DA SEMANA */}

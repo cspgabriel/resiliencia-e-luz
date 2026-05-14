@@ -26,3 +26,13 @@ export const formatShortDatePtBr = (timestamp: number): string =>
     day: '2-digit',
     month: 'short',
   });
+
+export const dateKey = (d: Date): string => localDate(d);
+
+export const daysBetween = (aIso: string, bIso: string): number => {
+  const a = new Date(aIso + 'T00:00:00');
+  const b = new Date(bIso + 'T00:00:00');
+  return Math.round((b.getTime() - a.getTime()) / 86400000);
+};
+
+export const monthKey = (d: string): string => d.slice(0, 7);

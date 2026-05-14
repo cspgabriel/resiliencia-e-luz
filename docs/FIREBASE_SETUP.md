@@ -1,20 +1,20 @@
 # Firebase Setup - Serenamente
 
-Este projeto usa Firebase **Auth** (anônima + email/senha) e **Firestore** para sincronizar dados do usuário **quando ele dá consentimento explícito**. Por padrão, o app continua local-first.
+Firebase Auth + Firestore para auth anônima, sync opt-in, social features (dupla, mural, calma coletiva), referral, gamificação e métricas.
 
 ## 1. Configurar o projeto Firebase
 
 No [Firebase Console](https://console.firebase.google.com) (projeto `animaxx-1f371`):
 
-1. **Authentication** → habilite os provedores:
-   - **Anônimo** (obrigatório - usado para iniciar sessão sem fricção)
+1. **Authentication** → habilite:
+   - **Anônimo** (obrigatório)
    - **Email/Senha** (opcional - upgrade da conta anônima)
-2. **Firestore Database** → crie no modo Production.
-3. **Configurações do Projeto → Seus apps → Web (`</>`)**: registre um app web e copie o objeto de configuração.
+2. **Firestore Database** → modo Production.
+3. **Web app**: registre em Configurações → Seus apps → `</>`.
 
 ## 2. Variáveis de ambiente
 
-Copie `.env.example` para `.env.local` e preencha com os valores do passo 1.3:
+Em `.env.local`:
 
 ```
 VITE_FIREBASE_API_KEY=AIza...
@@ -25,61 +25,79 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=...
 VITE_FIREBASE_APP_ID=...
 ```
 
-> Essas chaves são **públicas** (apiKey do Web SDK não é segredo). A segurança vem das Security Rules + Auth.
-
-## 3. Publicar regras de segurança
+## 3. Deploy de regras + índices
 
 ```bash
-# Instale a CLI (uma vez)
 npm install -g firebase-tools
-
-# Login e seleção do projeto
 firebase login
 firebase use animaxx-1f371
 
-# Deploy das regras
 firebase deploy --only firestore:rules
+firebase deploy --only firestore:indexes
 ```
 
-As regras estão em [`firestore.rules`](../firestore.rules) e isolam cada usuário em `users/{uid}/*`.
-
-## 4. Service Account (Admin SDK)
-
-O arquivo `*firebase-adminsdk*.json` **NÃO** deve ser commitado (já está no `.gitignore`).
-
-Ele só é necessário se você for:
-- Validar tokens Firebase no Worker (`worker/index.ts`)
-- Executar operações admin (deletar usuários em massa, ler dados de qualquer user)
-
-Para usar no Cloudflare Worker:
-
-```bash
-cd worker
-# Para dev local
-echo 'FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}' > .dev.vars
-
-# Para produção
-wrangler secret put FIREBASE_SERVICE_ACCOUNT
-# Cole o JSON inteiro em uma única linha
-```
-
-> **IMPORTANTE**: se a chave privada vazou (apareceu em chat, foi commitada, etc.), revogue-a imediatamente em
-> Firebase Console → Configurações do Projeto → Contas de Serviço → Gerar nova chave.
-
-## 5. Estrutura de dados no Firestore
+## 4. Estrutura completa de coleções
 
 ```
 users/{uid}
-├─ settings: { ... }                  // documento principal do usuário
-├─ checkins/{checkinId}               // mood checkins diários
-├─ diary/{entryId}                    // entradas do diário
-├─ chat/{messageId}                   // últimas mensagens do chat
-├─ trail_progress/{trailId}           // progresso de trilhas
-└─ exercise_log/{logId}               // log de exercícios concluídos
+├─ (doc principal: { settings, updatedAt })
+├─ checkins/{id}
+├─ diary/{id}
+├─ chat/{id}
+├─ trail_progress/{trailId}
+├─ exercise_log/{id}
+├─ letters/{id}                ← cartas para o futuro
+├─ companion/state             ← estado do Sereninho
+├─ achievements/unlocked       ← { ids: string[] }
+├─ buddies/{buddyUid}          ← duplas vinculadas
+├─ pings/{id}                  ← recebidos da dupla
+├─ rewards/{id}                ← prêmios (referral)
+└─ public/mood                 ← mood visível para a dupla
+
+invites/{CODIGO}                ← referral codes
+public/anon_feed/posts/{id}     ← mural moderado
+public/colectiva/sessions/{id}/participants/{uid}
+metrics/events/all/{id}         ← eventos virais/retenção (write-only do client)
 ```
 
-## 6. Privacidade (LGPD)
+## 5. Service Account (Admin SDK) - opcional
 
-- Sync para a nuvem **só acontece se** `cloudSyncEnabled === true` E `consentLGPD === true` E houver `auth.currentUser`.
-- "Apagar todos os dados" no app chama `wipeCloudData()` antes de `wipeAllData()`, removendo registros locais **e** na nuvem.
-- Conteúdo sensível (texto do diário, mensagens do chat) só sobe se o usuário explicitamente ativou a sincronização.
+Para moderação do mural anônimo, broadcast push, deletar usuário em massa.
+
+Mantenha **fora do git** (já está no `.gitignore`). Use no Worker via secret:
+
+```bash
+cd worker
+wrangler secret put FIREBASE_SERVICE_ACCOUNT
+# cole o JSON inteiro
+```
+
+## 6. Bootstrap automático de coleções
+
+Coleções no Firestore só existem quando recebem o primeiro documento. **Não é preciso criar manualmente** — assim que o usuário tomar a primeira ação relevante (check-in, escrever carta, ativar sync), o doc é criado e a coleção surge.
+
+Se quiser pré-criar para visualizar no console, rode o script:
+
+```bash
+node scripts/bootstrap-collections.mjs
+```
+
+(Esse script grava 1 doc placeholder em cada coleção.)
+
+## 7. Moderação do mural anônimo
+
+Posts são criados com `approved: false`. Use o Firebase Console ou um simples app interno para aprovar:
+
+```
+public/anon_feed/posts → set approved=true
+```
+
+Filtros automáticos já bloqueiam termos de crise + dados pessoais. Sempre revise antes de aprovar.
+
+## 8. Privacidade (LGPD)
+
+- Sync para a nuvem **só acontece** quando `cloudSyncEnabled === true` E `consentLGPD === true` E há auth.currentUser.
+- "Apagar todos os dados" remove local + nuvem (chama `wipeCloudData`).
+- Conteúdo sensível (texto do diário, mensagens do chat) só sobe se o usuário ativar.
+- Mural anônimo nunca expõe `authorUid` — guardado só para audit interno.
+- Dupla compartilha apenas emoji do humor — nunca diário, chat ou nome real (a menos que o usuário coloque o próprio nome no apelido).

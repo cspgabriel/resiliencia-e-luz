@@ -419,3 +419,190 @@ export const PAYWALL_REASONS = {
   DIARY_HISTORY: 'Histórico completo do diário é Plus.',
   EXPORT: 'Exportar em PDF é recurso Plus.',
 };
+
+// ============================================================
+// GAMIFICAÇÃO — XP, NÍVEIS E EVENTOS DE PONTUAÇÃO
+// ============================================================
+
+export const XP_EVENTS = {
+  checkin:           10,
+  diary_entry:       12,
+  exercise_complete: 15,
+  trail_day:         20,
+  chat_message:      3,
+  letter_written:    25,
+  letter_read:       15,
+  buddy_ping_sent:   8,
+  card_shared:       5,
+  colectiva_joined:  20,
+  affirmation_read:  2,
+  first_of_day_bonus: 5,
+};
+
+export const LEVELS = [
+  { level: 1,  needXp: 0,    title: 'Semeando' },
+  { level: 2,  needXp: 80,   title: 'Brotando' },
+  { level: 3,  needXp: 200,  title: 'Crescendo' },
+  { level: 4,  needXp: 400,  title: 'Florindo' },
+  { level: 5,  needXp: 700,  title: 'Sereno(a)' },
+  { level: 6,  needXp: 1100, title: 'Equilibrado(a)' },
+  { level: 7,  needXp: 1600, title: 'Presente' },
+  { level: 8,  needXp: 2200, title: 'Centrado(a)' },
+  { level: 9,  needXp: 3000, title: 'Mestre do Cuidado' },
+  { level: 10, needXp: 4000, title: 'Jardim Interior' },
+];
+
+// ============================================================
+// CONQUISTAS — incentivam comportamentos sustentáveis
+// ============================================================
+
+export const ACHIEVEMENTS_CATALOG: { id: string; title: string; description: string; icon: string; target?: number; category: 'streak' | 'checkin' | 'diary' | 'exercise' | 'social' | 'special' }[] = [
+  // Streak
+  { id: 'streak_3',     title: 'Três dias seguidos',      description: 'Você cuidou de você 3 dias em sequência.',   icon: '🌱', target: 3,   category: 'streak' },
+  { id: 'streak_7',     title: 'Uma semana',              description: '7 dias seguidos de presença.',                icon: '🌿', target: 7,   category: 'streak' },
+  { id: 'streak_30',    title: 'Um mês inteiro',          description: '30 dias de cuidado contínuo.',                icon: '🌳', target: 30,  category: 'streak' },
+  { id: 'streak_100',   title: '100 dias',                description: 'Você construiu um ritual.',                   icon: '🏆', target: 100, category: 'streak' },
+  // Check-in
+  { id: 'checkin_10',   title: '10 check-ins',            description: 'Você está aprendendo a se ouvir.',            icon: '👂', target: 10,  category: 'checkin' },
+  { id: 'checkin_50',   title: '50 check-ins',            description: 'Hábito formado.',                              icon: '💎', target: 50,  category: 'checkin' },
+  // Diário
+  { id: 'diary_first',  title: 'Primeira página',         description: 'Você abriu o diário pela primeira vez.',      icon: '📖', target: 1,   category: 'diary' },
+  { id: 'diary_30',     title: 'Diarista',                description: '30 entradas no diário.',                       icon: '✍️', target: 30,  category: 'diary' },
+  // Exercício
+  { id: 'exercise_5',   title: 'Cinco respiros',          description: 'Completou 5 exercícios.',                      icon: '🌬️', target: 5,   category: 'exercise' },
+  { id: 'exercise_25',  title: 'Praticante',              description: 'Completou 25 exercícios.',                     icon: '🧘', target: 25,  category: 'exercise' },
+  // Social
+  { id: 'first_letter', title: 'Carta para o futuro',     description: 'Você escreveu para você mesmo(a).',           icon: '💌', target: 1,   category: 'social' },
+  { id: 'first_share',  title: 'Compartilhou afeto',      description: 'Mandou um card de cuidado para alguém.',      icon: '💞', target: 1,   category: 'social' },
+  { id: 'first_buddy',  title: 'Dupla formada',           description: 'Você e alguém estão cuidando juntos.',         icon: '🤝', target: 1,   category: 'social' },
+  { id: 'colectiva_1',  title: 'Calma coletiva',          description: 'Respirou junto com outras pessoas.',           icon: '🌊', target: 1,   category: 'social' },
+  // Especial
+  { id: 'night_owl',    title: 'Coruja consciente',       description: 'Cuidou de si depois das 23h.',                 icon: '🦉', target: 1,   category: 'special' },
+  { id: 'early_bird',   title: 'Pássaro madrugador',      description: 'Cuidou de si antes das 7h.',                   icon: '🐦', target: 1,   category: 'special' },
+  { id: 'comeback',     title: 'Voltou com gentileza',    description: 'Retornou ao app após uma pausa.',              icon: '💛', target: 1,   category: 'special' },
+];
+
+// ============================================================
+// COMPANHEIRO — SERENINHO (estágios)
+// ============================================================
+
+export const COMPANION_STAGES = [
+  { stage: 0, name: 'Semente',   emoji: '🌰', needXp: 0,    description: 'Começo de tudo.' },
+  { stage: 1, name: 'Broto',     emoji: '🌱', needXp: 50,   description: 'Apareceu a primeira folha.' },
+  { stage: 2, name: 'Muda',      emoji: '🌿', needXp: 150,  description: 'Pequena mas firme.' },
+  { stage: 3, name: 'Plantinha', emoji: '🪴', needXp: 350,  description: 'Cresceu com seu cuidado.' },
+  { stage: 4, name: 'Florida',   emoji: '🌸', needXp: 700,  description: 'Floresceu junto com você.' },
+  { stage: 5, name: 'Jardim',    emoji: '🌷', needXp: 1200, description: 'Virou um jardim inteiro.' },
+];
+
+export const COMPANION_GREETINGS = [
+  'Que bom te ver. Como você tá?',
+  'Tô aqui crescendo com você 💚',
+  'Você apareceu. Isso já é cuidado.',
+  'Um dia de cada vez. Estamos juntos.',
+  'Respira. Eu te espero.',
+];
+
+// ============================================================
+// AFIRMAÇÕES DIÁRIAS — POOL ROTATIVO (sem repetir por 60 dias)
+// ============================================================
+
+export const AFFIRMATIONS: { text: string; palette: string[] }[] = [
+  { text: 'Hoje você não precisa ser produtivo. Só precisa estar.',                palette: ['#A7F3D0','#FCD34D'] },
+  { text: 'Respirar fundo já é começar de novo.',                                  palette: ['#BFDBFE','#A5F3FC'] },
+  { text: 'Sentir não é fraqueza. Sentir é estar vivo.',                           palette: ['#FBCFE8','#FECACA'] },
+  { text: 'Você atravessou todos os dias difíceis até agora. 100% de aproveitamento.', palette: ['#FDE68A','#FCA5A5'] },
+  { text: 'O que pesa hoje não é definitivo.',                                     palette: ['#C7D2FE','#DDD6FE'] },
+  { text: 'Pequeno também conta.',                                                 palette: ['#A7F3D0','#86EFAC'] },
+  { text: 'Descansar é parte do plano, não falha.',                                palette: ['#FED7AA','#FCA5A5'] },
+  { text: 'Você merece o mesmo cuidado que oferece aos outros.',                   palette: ['#FBCFE8','#FDE68A'] },
+  { text: 'Hoje, só por hoje, faça o suficiente.',                                 palette: ['#A5F3FC','#BFDBFE'] },
+  { text: 'A calma também pratica. Volta amanhã.',                                 palette: ['#DDD6FE','#FBCFE8'] },
+  { text: 'Você não precisa de uma razão para cuidar de você.',                    palette: ['#FDE68A','#A7F3D0'] },
+  { text: 'A ansiedade fala alto. A serenidade ensina baixinho.',                  palette: ['#BFDBFE','#FBCFE8'] },
+  { text: 'Ser gentil consigo é mais corajoso que se cobrar.',                     palette: ['#FECACA','#FDE68A'] },
+  { text: 'Hoje pode ser leve, mesmo que pequeno.',                                palette: ['#86EFAC','#A5F3FC'] },
+  { text: 'Você é mais inteiro do que se sente nos dias difíceis.',                palette: ['#C7D2FE','#FCD34D'] },
+];
+
+export const getDailyAffirmation = (dateKey: string): typeof AFFIRMATIONS[number] => {
+  // Hash determinístico baseado na data → mesma afirmação o dia inteiro
+  let h = 0;
+  for (let i = 0; i < dateKey.length; i++) h = (h * 31 + dateKey.charCodeAt(i)) >>> 0;
+  return AFFIRMATIONS[h % AFFIRMATIONS.length];
+};
+
+// ============================================================
+// MINI-TRILHAS DE 3 DIAS — baixa ativação
+// ============================================================
+
+export const MINI_TRAILS: { id: string; title: string; description: string; iconName: string; tasks: string[] }[] = [
+  {
+    id: 'mini-comecar',
+    title: 'Para começar (3 dias)',
+    description: 'Três dias pequenos para entender o app.',
+    iconName: 'Sparkles',
+    tasks: [
+      'Faça um check-in rápido.',
+      'Teste a Respiração 4-7-8 (2 min).',
+      'Escreva 3 coisas boas no diário.',
+    ],
+  },
+  {
+    id: 'mini-dormir',
+    title: 'Dormir melhor em 3 dias',
+    description: 'Ritual noturno enxuto.',
+    iconName: 'Moon',
+    tasks: [
+      'Faça um ritual noturno hoje.',
+      'Despeje a mente no diário antes de dormir.',
+      'Repita o ritual e anote o que mudou.',
+    ],
+  },
+  {
+    id: 'mini-respirar',
+    title: 'Respirar com calma em 3 dias',
+    description: 'Para quem tá com ansiedade leve.',
+    iconName: 'Wind',
+    tasks: [
+      'Respiração 4-7-8 ao acordar.',
+      'Grounding 5-4-3-2-1 no meio do dia.',
+      'Pausa consciente antes de dormir.',
+    ],
+  },
+];
+
+// ============================================================
+// STREAK — política gentil (Wysa/Finch-style)
+// ============================================================
+
+export const STREAK_FREEZES_PER_MONTH = 4;
+export const STREAK_MIN_ACTIONS_FOR_DAY = 1; // 1 ação qualquer (checkin, exercício, diário) já mantém
+
+// ============================================================
+// CALMA COLETIVA — sessão diária às 22h00
+// ============================================================
+
+export const COLECTIVA_SCHEDULE_HOUR = 22;
+export const COLECTIVA_DURATION_MIN = 5;
+export const COLECTIVA_EXERCISE_ID = 'resp-478';
+
+// ============================================================
+// CONVITES / REFERRAL
+// ============================================================
+
+export const REFERRAL_REWARD_DAYS = 30;
+export const REFERRAL_WHATSAPP_TEXT = (code: string, url: string) =>
+  `Tô usando o Serenamente pra me cuidar todo dia (check-in, respiração, diário). Quer experimentar comigo? Com meu código ${code} a gente ganha 30 dias do plano Plus juntos: ${url}?ref=${code}`;
+
+// ============================================================
+// MURAL ANÔNIMO — filtros automáticos
+// ============================================================
+
+export const ANON_BANNED_TERMS = [
+  ...CRISIS_TERMS_URGENT,
+  ...CRISIS_TERMS_CONCERN,
+  '@', 'http', 'www.', 'cpf', 'rg ', 'whatsapp', 'telegram',
+];
+
+export const ANON_MAX_LEN = 140;

@@ -95,6 +95,14 @@ export interface UserSettings {
   locale: SupportedLocale;
   cloudSyncEnabled?: boolean;
   cloudUserId?: string;
+  companion?: CompanionState;
+  streak?: StreakState;
+  achievements?: string[];
+  totalXp?: number;
+  publicProfile?: boolean;
+  reminderLearned?: { hour: number; confidence: number };
+  inviteCodeUsed?: string;
+  inviteCodeOwned?: string;
 }
 
 export interface TrailProgress {
@@ -131,6 +139,140 @@ export enum ViewState {
   PRIVACY = 'PRIVACY',
   TERMS = 'TERMS',
   SOS = 'SOS',
+  COMPANION = 'COMPANION',
+  LETTERS = 'LETTERS',
+  WRAPPED = 'WRAPPED',
+  COLECTIVA = 'COLECTIVA',
+  ANON_FEED = 'ANON_FEED',
+  BUDDY = 'BUDDY',
+  INVITE = 'INVITE',
+  ACHIEVEMENTS = 'ACHIEVEMENTS',
+}
+
+// ========== GAMIFICAÇÃO ==========
+
+export interface CompanionState {
+  name: string;
+  species: 'planta' | 'passarinho';
+  stage: number;          // 0..5
+  xp: number;
+  totalXp: number;
+  lastCareAt: number;
+  mood: 'feliz' | 'ok' | 'sereno' | 'cansado';
+  customizations?: { vasoCor?: string; fundo?: string };
+}
+
+export interface StreakState {
+  current: number;
+  longest: number;
+  lastDate: string;
+  freezesAvailable: number;
+  freezesUsedThisMonth: number;
+  protectedDates: string[];
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlockedAt?: number;
+  progress?: number;
+  target?: number;
+  category: 'streak' | 'checkin' | 'diary' | 'exercise' | 'social' | 'special';
+}
+
+export interface UserLevel {
+  level: number;
+  title: string;
+  xpInLevel: number;
+  xpToNext: number;
+  totalXp: number;
+}
+
+// ========== CONEXÃO ==========
+
+export interface FutureLetter {
+  id: string;
+  createdAt: number;
+  deliverAt: number;
+  title: string;
+  content: string;
+  delivered: boolean;
+  openedAt?: number;
+}
+
+export interface BuddyLink {
+  buddyUid: string;
+  buddyName: string;
+  pairedAt: number;
+  shareLevel: 'mood_only' | 'mood_and_note';
+}
+
+export interface BuddyPing {
+  id: string;
+  fromUid: string;
+  fromName: string;
+  kind: 'abraco' | 'coracao' | 'estou_aqui' | 'forca';
+  createdAt: number;
+  read?: boolean;
+}
+
+export interface InviteCode {
+  code: string;
+  ownerUid: string;
+  createdAt: number;
+  redeemedBy?: string;
+  redeemedAt?: number;
+  rewardGranted?: boolean;
+}
+
+export interface AnonPost {
+  id: string;
+  text: string;          // até 140 chars, sem PII, sem gatilho
+  mood?: Mood;
+  hearts: number;
+  createdAt: number;
+  approved: boolean;
+}
+
+export interface ColectivaSession {
+  id: string;
+  startsAt: number;
+  endsAt: number;
+  participants: number;
+  exerciseId: string;
+}
+
+// ========== AFIRMAÇÃO DIÁRIA + WRAPPED ==========
+
+export interface DailyAffirmation {
+  date: string;
+  text: string;
+  author?: string;
+  palette: string[];
+}
+
+export interface WrappedMonth {
+  month: string;          // YYYY-MM
+  checkinsCount: number;
+  exercisesCount: number;
+  diaryEntries: number;
+  topMood?: Mood;
+  topTrigger?: string;
+  streakRecord: number;
+  palette: string[];
+  highlights: string[];
+}
+
+// ========== MÉTRICAS ==========
+
+export interface MetricEvent {
+  id: string;
+  name: string;
+  ts: number;
+  uid?: string;
+  props?: Record<string, string | number | boolean>;
 }
 
 export interface CrisisCheck {

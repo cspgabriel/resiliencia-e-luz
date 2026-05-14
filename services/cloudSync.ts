@@ -7,7 +7,7 @@ import { getDb, isFirebaseConfigured } from './firebase';
 import { currentUserId } from './firebaseAuth';
 import {
   CheckIn, ChatMessage, DiaryEntry, ExerciseLog,
-  TrailProgress, UserSettings,
+  TrailProgress, UserSettings, FutureLetter,
 } from '../types';
 
 type Collection =
@@ -15,7 +15,13 @@ type Collection =
   | 'diary'
   | 'chat'
   | 'trail_progress'
-  | 'exercise_log';
+  | 'exercise_log'
+  | 'letters'
+  | 'buddies'
+  | 'achievements'
+  | 'rewards'
+  | 'pings'
+  | 'public';
 
 const enabled = (settings: UserSettings | null | undefined): boolean => {
   if (!isFirebaseConfigured()) return false;
@@ -89,6 +95,28 @@ export const syncExerciseLog = (l: ExerciseLog, settings: UserSettings): Promise
   await setDoc(userDoc(currentUserId()!, 'exercise_log', l.id), l, { merge: true });
 });
 
+// ---------- CARTAS PARA O FUTURO ----------
+export const syncLetter = (l: FutureLetter, settings: UserSettings): Promise<void> => safe(async () => {
+  if (!enabled(settings)) return;
+  await setDoc(userDoc(currentUserId()!, 'letters', l.id), l, { merge: true });
+});
+
+// ---------- COMPANION (documento único) ----------
+export const syncCompanion = (settings: UserSettings): Promise<void> => safe(async () => {
+  if (!enabled(settings) || !settings.companion) return;
+  const uid = currentUserId()!; const db = getDb()!;
+  await setDoc(doc(db, 'users', uid, 'companion', 'state'), settings.companion, { merge: true });
+});
+
+// ---------- ACHIEVEMENTS (lista de ids desbloqueadas) ----------
+export const syncAchievements = (ids: string[], settings: UserSettings): Promise<void> => safe(async () => {
+  if (!enabled(settings)) return;
+  const uid = currentUserId()!; const db = getDb()!;
+  await setDoc(doc(db, 'users', uid, 'achievements', 'unlocked'), {
+    ids, updatedAt: Date.now(),
+  }, { merge: true });
+});
+
 // ---------- BACKFILL (sync inicial) ----------
 export const backfillAll = (
   settings: UserSettings,
@@ -97,15 +125,19 @@ export const backfillAll = (
   messages: ChatMessage[],
   trails: TrailProgress[],
   exerciseLog: ExerciseLog[],
+  letters: FutureLetter[] = [],
 ): Promise<void> => safe(async () => {
   if (!enabled(settings)) return;
   await Promise.all([
     syncSettings(settings),
+    syncCompanion(settings),
+    syncAchievements(settings.achievements || [], settings),
     ...checkins.map(c => syncCheckin(c, settings)),
     ...diary.map(d => syncDiaryEntry(d, settings)),
     ...messages.map(m => syncChatMessage(m, settings)),
     ...trails.map(t => syncTrailProgress(t, settings)),
     ...exerciseLog.map(l => syncExerciseLog(l, settings)),
+    ...letters.map(l => syncLetter(l, settings)),
   ]);
 });
 

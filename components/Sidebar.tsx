@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewState, UserSettings } from '../types';
-import { Home, MessageCircle, Wind, BookOpen, Settings, AlertCircle, Sparkles, Map, BarChart3 } from 'lucide-react';
+import { Home, MessageCircle, Wind, BookOpen, Settings, AlertCircle, Sparkles, Map, BarChart3, Heart, Mail, Trophy, UserPlus, Waves, Users, Gift } from 'lucide-react';
 import { APP_NAME } from '../constants';
 
 interface Props {
@@ -11,13 +11,21 @@ interface Props {
 
 const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
   const items = [
-    { v: ViewState.HOME,      label: 'Início',     icon: Home },
-    { v: ViewState.CHAT,      label: 'Conversar',  icon: MessageCircle },
-    { v: ViewState.EXERCISES, label: 'Exercícios', icon: Wind },
-    { v: ViewState.TRAILS,    label: 'Trilhas',    icon: Map },
-    { v: ViewState.INSIGHTS,  label: 'Insights',   icon: BarChart3 },
-    { v: ViewState.DIARY,     label: 'Diário',     icon: BookOpen },
-    { v: ViewState.SOS,       label: 'SOS',        icon: AlertCircle, danger: true },
+    { v: ViewState.HOME,         label: 'Início',     icon: Home },
+    { v: ViewState.CHAT,         label: 'Conversar',  icon: MessageCircle },
+    { v: ViewState.COMPANION,    label: 'Sereninho',  icon: Heart },
+    { v: ViewState.EXERCISES,    label: 'Exercícios', icon: Wind },
+    { v: ViewState.TRAILS,       label: 'Trilhas',    icon: Map },
+    { v: ViewState.LETTERS,      label: 'Cartas',     icon: Mail },
+    { v: ViewState.COLECTIVA,    label: 'Calma viva', icon: Waves },
+    { v: ViewState.BUDDY,        label: 'Dupla',      icon: Users },
+    { v: ViewState.ANON_FEED,    label: 'Sentindo',   icon: BookOpen },
+    { v: ViewState.INSIGHTS,     label: 'Insights',   icon: BarChart3 },
+    { v: ViewState.WRAPPED,      label: 'Wrapped',    icon: Gift },
+    { v: ViewState.ACHIEVEMENTS, label: 'Conquistas', icon: Trophy },
+    { v: ViewState.DIARY,        label: 'Diário',     icon: BookOpen },
+    { v: ViewState.INVITE,       label: 'Convidar',   icon: UserPlus },
+    { v: ViewState.SOS,          label: 'SOS',        icon: AlertCircle, danger: true },
   ];
 
   return (
