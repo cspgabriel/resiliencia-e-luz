@@ -5,6 +5,7 @@ import { APP_NAME, FREE_LIMITS, getDailyPlan, EXERCISES, MINI_TRAILS, XP_EVENTS 
 import { today } from '../services/date';
 import { computeLevel } from '../services/gamification';
 import DailyAffirmationCard from './DailyAffirmationCard';
+import AdSlot from './AdSlot';
 
 interface Props {
   onNavigate: (v: ViewState) => void;
@@ -192,6 +193,9 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins
             <p className="text-xs text-red-700/80 dark:text-red-300/80">Ajuda agora</p>
           </button>
         </div>
+
+        {/* ANÚNCIO (some pra Plus / pode ser ocultado) */}
+        <AdSlot slotId="home_mid" format="banner" settings={settings} onNavigate={onNavigate} />
 
         {/* MINI-TRILHAS DE 3 DIAS */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 mb-5">

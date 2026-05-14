@@ -4,6 +4,7 @@ import { FutureLetter, UserSettings } from '../types';
 import { loadLetters, saveLetter, deleteLetter, markDelivered } from '../services/futureLetter';
 import { formatShortDatePtBr } from '../services/date';
 import { trackSafeEvent } from '../services/analytics';
+import AdSlot from './AdSlot';
 
 interface Props {
   onBack: () => void;
@@ -134,6 +135,8 @@ const Letters: React.FC<Props> = ({ onBack, settings, onXpGain }) => {
             </p>
           </div>
         )}
+
+        {letters.length > 0 && <AdSlot slotId="letters_list" format="banner" settings={settings} />}
       </div>
 
       {composing && (

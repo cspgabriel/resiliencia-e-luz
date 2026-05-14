@@ -100,6 +100,8 @@ export interface UserSettings {
   achievements?: string[];
   totalXp?: number;
   xpHistory?: { date: string; xp: number }[];
+  adsEnabled?: boolean;          // default true (não-Plus veem ads não-personalizados)
+  adsPersonalized?: boolean;     // default false (LGPD - precisa opt-in)
   publicProfile?: boolean;
   reminderLearned?: { hour: number; confidence: number };
   inviteCodeUsed?: string;

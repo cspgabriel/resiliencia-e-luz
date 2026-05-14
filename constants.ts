@@ -606,3 +606,26 @@ export const ANON_BANNED_TERMS = [
 ];
 
 export const ANON_MAX_LEN = 140;
+
+// ============================================================
+// ANÚNCIOS — slots e contextos onde podem aparecer
+// ============================================================
+// IMPORTANTE: nunca colocar ads em telas de crise (SOS), íntimas (chat, leitura
+// de carta) ou de foco (exercise detail, calma coletiva, onboarding).
+
+export const AD_SLOTS = {
+  home_top:        { id: 'home_top',        format: 'native',  context: 'home' },
+  home_mid:        { id: 'home_mid',        format: 'banner',  context: 'home' },
+  exercises_list:  { id: 'exercises_list',  format: 'native',  context: 'exercises' },
+  trails_bottom:   { id: 'trails_bottom',   format: 'banner',  context: 'trails' },
+  diary_inline:    { id: 'diary_inline',    format: 'native',  context: 'diary' },
+  insights_bottom: { id: 'insights_bottom', format: 'banner',  context: 'insights' },
+  achievements:    { id: 'achievements',    format: 'banner',  context: 'achievements' },
+  wrapped_bottom:  { id: 'wrapped_bottom',  format: 'banner',  context: 'wrapped' },
+  letters_list:    { id: 'letters_list',    format: 'banner',  context: 'letters' },
+} as const;
+
+export type AdSlotId = keyof typeof AD_SLOTS;
+
+// Frequência: a cada N entradas no diário, mostra 1 ad
+export const ADS_DIARY_EVERY_N = 6;

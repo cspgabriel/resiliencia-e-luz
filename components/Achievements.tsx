@@ -3,6 +3,7 @@ import { ArrowLeft, Lock } from 'lucide-react';
 import { UserSettings } from '../types';
 import { ACHIEVEMENTS_CATALOG, LEVELS } from '../constants';
 import { computeLevel } from '../services/gamification';
+import AdSlot from './AdSlot';
 
 interface Props {
   onBack: () => void;
@@ -63,6 +64,8 @@ const Achievements: React.FC<Props> = ({ onBack, settings }) => {
             </div>
           </section>
         ))}
+
+        <AdSlot slotId="achievements" format="banner" settings={settings} />
 
         <section className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
           <h3 className="text-sm font-semibold mb-3 text-slate-700 dark:text-slate-200">Trilha de níveis</h3>

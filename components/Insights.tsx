@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { ArrowLeft, BarChart3, BookOpen, Moon, Sparkles, Wind } from 'lucide-react';
 import { CheckIn, DiaryEntry, ExerciseLog, MOOD_META, UserSettings } from '../types';
+import AdSlot from './AdSlot';
 
 interface Props {
   onBack: () => void;
@@ -12,7 +13,7 @@ interface Props {
 
 const average = (values: number[]) => values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
 
-const Insights: React.FC<Props> = ({ onBack, checkins, diary, exerciseLog }) => {
+const Insights: React.FC<Props> = ({ onBack, checkins, diary, exerciseLog, settings }) => {
   const last7 = checkins.slice(0, 7);
   const last30 = checkins.slice(0, 30);
 
@@ -111,6 +112,7 @@ const Insights: React.FC<Props> = ({ onBack, checkins, diary, exerciseLog }) => 
                 {mostUsedExercise && <p>Exercício mais usado: <strong>{mostUsedExercise[0]}</strong> ({mostUsedExercise[1]}x)</p>}
               </div>
             </section>
+            <AdSlot slotId="insights_bottom" format="banner" settings={settings} />
           </>
         )}
       </div>

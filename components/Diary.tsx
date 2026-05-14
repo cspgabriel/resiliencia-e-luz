@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { DiaryEntry, UserSettings, CheckIn, MOOD_META } from '../types';
 import { ArrowLeft, Plus, Trash2, Lock } from 'lucide-react';
-import { FREE_LIMITS, PAYWALL_REASONS } from '../constants';
+import { FREE_LIMITS, PAYWALL_REASONS, ADS_DIARY_EVERY_N } from '../constants';
 import { today, formatShortDatePtBr } from '../services/date';
+import AdSlot from './AdSlot';
 
 interface Props {
   onBack: () => void;
@@ -87,22 +88,26 @@ const Diary: React.FC<Props> = ({ onBack, entries, checkins, settings, onSave, o
           </div>
         )}
 
-        {visible.map(e => {
+        {visible.map((e, idx) => {
           const ci = checkins.find(c => c.date === e.date);
+          const showAd = idx > 0 && idx % ADS_DIARY_EVERY_N === 0;
           return (
-            <div key={e.id} className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="text-xs text-slate-500">{formatShortDatePtBr(e.timestamp)}</p>
-                  <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{e.prompt}</p>
+            <React.Fragment key={e.id}>
+              {showAd && <AdSlot slotId={`diary_inline_${idx}`} format="native" settings={settings} onUpgrade={onUpgrade} />}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="text-xs text-slate-500">{formatShortDatePtBr(e.timestamp)}</p>
+                    <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{e.prompt}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {ci && <span className="text-2xl">{MOOD_META[ci.mood].emoji}</span>}
+                    <button onClick={() => onDelete(e.id)} className="text-slate-300 hover:text-red-500 p-1"><Trash2 className="w-4 h-4" /></button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {ci && <span className="text-2xl">{MOOD_META[ci.mood].emoji}</span>}
-                  <button onClick={() => onDelete(e.id)} className="text-slate-300 hover:text-red-500 p-1"><Trash2 className="w-4 h-4" /></button>
-                </div>
+                <p className="text-sm text-slate-700 dark:text-slate-200 whitespace-pre-wrap">{e.content}</p>
               </div>
-              <p className="text-sm text-slate-700 dark:text-slate-200 whitespace-pre-wrap">{e.content}</p>
-            </div>
+            </React.Fragment>
           );
         })}
 

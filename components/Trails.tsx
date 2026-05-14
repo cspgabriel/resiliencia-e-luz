@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft, CheckCircle2, Lock, Map } from 'lucide-react';
 import { UserSettings, TrailProgress } from '../types';
 import { TRAILS, ICON_MAP, getTrailTask } from '../constants';
+import AdSlot from './AdSlot';
 
 interface Props {
   onBack: () => void;
@@ -84,6 +85,8 @@ const Trails: React.FC<Props> = ({ onBack, settings, progress, onCompleteDay, on
             </div>
           );
         })}
+
+        <AdSlot slotId="trails_bottom" format="banner" settings={settings} onUpgrade={onUpgrade} />
       </div>
     </div>
   );

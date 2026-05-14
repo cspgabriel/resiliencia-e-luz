@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { UserSettings, ViewState } from '../types';
-import { ArrowLeft, Sun, Moon, Trash2, ShieldCheck, FileText, ExternalLink, Heart, Bell, Lock, Bot, Phone, Cloud, LogIn, LogOut, UserCircle2 } from 'lucide-react';
+import { ArrowLeft, Sun, Moon, Trash2, ShieldCheck, FileText, ExternalLink, Heart, Bell, Lock, Bot, Phone, Cloud, LogIn, LogOut, UserCircle2, Megaphone } from 'lucide-react';
 import { APP_NAME, DISCLAIMER } from '../constants';
 import { isFirebaseConfigured, getFirebaseAuth } from '../services/firebase';
 import { signOut, watchUser } from '../services/firebaseAuth';
@@ -148,6 +148,37 @@ const SettingsModal: React.FC<Props> = ({ onBack, settings, onUpdate, onWipeData
               Estrutura pronta para app nativo. No PWA, implementar PIN local como próximo passo.
             </span>
           </label>
+
+          {!settings.isPro && (
+            <>
+              <label className="flex items-start gap-3 cursor-pointer py-3 border-t border-slate-100 dark:border-slate-700">
+                <input
+                  type="checkbox"
+                  checked={settings.adsEnabled !== false}
+                  onChange={e => toggle('adsEnabled', e.target.checked)}
+                  className="mt-1 w-4 h-4 accent-emerald-500"
+                />
+                <span className="text-sm text-slate-700 dark:text-slate-200 flex-1">
+                  <span className="flex items-center gap-2 font-semibold"><Megaphone className="w-4 h-4" /> Mostrar anúncios</span>
+                  Os anúncios sustentam o app gratuito. Para remover anúncios, considere o plano Plus.
+                </span>
+              </label>
+              {settings.adsEnabled !== false && (
+                <label className="flex items-start gap-3 cursor-pointer py-3 border-t border-slate-100 dark:border-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={!!settings.adsPersonalized}
+                    onChange={e => toggle('adsPersonalized', e.target.checked)}
+                    className="mt-1 w-4 h-4 accent-emerald-500"
+                  />
+                  <span className="text-sm text-slate-700 dark:text-slate-200 flex-1">
+                    <span className="font-semibold">Anúncios personalizados</span>
+                    <br />Permite usar dados para deixar os anúncios mais relevantes. Sem isso, você vê anúncios genéricos.
+                  </span>
+                </label>
+              )}
+            </>
+          )}
 
           <button onClick={() => onNavigate(ViewState.PRIVACY)} className="w-full flex items-center justify-between py-3 text-sm text-emerald-600 dark:text-emerald-400 border-t border-slate-100 dark:border-slate-700">
             <span className="flex items-center gap-2"><FileText className="w-4 h-4" /> Política de privacidade</span>
