@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Exercise, DiaryEntry } from '../types';
 import { ICON_MAP } from '../constants';
+import { today } from '../services/date';
 import { ArrowLeft, Play, Pause, RotateCcw, Check, Save } from 'lucide-react';
 
 interface Props {
   exercise: Exercise;
   onBack: () => void;
-  onComplete: () => void;
+  onComplete: (exercise: Exercise) => void;
   onSaveDiary?: (e: DiaryEntry) => void;
 }
 
@@ -80,20 +81,19 @@ const Timer: React.FC<{ minutes: number; onDone?: () => void }> = ({ minutes, on
 
 const ExerciseDetail: React.FC<Props> = ({ exercise, onBack, onComplete, onSaveDiary }) => {
   const Icon = ICON_MAP[exercise.iconName] || ICON_MAP.Wind;
-  const [done, setDone] = useState(false);
   const [diaryText, setDiaryText] = useState('');
 
   const handleFinish = () => {
     if (diaryText.trim() && onSaveDiary) {
       onSaveDiary({
         id: `d-${Date.now()}`,
-        date: new Date().toISOString().split('T')[0],
+        date: today(),
         timestamp: Date.now(),
         prompt: exercise.title,
         content: diaryText.trim(),
       });
     }
-    onComplete();
+    onComplete(exercise);
   };
 
   return (
@@ -113,7 +113,7 @@ const ExerciseDetail: React.FC<Props> = ({ exercise, onBack, onComplete, onSaveD
         <p className="text-slate-600 dark:text-slate-300 mb-4">{exercise.description}</p>
 
         {exercise.hasBreathing && <BreathingCircle />}
-        {exercise.hasTimer && !exercise.hasBreathing && <Timer minutes={exercise.duration} onDone={() => setDone(true)} />}
+        {exercise.hasTimer && !exercise.hasBreathing && <Timer minutes={exercise.duration} />}
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 space-y-3">
           {exercise.steps.map((step, i) => (

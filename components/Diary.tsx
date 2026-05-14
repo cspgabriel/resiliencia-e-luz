@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { DiaryEntry, UserSettings, CheckIn, MOOD_META } from '../types';
 import { ArrowLeft, Plus, Trash2, Lock } from 'lucide-react';
 import { FREE_LIMITS, PAYWALL_REASONS } from '../constants';
+import { today, formatShortDatePtBr } from '../services/date';
 
 interface Props {
   onBack: () => void;
@@ -25,7 +26,7 @@ const DAILY_PROMPTS = [
 const Diary: React.FC<Props> = ({ onBack, entries, checkins, settings, onSave, onDelete, onUpgrade }) => {
   const [writing, setWriting] = useState(false);
   const [text, setText] = useState('');
-  const [prompt, setPrompt] = useState(DAILY_PROMPTS[Math.floor(Math.random() * DAILY_PROMPTS.length)]);
+  const [prompt] = useState(DAILY_PROMPTS[Math.floor(Math.random() * DAILY_PROMPTS.length)]);
 
   const cutoff = useMemo(() => {
     if (settings.isPro) return 0;
@@ -41,7 +42,7 @@ const Diary: React.FC<Props> = ({ onBack, entries, checkins, settings, onSave, o
     if (!text.trim()) return;
     onSave({
       id: `d-${Date.now()}`,
-      date: new Date().toISOString().split('T')[0],
+      date: today(),
       timestamp: Date.now(),
       prompt, content: text.trim(),
     });
@@ -87,13 +88,12 @@ const Diary: React.FC<Props> = ({ onBack, entries, checkins, settings, onSave, o
         )}
 
         {visible.map(e => {
-          const date = new Date(e.timestamp);
           const ci = checkins.find(c => c.date === e.date);
           return (
             <div key={e.id} className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <p className="text-xs text-slate-500">{date.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'short' })}</p>
+                  <p className="text-xs text-slate-500">{formatShortDatePtBr(e.timestamp)}</p>
                   <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{e.prompt}</p>
                 </div>
                 <div className="flex items-center gap-2">

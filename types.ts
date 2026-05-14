@@ -29,6 +29,7 @@ export interface CheckIn {
   sleep: number;
   note?: string;
   trigger?: string;
+  triggerTags?: string[];
 }
 
 export interface ChatMessage {
@@ -51,6 +52,7 @@ export interface Exercise {
   systemPrompt?: string;
   hasTimer?: boolean;
   hasBreathing?: boolean;
+  audioUrl?: string;
 }
 
 export enum ExerciseCategory {
@@ -72,6 +74,8 @@ export interface DiaryEntry {
   mood?: Mood;
 }
 
+export type SupportedLocale = 'pt-BR' | 'en-US' | 'es-LATAM';
+
 export interface UserSettings {
   isPro: boolean;
   messagesUsedToday: number;
@@ -84,7 +88,28 @@ export interface UserSettings {
   consentDate?: number;
   ageConfirmed: boolean;
   emergencyContact?: string;
+  emergencyPhone?: string;
   name?: string;
+  allowAiProcessing: boolean;
+  appLockEnabled: boolean;
+  locale: SupportedLocale;
+}
+
+export interface TrailProgress {
+  trailId: string;
+  completedDays: number[];
+  startedAt: number;
+  updatedAt: number;
+}
+
+export interface ExerciseLog {
+  id: string;
+  exerciseId: string;
+  title: string;
+  category: ExerciseCategory;
+  date: string;
+  timestamp: number;
+  source?: 'exercise' | 'trail' | 'sos';
 }
 
 export enum ViewState {
@@ -95,10 +120,14 @@ export enum ViewState {
   CHAT = 'CHAT',
   EXERCISES = 'EXERCISES',
   EXERCISE_DETAIL = 'EXERCISE_DETAIL',
+  TRAILS = 'TRAILS',
   DIARY = 'DIARY',
   HISTORY = 'HISTORY',
+  INSIGHTS = 'INSIGHTS',
   PAYWALL = 'PAYWALL',
   SETTINGS = 'SETTINGS',
+  PRIVACY = 'PRIVACY',
+  TERMS = 'TERMS',
   SOS = 'SOS',
 }
 
@@ -112,4 +141,12 @@ export interface ModelConfig {
   temperature?: number;
   maxTokens?: number;
   systemInstruction?: string;
+}
+
+export interface DailyPlan {
+  title: string;
+  message: string;
+  actionLabel: string;
+  targetView: ViewState;
+  exerciseId?: string;
 }

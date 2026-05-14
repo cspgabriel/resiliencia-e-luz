@@ -1,11 +1,14 @@
 import React, { useMemo } from 'react';
-import { ViewState, CheckIn, MOOD_META, UserSettings } from '../types';
-import { MessageCircle, Wind, BookOpen, AlertCircle, ArrowRight, Sparkles, TrendingUp, Calendar } from 'lucide-react';
-import { APP_NAME, FREE_LIMITS } from '../constants';
+import { ViewState, CheckIn, MOOD_META, UserSettings, ExerciseLog, Exercise } from '../types';
+import { MessageCircle, Wind, BookOpen, AlertCircle, ArrowRight, Sparkles, TrendingUp, Calendar, Map, BarChart3, Target } from 'lucide-react';
+import { APP_NAME, FREE_LIMITS, getDailyPlan, EXERCISES } from '../constants';
+import { today } from '../services/date';
 
 interface Props {
   onNavigate: (v: ViewState) => void;
+  onSelectExercise: (e: Exercise) => void;
   checkins: CheckIn[];
+  exerciseLog: ExerciseLog[];
   settings: UserSettings;
 }
 
@@ -17,9 +20,10 @@ const greeting = (): string => {
   return 'Boa noite';
 };
 
-const HomeDashboard: React.FC<Props> = ({ onNavigate, checkins, settings }) => {
-  const todayStr = new Date().toISOString().split('T')[0];
+const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins, exerciseLog, settings }) => {
+  const todayStr = today();
   const todayCheck = checkins.find(c => c.date === todayStr);
+  const todayExercises = exerciseLog.filter(e => e.date === todayStr);
   const last7 = useMemo(() => checkins.slice(0, 7).reverse(), [checkins]);
 
   const avg = last7.length > 0
@@ -27,6 +31,18 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, checkins, settings }) => {
     : null;
 
   const msgsLeft = settings.isPro ? '∞' : Math.max(0, FREE_LIMITS.messagesPerDay - settings.messagesUsedToday);
+  const plan = getDailyPlan(todayCheck?.mood, todayCheck?.energy, todayCheck?.sleep);
+
+  const startPlan = () => {
+    if (plan.exerciseId) {
+      const exercise = EXERCISES.find(e => e.id === plan.exerciseId);
+      if (exercise && (!exercise.isPremium || settings.isPro)) {
+        onSelectExercise(exercise);
+        return;
+      }
+    }
+    onNavigate(plan.targetView);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 to-sky-50/40 dark:from-slate-950 dark:to-slate-900 pb-24">
@@ -56,6 +72,9 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, checkins, settings }) => {
             <div className="flex-1">
               <p className="text-sm text-slate-500 dark:text-slate-400">Você tá:</p>
               <p className="font-semibold text-slate-900 dark:text-white">{MOOD_META[todayCheck.mood].label}</p>
+              {todayCheck.triggerTags && todayCheck.triggerTags.length > 0 && (
+                <p className="text-xs text-slate-500 mt-1">{todayCheck.triggerTags.join(' · ')}</p>
+              )}
               {todayCheck.note && <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 italic line-clamp-2">"{todayCheck.note}"</p>}
             </div>
             <button onClick={() => onNavigate(ViewState.CHECKIN)} className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold underline">
@@ -64,18 +83,39 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, checkins, settings }) => {
           </div>
         )}
 
+        {/* PLANO DO DIA */}
+        <button
+          onClick={startPlan}
+          className="w-full bg-white dark:bg-slate-800 rounded-2xl p-5 mb-5 border border-emerald-200 dark:border-emerald-900 text-left flex items-start gap-4 active:scale-[0.98] transition"
+        >
+          <div className="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
+            <Target className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-slate-900 dark:text-white">{plan.title}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{plan.message}</p>
+            <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mt-3">{plan.actionLabel} →</p>
+          </div>
+        </button>
+
         {/* QUICK ACTIONS */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
           <button onClick={() => onNavigate(ViewState.CHAT)} className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left active:scale-[0.97] transition">
             <MessageCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400 mb-2" />
             <p className="font-semibold text-slate-900 dark:text-white text-sm">Conversar</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">{msgsLeft} mensagens hoje</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{settings.allowAiProcessing ? `${msgsLeft} mensagens hoje` : 'Ative IA nos ajustes'}</p>
           </button>
 
           <button onClick={() => onNavigate(ViewState.EXERCISES)} className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left active:scale-[0.97] transition">
             <Wind className="w-6 h-6 text-sky-600 dark:text-sky-400 mb-2" />
             <p className="font-semibold text-slate-900 dark:text-white text-sm">Exercícios</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Respiração, TCC, mindfulness</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{todayExercises.length} feitos hoje</p>
+          </button>
+
+          <button onClick={() => onNavigate(ViewState.TRAILS)} className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left active:scale-[0.97] transition">
+            <Map className="w-6 h-6 text-violet-600 dark:text-violet-400 mb-2" />
+            <p className="font-semibold text-slate-900 dark:text-white text-sm">Trilhas</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">7, 14 e 21 dias</p>
           </button>
 
           <button onClick={() => onNavigate(ViewState.DIARY)} className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left active:scale-[0.97] transition">
@@ -84,10 +124,16 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, checkins, settings }) => {
             <p className="text-xs text-slate-500 dark:text-slate-400">Escreva o que sentiu hoje</p>
           </button>
 
+          <button onClick={() => onNavigate(ViewState.INSIGHTS)} className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-left active:scale-[0.97] transition">
+            <BarChart3 className="w-6 h-6 text-amber-600 dark:text-amber-400 mb-2" />
+            <p className="font-semibold text-slate-900 dark:text-white text-sm">Insights</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Padrões, sem diagnóstico</p>
+          </button>
+
           <button onClick={() => onNavigate(ViewState.SOS)} className="bg-red-50 dark:bg-red-950/30 p-4 rounded-2xl border border-red-200 dark:border-red-900 text-left active:scale-[0.97] transition">
             <AlertCircle className="w-6 h-6 text-red-500 mb-2" />
             <p className="font-semibold text-red-900 dark:text-red-200 text-sm">SOS Ansiedade</p>
-            <p className="text-xs text-red-700/80 dark:text-red-300/80">Combo de calma agora</p>
+            <p className="text-xs text-red-700/80 dark:text-red-300/80">Ajuda agora</p>
           </button>
         </div>
 
@@ -124,7 +170,7 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, checkins, settings }) => {
                 <Sparkles className="w-4 h-4" />
                 <p className="text-xs font-semibold uppercase tracking-wide opacity-90">Plus</p>
               </div>
-              <p className="font-semibold">Chat ilimitado + 4 trilhas guiadas</p>
+              <p className="font-semibold">Chat ampliado + trilhas guiadas + PDF</p>
               <p className="text-xs opacity-90">A partir de R$ 9,90/mês no plano anual</p>
             </div>
             <ArrowRight className="w-5 h-5" />

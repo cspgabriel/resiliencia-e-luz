@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChatMessage, UserSettings } from '../types';
 import { sendChatMessage } from '../services/geminiService';
-import { ArrowLeft, Send, AlertCircle, Phone } from 'lucide-react';
+import { ArrowLeft, Send, AlertCircle, Phone, Shield } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { DISCLAIMER, FREE_LIMITS, EMERGENCY_CONTACTS } from '../constants';
 
@@ -48,6 +48,18 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
     const updated = [...messages, userMsg];
     setMessages(updated);
     setInput('');
+
+    if (!settings.allowAiProcessing) {
+      const consentMsg: ChatMessage = {
+        id: `local-${Date.now()}`,
+        role: 'model',
+        text: 'A conversa com IA está desativada. Suas mensagens não foram enviadas para nenhum provedor externo. Para conversar comigo, ative "Conversa com IA" em Ajustes. Enquanto isso, você ainda pode usar check-in, diário, exercícios e SOS.',
+        timestamp: Date.now(),
+      };
+      setMessages([...updated, consentMsg]);
+      return;
+    }
+
     setBusy(true);
 
     try {
@@ -83,12 +95,19 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
         <button onClick={onBack} className="p-2 -ml-2 text-slate-600 dark:text-slate-300"><ArrowLeft /></button>
         <div className="flex-1">
           <h1 className="font-semibold text-slate-900 dark:text-white">Conversa com Sereno</h1>
-          <p className="text-xs text-slate-500">{settings.isPro ? 'Plus · ilimitado' : `${remaining} mensagens hoje`}</p>
+          <p className="text-xs text-slate-500">{settings.isPro ? 'Plus · ampliado' : `${remaining} mensagens hoje`} · IA {settings.allowAiProcessing ? 'ativa' : 'desativada'}</p>
         </div>
         <button onClick={() => setShowEmergency(true)} title="Ajuda emergencial" className="p-2 text-red-500">
           <Phone className="w-5 h-5" />
         </button>
       </header>
+
+      {!settings.allowAiProcessing && (
+        <div className="mx-4 mt-3 bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900 rounded-2xl p-3 flex gap-2 text-xs text-sky-900 dark:text-sky-100">
+          <Shield className="w-4 h-4 shrink-0 mt-0.5" />
+          <p>Privacidade reforçada: o chat com IA está desligado. Nada digitado aqui é enviado para provedor externo enquanto essa opção estiver desativada.</p>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         {messages.map(m => (

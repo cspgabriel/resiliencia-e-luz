@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewState, UserSettings } from '../types';
-import { Home, MessageCircle, Wind, BookOpen, Settings, AlertCircle, Sparkles, Heart } from 'lucide-react';
+import { Home, MessageCircle, Wind, BookOpen, Settings, AlertCircle, Sparkles, Map, BarChart3 } from 'lucide-react';
 import { APP_NAME } from '../constants';
 
 interface Props {
@@ -14,6 +14,8 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
     { v: ViewState.HOME,      label: 'Início',     icon: Home },
     { v: ViewState.CHAT,      label: 'Conversar',  icon: MessageCircle },
     { v: ViewState.EXERCISES, label: 'Exercícios', icon: Wind },
+    { v: ViewState.TRAILS,    label: 'Trilhas',    icon: Map },
+    { v: ViewState.INSIGHTS,  label: 'Insights',   icon: BarChart3 },
     { v: ViewState.DIARY,     label: 'Diário',     icon: BookOpen },
     { v: ViewState.SOS,       label: 'SOS',        icon: AlertCircle, danger: true },
   ];
@@ -27,14 +29,14 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
       </div>
 
       {/* Mobile bottom nav / desktop side nav */}
-      <div className="flex md:flex-col justify-around md:justify-start md:flex-1 md:px-3 md:gap-1">
+      <div className="flex md:flex-col justify-around md:justify-start md:flex-1 md:px-3 md:gap-1 overflow-x-auto">
         {items.map(it => {
           const active = current === it.v;
           return (
             <button
               key={it.v}
               onClick={() => onNavigate(it.v)}
-              className={`flex flex-col md:flex-row items-center md:gap-3 gap-0.5 py-3 px-2 md:px-4 md:py-3 md:rounded-xl transition flex-1 md:flex-none ${
+              className={`flex flex-col md:flex-row items-center md:gap-3 gap-0.5 py-3 px-2 md:px-4 md:py-3 md:rounded-xl transition min-w-[64px] md:min-w-0 flex-1 md:flex-none ${
                 active
                   ? 'text-emerald-600 dark:text-emerald-400 md:bg-emerald-50 md:dark:bg-emerald-900/30'
                   : it.danger
