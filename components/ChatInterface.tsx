@@ -53,7 +53,7 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
       const consentMsg: ChatMessage = {
         id: `local-${Date.now()}`,
         role: 'model',
-        text: 'A conversa com IA está desativada. Suas mensagens não foram enviadas para nenhum provedor externo. Para conversar comigo, ative "Conversa com IA" em Ajustes. Enquanto isso, você ainda pode usar check-in, diário, exercícios e SOS.',
+        text: 'A conversa com IA está desativada. Suas mensagens não foram enviadas para nenhum provedor externo. Para conversar comigo, ative "Conversa com IA" em Ajustes.',
         timestamp: Date.now(),
       };
       setMessages([...updated, consentMsg]);
@@ -61,10 +61,8 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
     }
 
     setBusy(true);
-
     try {
       const result = await sendChatMessage(text, updated);
-
       const botMsg: ChatMessage = {
         id: `m-${Date.now()}`,
         role: 'model',
@@ -73,7 +71,6 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
         flagged: result.flagged,
       };
       setMessages([...updated, botMsg]);
-
       if (result.flagged) setShowEmergency(true);
       if (!result.bypassedAI) onIncrementUsage();
     } catch (e) {
@@ -95,7 +92,7 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} className="p-2 -ml-2 text-slate-600 dark:text-slate-300 md:hidden"><ArrowLeft /></button>
           <div className="flex-1">
-            <h1 className="font-semibold text-slate-900 dark:text-white">Conversa com Sereno</h1>
+            <h1 className="font-semibold text-slate-900 dark:text-white">Conversa com Luz</h1>
             <p className="text-xs text-slate-500">{settings.isPro ? 'Plus · ampliado' : `${remaining} mensagens hoje`} · IA {settings.allowAiProcessing ? 'ativa' : 'desativada'}</p>
           </div>
           <button onClick={() => setShowEmergency(true)} title="Ajuda emergencial" className="p-2 text-red-500">
@@ -108,7 +105,7 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
         <div className="max-w-3xl mx-auto w-full px-4 mt-3">
           <div className="bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900 rounded-2xl p-3 flex gap-2 text-xs text-sky-900 dark:text-sky-100">
             <Shield className="w-4 h-4 shrink-0 mt-0.5" />
-            <p>Privacidade reforçada: o chat com IA está desligado. Nada digitado aqui é enviado para provedor externo enquanto essa opção estiver desativada.</p>
+            <p>Privacidade reforçada: o chat com IA está desligado.</p>
           </div>
         </div>
       )}
@@ -119,7 +116,7 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
             <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm ${
                 m.role === 'user'
-                  ? 'bg-emerald-500 text-white rounded-br-sm'
+                  ? 'bg-brand-600 text-white rounded-br-sm'
                   : m.flagged
                     ? 'bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-900 dark:text-red-100 rounded-bl-sm'
                     : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-sm border border-slate-200 dark:border-slate-700'
@@ -134,9 +131,9 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
             <div className="flex justify-start">
               <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <div className="flex gap-1">
-                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" />
-                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0.15s' }} />
-                  <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0.3s' }} />
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
                 </div>
               </div>
             </div>
@@ -160,7 +157,7 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
             <button
               onClick={handleSend}
               disabled={!input.trim() || !canSend || busy}
-              className="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center disabled:opacity-40"
+              className="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center disabled:opacity-40"
             >
               <Send className="w-5 h-5" />
             </button>
@@ -185,7 +182,7 @@ const ChatInterface: React.FC<Props> = ({ onBack, messages, setMessages, setting
               {EMERGENCY_CONTACTS.map(c => (
                 <a key={c.name} href={c.url} target="_blank" rel="noreferrer" className="block bg-slate-50 dark:bg-slate-800 rounded-xl p-3 hover:bg-slate-100 dark:hover:bg-slate-700">
                   <p className="font-semibold text-slate-900 dark:text-white text-sm">{c.name}</p>
-                  <p className="text-emerald-600 dark:text-emerald-400 font-bold">{c.phone}</p>
+                  <p className="text-brand-600 dark:text-brand-400 font-bold">{c.phone}</p>
                   <p className="text-xs text-slate-500">{c.detail}</p>
                 </a>
               ))}

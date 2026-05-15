@@ -77,10 +77,10 @@ const callClientDevFallback = async (userText: string, history: ChatMessage[], c
   const ai = new GoogleGenAI({ apiKey });
   const recentHistory = history.slice(-6);
   const contextText = recentHistory
-    .map(m => `${m.role === 'user' ? 'Usuário' : 'Sereno'}: ${m.text}`)
+    .map(m => `${m.role === 'user' ? 'Usuário' : 'Luz'}: ${m.text}`)
     .join('\n');
 
-  const prompt = `${contextText}\n\nUsuário: ${userText}\n\nSereno:`;
+  const prompt = `${contextText}\n\nUsuário: ${userText}\n\nLuz:`;
 
   const response = await ai.models.generateContent({
     model: MODEL_NAME,
@@ -132,7 +132,6 @@ export const sendChatMessage = async (
   }
 };
 
-// Mantém compatibilidade com chamadas antigas (caso alguma sobrou)
 export const generateResponse = async (
   _apiKey: string,
   prompt: string,

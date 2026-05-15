@@ -23,9 +23,9 @@ const normalizeText = (value: unknown): string =>
 const buildPrompt = (userText: string, history: Array<{ role: string; text: string }>) => {
   const context = history
     .slice(-6)
-    .map(m => `${m.role === 'user' ? 'Usuário' : 'Sereno'}: ${normalizeText(m.text)}`)
+    .map(m => `${m.role === 'user' ? 'Usuário' : 'Luz'}: ${normalizeText(m.text)}`)
     .join('\n');
-  return `${context}\n\nUsuário: ${userText}\n\nSereno:`;
+  return `${context}\n\nUsuário: ${userText}\n\nLuz:`;
 };
 
 export default {

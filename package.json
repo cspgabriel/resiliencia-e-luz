@@ -1,8 +1,8 @@
 {
-  "name": "serenamente",
+  "name": "resilienciaeluz",
   "private": true,
   "version": "1.0.0",
-  "description": "Apoio emocional diário com IA - app de bem-estar (PWA)",
+  "description": "Frases, reflexões e bem-estar diário - app Resiliência e Luz (PWA)",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -4,7 +4,7 @@ import { doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { getDb, isFirebaseConfigured } from './firebase';
 import { currentUserId } from './firebaseAuth';
 
-const LS_KEY = 'serenamente_letters';
+const LS_KEY = 'resilienciaeluz_letters';
 
 export const loadLetters = (): FutureLetter[] => {
   try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
