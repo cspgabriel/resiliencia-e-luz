@@ -4,9 +4,9 @@ import {
   Sun, Cloud, Flower2, MessageCircle, PenLine, Map, BarChart3
 } from 'lucide-react';
 
-export const APP_NAME = "Serenamente";
-export const APP_TAGLINE = "Sua mente em paz, todo dia.";
-export const APP_DESCRIPTION = "Apoio emocional diário com IA para organizar sentimentos, reduzir estresse e criar pequenos rituais de autocuidado.";
+export const APP_NAME = "Resiliência e Luz";
+export const APP_TAGLINE = "Seja a mudança que você quer ver.";
+export const APP_DESCRIPTION = "Frases, reflexões e bem-estar diário para cultivar resiliência, fé e leveza no seu dia a dia.";
 
 export const ICON_MAP: Record<string, any> = {
   Wind, Sparkles, BookOpen, Heart, Moon, Brain, AlertCircle,
@@ -56,7 +56,6 @@ export const EMERGENCY_CONTACTS = [
   { name: 'CAPS', phone: 'Procure unidade local', detail: 'Centro de Atenção Psicossocial', url: 'https://www.gov.br/saude/pt-br/acesso-a-informacao/acoes-e-programas/caps' },
 ];
 
-// Estrutura inicial para internacionalização. Não basta traduzir: crise, preço e termos mudam por país.
 export const MARKET_CONFIGS = {
   'pt-BR': {
     label: 'Brasil',
@@ -116,7 +115,7 @@ Eu posso ficar aqui com você por alguns instantes, mas o passo mais seguro agor
 // SYSTEM PROMPT DO CHAT (acolhedor, recusa diagnóstico)
 // ============================================================
 
-export const CHAT_SYSTEM_PROMPT = `Você é o Sereno, assistente de bem-estar emocional do app Serenamente.
+export const CHAT_SYSTEM_PROMPT = `Você é a Luz, assistente de bem-estar emocional do app Resiliência e Luz.
 
 REGRAS INEGOCIÁVEIS:
 1. Você NÃO é psicólogo, psiquiatra nem terapeuta. NUNCA diga "você tem [transtorno]".
@@ -360,7 +359,7 @@ export const EXERCISES: Exercise[] = [
       'No fim, vocês criam uma versão mais equilibrada.',
       'Anote no diário para reforçar.',
     ],
-    { systemPrompt: `Você é o Sereno em modo Reframe. Conduza o usuário em até 6 perguntas socráticas curtas para reestruturar um pensamento. Não dê resposta pronta. Não diagnostique. Termine sugerindo escrever a versão equilibrada no diário.` }
+    { systemPrompt: `Você é a Luz em modo Reframe. Conduza o usuário em até 6 perguntas socráticas curtas para reestruturar um pensamento. Não dê resposta pronta. Não diagnostique. Termine sugerindo escrever a versão equilibrada no diário.` }
   ),
 
   makeEx('pausa-cafe', 'Pausa Consciente',
@@ -376,7 +375,6 @@ export const EXERCISES: Exercise[] = [
   ),
 ];
 
-// Trilhas (guias de 7/14/21 dias)
 export interface Trail {
   id: string;
   title: string;
@@ -408,10 +406,8 @@ export const getTrailTask = (trailId: string, day: number): string => {
   return tasks[trailId]?.[day - 1] || 'Faça um check-in, escolha um exercício curto e anote uma linha no diário.';
 };
 
-// Disclaimer permanente
-export const DISCLAIMER = "Serenamente é apoio emocional, não substitui psicoterapia. Em crise ou risco imediato, procure ajuda humana e serviços de emergência.";
+export const DISCLAIMER = "Resiliência e Luz é apoio emocional, não substitui psicoterapia. Em crise ou risco imediato, procure ajuda humana e serviços de emergência.";
 
-// Triggers pra paywall
 export const PAYWALL_REASONS = {
   MESSAGE_LIMIT: 'Você usou suas 8 mensagens de hoje.',
   PREMIUM_EXERCISE: 'Esse exercício é do plano Plus.',
@@ -444,7 +440,7 @@ export const LEVELS = [
   { level: 2,  needXp: 80,   title: 'Brotando' },
   { level: 3,  needXp: 200,  title: 'Crescendo' },
   { level: 4,  needXp: 400,  title: 'Florindo' },
-  { level: 5,  needXp: 700,  title: 'Sereno(a)' },
+  { level: 5,  needXp: 700,  title: 'Resiliente' },
   { level: 6,  needXp: 1100, title: 'Equilibrado(a)' },
   { level: 7,  needXp: 1600, title: 'Presente' },
   { level: 8,  needXp: 2200, title: 'Centrado(a)' },
@@ -457,26 +453,20 @@ export const LEVELS = [
 // ============================================================
 
 export const ACHIEVEMENTS_CATALOG: { id: string; title: string; description: string; icon: string; target?: number; category: 'streak' | 'checkin' | 'diary' | 'exercise' | 'social' | 'special' }[] = [
-  // Streak
   { id: 'streak_3',     title: 'Três dias seguidos',      description: 'Você cuidou de você 3 dias em sequência.',   icon: '🌱', target: 3,   category: 'streak' },
   { id: 'streak_7',     title: 'Uma semana',              description: '7 dias seguidos de presença.',                icon: '🌿', target: 7,   category: 'streak' },
   { id: 'streak_30',    title: 'Um mês inteiro',          description: '30 dias de cuidado contínuo.',                icon: '🌳', target: 30,  category: 'streak' },
   { id: 'streak_100',   title: '100 dias',                description: 'Você construiu um ritual.',                   icon: '🏆', target: 100, category: 'streak' },
-  // Check-in
   { id: 'checkin_10',   title: '10 check-ins',            description: 'Você está aprendendo a se ouvir.',            icon: '👂', target: 10,  category: 'checkin' },
   { id: 'checkin_50',   title: '50 check-ins',            description: 'Hábito formado.',                              icon: '💎', target: 50,  category: 'checkin' },
-  // Diário
   { id: 'diary_first',  title: 'Primeira página',         description: 'Você abriu o diário pela primeira vez.',      icon: '📖', target: 1,   category: 'diary' },
   { id: 'diary_30',     title: 'Diarista',                description: '30 entradas no diário.',                       icon: '✍️', target: 30,  category: 'diary' },
-  // Exercício
   { id: 'exercise_5',   title: 'Cinco respiros',          description: 'Completou 5 exercícios.',                      icon: '🌬️', target: 5,   category: 'exercise' },
   { id: 'exercise_25',  title: 'Praticante',              description: 'Completou 25 exercícios.',                     icon: '🧘', target: 25,  category: 'exercise' },
-  // Social
   { id: 'first_letter', title: 'Carta para o futuro',     description: 'Você escreveu para você mesmo(a).',           icon: '💌', target: 1,   category: 'social' },
   { id: 'first_share',  title: 'Compartilhou afeto',      description: 'Mandou um card de cuidado para alguém.',      icon: '💞', target: 1,   category: 'social' },
   { id: 'first_buddy',  title: 'Dupla formada',           description: 'Você e alguém estão cuidando juntos.',         icon: '🤝', target: 1,   category: 'social' },
   { id: 'colectiva_1',  title: 'Calma coletiva',          description: 'Respirou junto com outras pessoas.',           icon: '🌊', target: 1,   category: 'social' },
-  // Especial
   { id: 'night_owl',    title: 'Coruja consciente',       description: 'Cuidou de si depois das 23h.',                 icon: '🦉', target: 1,   category: 'special' },
   { id: 'early_bird',   title: 'Pássaro madrugador',      description: 'Cuidou de si antes das 7h.',                   icon: '🐦', target: 1,   category: 'special' },
   { id: 'comeback',     title: 'Voltou com gentileza',    description: 'Retornou ao app após uma pausa.',              icon: '💛', target: 1,   category: 'special' },
@@ -526,7 +516,6 @@ export const AFFIRMATIONS: { text: string; palette: string[] }[] = [
 ];
 
 export const getDailyAffirmation = (dateKey: string): typeof AFFIRMATIONS[number] => {
-  // Hash determinístico baseado na data → mesma afirmação o dia inteiro
   let h = 0;
   for (let i = 0; i < dateKey.length; i++) h = (h * 31 + dateKey.charCodeAt(i)) >>> 0;
   return AFFIRMATIONS[h % AFFIRMATIONS.length];
@@ -577,7 +566,7 @@ export const MINI_TRAILS: { id: string; title: string; description: string; icon
 // ============================================================
 
 export const STREAK_FREEZES_PER_MONTH = 4;
-export const STREAK_MIN_ACTIONS_FOR_DAY = 1; // 1 ação qualquer (checkin, exercício, diário) já mantém
+export const STREAK_MIN_ACTIONS_FOR_DAY = 1;
 
 // ============================================================
 // CALMA COLETIVA — sessão diária às 22h00
@@ -593,7 +582,7 @@ export const COLECTIVA_EXERCISE_ID = 'resp-478';
 
 export const REFERRAL_REWARD_DAYS = 30;
 export const REFERRAL_WHATSAPP_TEXT = (code: string, url: string) =>
-  `Tô usando o Serenamente pra me cuidar todo dia (check-in, respiração, diário). Quer experimentar comigo? Com meu código ${code} a gente ganha 30 dias do plano Plus juntos: ${url}?ref=${code}`;
+  `Tô usando o Resiliência e Luz pra me cuidar todo dia (check-in, respiração, diário). Quer experimentar comigo? Com meu código ${code} a gente ganha 30 dias do plano Plus juntos: ${url}?ref=${code}`;
 
 // ============================================================
 // MURAL ANÔNIMO — filtros automáticos
@@ -610,8 +599,6 @@ export const ANON_MAX_LEN = 140;
 // ============================================================
 // ANÚNCIOS — slots e contextos onde podem aparecer
 // ============================================================
-// IMPORTANTE: nunca colocar ads em telas de crise (SOS), íntimas (chat, leitura
-// de carta) ou de foco (exercise detail, calma coletiva, onboarding).
 
 export const AD_SLOTS = {
   home_top:        { id: 'home_top',        format: 'native',  context: 'home' },
@@ -627,5 +614,4 @@ export const AD_SLOTS = {
 
 export type AdSlotId = keyof typeof AD_SLOTS;
 
-// Frequência: a cada N entradas no diário, mostra 1 ad
 export const ADS_DIARY_EVERY_N = 6;

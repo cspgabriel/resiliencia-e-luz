@@ -43,7 +43,7 @@ const Wrapped: React.FC<Props> = ({ onBack, checkins, diary, exerciseLog, settin
       badge: 'Wrapped',
       palette: [data.palette[0], data.palette[1]],
     });
-    const r = await shareOrDownload(blob, `serenamente-wrapped-${month}.png`, `Meu mês no Serenamente 🌱`);
+    const r = await shareOrDownload(blob, `resilienciaeluz-wrapped-${month}.png`, `Meu mês no Resiliência e Luz ✨`);
     recordShare('wrapped', settings);
     trackSafeEvent('wrapped_shared', { result: r, slide });
   };
