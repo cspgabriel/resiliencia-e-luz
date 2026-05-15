@@ -5,13 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
     <meta name="theme-color" content="#1a6b73" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#020617" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#050E10" media="(prefers-color-scheme: dark)" />
     <meta name="color-scheme" content="light dark" />
 
     <!-- PWA -->
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="application-name" content="Serenamente" />
-    <meta name="description" content="Apoio emocional diário com IA para reduzir ansiedade, melhorar sono e cuidar de você." />
+    <meta name="description" content="Apoio emocional diário com IA para reduzir ansiedade, melhorar sono e cuidar de você. Feito no Brasil, com cuidado." />
 
     <!-- Apple / iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -20,8 +20,6 @@
     <meta name="apple-mobile-web-app-title" content="Serenamente" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
-    <!-- iOS splash screens (gerar via real-favicon-generator se quiser polish) -->
     <link rel="apple-touch-startup-image" href="/icon.svg" />
 
     <!-- Microsoft -->
@@ -30,7 +28,7 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="Serenamente — Sua mente em paz, todo dia" />
-    <meta property="og:description" content="Apoio emocional diário com IA para reduzir ansiedade, melhorar sono e cuidar de você." />
+    <meta property="og:description" content="Apoio emocional diário com IA para reduzir ansiedade, melhorar sono e cuidar de você mesmo." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/icon-512.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -40,14 +38,53 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
     <script>
       tailwind.config = {
         darkMode: 'class',
         theme: {
           extend: {
-            fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+              serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            },
+            colors: {
+              brand: {
+                50:  '#EFFAF8',
+                100: '#D7F2EE',
+                200: '#AFE4DC',
+                300: '#7FCDC4',
+                400: '#5EB8B3',
+                500: '#3FA09B',
+                600: '#1A6B73',
+                700: '#155B62',
+                800: '#0E4D54',
+                900: '#093A40',
+              },
+            },
+            boxShadow: {
+              'brand-soft': '0 10px 40px -10px rgba(26,107,115,0.35)',
+              'brand-glow': '0 20px 80px -20px rgba(94,184,179,0.55)',
+              'glass':      '0 8px 32px 0 rgba(14,77,84,0.18)',
+            },
+            keyframes: {
+              float:        { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+              floatSlow:    { '0%,100%': { transform: 'translateY(0) translateX(0)' }, '50%': { transform: 'translateY(-18px) translateX(8px)' } },
+              fadeUp:       { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+              breathe:      { '0%,100%': { transform: 'scale(1)', opacity: 0.6 }, '50%': { transform: 'scale(1.08)', opacity: 0.9 } },
+              shimmer:      { '0%': { backgroundPosition: '-1000px 0' }, '100%': { backgroundPosition: '1000px 0' } },
+              typing:       { '0%,60%,100%': { opacity: 0.3 }, '30%': { opacity: 1 } },
+              gradientMove: { '0%,100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
+            },
+            animation: {
+              float:        'float 6s ease-in-out infinite',
+              'float-slow': 'floatSlow 10s ease-in-out infinite',
+              'fade-up':    'fadeUp 0.8s ease-out forwards',
+              breathe:      'breathe 4s ease-in-out infinite',
+              typing:       'typing 1.4s ease-in-out infinite',
+              'gradient-move': 'gradientMove 18s ease infinite',
+            },
           }
         }
       }
@@ -59,20 +96,26 @@
         --sab: env(safe-area-inset-bottom);
         --sal: env(safe-area-inset-left);
         --sar: env(safe-area-inset-right);
+        --brand-600: #1A6B73;
+        --brand-700: #155B62;
+        --brand-800: #0E4D54;
       }
-      html, body {
-        overscroll-behavior-y: none;
-      }
+      html, body { overscroll-behavior-y: none; }
+      html { scroll-behavior: smooth; }
       body {
-        background-color: #f8fafc;
+        background-color: #F4F9F8;
         -webkit-tap-highlight-color: transparent;
         font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        font-feature-settings: 'cv11', 'ss01';
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
       }
-      .dark body { background-color: #020617; }
+      .dark body { background-color: #050E10; }
 
+      /* Scrollbar discreta */
       ::-webkit-scrollbar { width: 6px; height: 6px; }
-      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-      .dark ::-webkit-scrollbar-thumb { background: #334155; }
+      ::-webkit-scrollbar-thumb { background: #B8D5D2; border-radius: 3px; }
+      .dark ::-webkit-scrollbar-thumb { background: #234D52; }
 
       .safe-pb { padding-bottom: max(var(--sab), 1rem); }
       .safe-pt { padding-top: max(var(--sat), 1rem); }
@@ -82,20 +125,181 @@
         body { user-select: none; -webkit-user-select: none; }
       }
 
-      /* Splash inicial (até React montar) */
+      /* ===== KEYFRAMES (para uso em CSS puro além do Tailwind) ===== */
+      @keyframes fadeUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+      @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+      @keyframes floatSlow { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-18px) translateX(8px); } }
+      @keyframes breathe { 0%,100% { transform: scale(1); opacity: .6; } 50% { transform: scale(1.08); opacity: .9; } }
+      @keyframes typing { 0%,60%,100% { opacity: .3; } 30% { opacity: 1; } }
+      @keyframes gradientMove { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+      /* ===== UTILITÁRIOS PREMIUM ===== */
+
+      /* Vidro translúcido */
+      .glass {
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+      .dark .glass {
+        background: rgba(14, 77, 84, 0.35);
+        border-color: rgba(94, 184, 179, 0.18);
+      }
+      .glass-strong {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+      }
+      .dark .glass-strong {
+        background: rgba(9, 58, 64, 0.7);
+        border-color: rgba(94, 184, 179, 0.22);
+      }
+
+      /* Gradient mesh de fundo — usado na landing e onboarding */
+      .mesh-bg {
+        background:
+          radial-gradient(at 18% 22%, rgba(94, 184, 179, 0.45) 0px, transparent 50%),
+          radial-gradient(at 82% 14%, rgba(167, 243, 208, 0.45) 0px, transparent 50%),
+          radial-gradient(at 75% 80%, rgba(26, 107, 115, 0.35) 0px, transparent 50%),
+          radial-gradient(at 12% 90%, rgba(186, 230, 253, 0.4) 0px, transparent 50%),
+          linear-gradient(180deg, #F4F9F8 0%, #E8F5F3 100%);
+      }
+      .dark .mesh-bg {
+        background:
+          radial-gradient(at 18% 22%, rgba(26, 107, 115, 0.55) 0px, transparent 50%),
+          radial-gradient(at 82% 14%, rgba(94, 184, 179, 0.25) 0px, transparent 50%),
+          radial-gradient(at 75% 80%, rgba(20, 83, 90, 0.55) 0px, transparent 50%),
+          radial-gradient(at 12% 90%, rgba(14, 77, 84, 0.45) 0px, transparent 50%),
+          linear-gradient(180deg, #050E10 0%, #06151A 100%);
+      }
+
+      /* Gradient mesh suave para áreas internas (home, sidebar) */
+      .mesh-soft {
+        background:
+          radial-gradient(at 0% 0%, rgba(94, 184, 179, 0.14) 0px, transparent 45%),
+          radial-gradient(at 100% 100%, rgba(186, 230, 253, 0.18) 0px, transparent 45%),
+          linear-gradient(180deg, #F8FCFB 0%, #F0F7F6 100%);
+      }
+      .dark .mesh-soft {
+        background:
+          radial-gradient(at 0% 0%, rgba(26, 107, 115, 0.22) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(20, 83, 90, 0.32) 0px, transparent 50%),
+          linear-gradient(180deg, #050E10 0%, #07181B 100%);
+      }
+
+      /* Texto com gradiente da marca */
+      .text-brand-gradient {
+        background: linear-gradient(135deg, #1A6B73 0%, #5EB8B3 50%, #1A6B73 100%);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradientMove 8s ease infinite;
+      }
+
+      /* Botão primário — CTA premium */
+      .btn-primary {
+        position: relative;
+        background: linear-gradient(135deg, #1A6B73 0%, #5EB8B3 100%);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 12px 36px -10px rgba(26,107,115,0.55);
+        transition: transform 200ms ease, box-shadow 200ms ease;
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 18px 48px -10px rgba(26,107,115,0.7);
+      }
+      .btn-primary:active { transform: translateY(0); }
+
+      /* Botão secundário translúcido */
+      .btn-ghost {
+        background: rgba(255,255,255,0.7);
+        backdrop-filter: blur(12px);
+        color: #0E4D54;
+        font-weight: 600;
+        border: 1px solid rgba(26,107,115,0.18);
+        transition: background 200ms ease, transform 200ms ease;
+      }
+      .btn-ghost:hover { background: rgba(255,255,255,0.95); transform: translateY(-1px); }
+      .dark .btn-ghost { background: rgba(14,77,84,0.5); color: #D7F2EE; border-color: rgba(94,184,179,0.3); }
+      .dark .btn-ghost:hover { background: rgba(14,77,84,0.8); }
+
+      /* Indicador de digitação no chat */
+      .typing-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: #1A6B73;
+        animation: typing 1.4s ease-in-out infinite;
+      }
+      .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+      .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+      /* Animações fade-up com delay encadeado.
+         Aplicadas via @media para garantir que o conteúdo seja
+         visível por padrão (suporte a headless/throttle/SSR/JS-off). */
+      .reveal { opacity: 1; }
+      @media (prefers-reduced-motion: no-preference) {
+        .reveal.reveal-anim { opacity: 0; animation: fadeUp 0.9s ease-out forwards; }
+        .reveal-anim.reveal-1 { animation-delay: 0.1s; }
+        .reveal-anim.reveal-2 { animation-delay: 0.25s; }
+        .reveal-anim.reveal-3 { animation-delay: 0.4s; }
+        .reveal-anim.reveal-4 { animation-delay: 0.55s; }
+        .reveal-anim.reveal-5 { animation-delay: 0.7s; }
+      }
+
+      /* Borda gradient — usada em cards premium */
+      .gradient-border {
+        position: relative;
+        background: #fff;
+        border-radius: 1.25rem;
+      }
+      .gradient-border::before {
+        content: '';
+        position: absolute; inset: 0;
+        padding: 1.5px;
+        border-radius: inherit;
+        background: linear-gradient(135deg, #5EB8B3 0%, #1A6B73 100%);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+        pointer-events: none;
+      }
+      .dark .gradient-border { background: #082326; }
+
+      /* Padrão de pontos sutis (textura) */
+      .dot-grid {
+        background-image: radial-gradient(rgba(26,107,115,0.18) 1px, transparent 1px);
+        background-size: 18px 18px;
+      }
+      .dark .dot-grid {
+        background-image: radial-gradient(rgba(94,184,179,0.18) 1px, transparent 1px);
+      }
+
+      /* Respeitar preferência de movimento reduzido */
+      @media (prefers-reduced-motion: reduce) {
+        .reveal, .animate-float, .animate-float-slow, .animate-breathe,
+        .animate-typing, .animate-gradient-move, .text-brand-gradient {
+          animation: none !important;
+        }
+        .reveal { opacity: 1; }
+        html { scroll-behavior: auto; }
+      }
+
+      /* Splash inicial (até React montar) — usa paleta brand */
       .pwa-splash {
         position: fixed; inset: 0;
         display: flex; align-items: center; justify-content: center;
         flex-direction: column; gap: 1rem;
-        background: linear-gradient(180deg, #f8fafc 0%, #ecfeff 100%);
+        background: linear-gradient(180deg, #F4F9F8 0%, #E8F5F3 100%);
         z-index: 10000; transition: opacity .3s;
       }
-      .dark .pwa-splash { background: linear-gradient(180deg, #020617 0%, #082f49 100%); }
+      .dark .pwa-splash { background: linear-gradient(180deg, #050E10 0%, #093A40 100%); }
       .pwa-splash.hidden { opacity: 0; pointer-events: none; }
-      .pwa-splash img { width: 72px; height: 72px; animation: pulse 2s ease-in-out infinite; }
-      .pwa-splash p { font-weight: 600; color: #1a6b73; }
-      .dark .pwa-splash p { color: #67e8f9; }
-      @keyframes pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: .8; } }
+      .pwa-splash img { width: 72px; height: 72px; animation: breathe 4s ease-in-out infinite; }
+      .pwa-splash p { font-weight: 700; color: #1A6B73; letter-spacing: -0.01em; }
+      .dark .pwa-splash p { color: #AFE4DC; }
     </style>
   </head>
   <body>
