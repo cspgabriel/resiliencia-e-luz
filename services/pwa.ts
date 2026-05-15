@@ -1,35 +1,42 @@
-// Registro do Service Worker via virtual:pwa-register/react (gerado pelo vite-plugin-pwa)
+// Registro do Service Worker via virtual:pwa-register (gerado pelo vite-plugin-pwa)
 // Esse módulo é injetado em tempo de build. Em dev fica como noop.
+// Sem top-level await (incompatível com target ES2020 / Safari 14).
 
-let _registerSW: ((opts?: any) => () => Promise<void>) | null = null;
+type RegisterSW = (opts?: any) => () => Promise<void>;
 
-try {
+const _swPromise: Promise<RegisterSW | null> =
   // @ts-expect-error virtual module
-  const mod = await import('virtual:pwa-register');
-  _registerSW = mod.registerSW;
-} catch {
-  _registerSW = null;
-}
+  import('virtual:pwa-register')
+    .then((mod: { registerSW: RegisterSW }) => mod.registerSW)
+    .catch(() => null);
 
 export interface PwaCallbacks {
   onNeedRefresh: () => void;
   onOfflineReady: () => void;
 }
 
-export const registerPwa = (cb: PwaCallbacks): (() => Promise<void>) | null => {
-  if (!_registerSW) return null;
-  return _registerSW({
-    onNeedRefresh: cb.onNeedRefresh,
-    onOfflineReady: cb.onOfflineReady,
-    onRegisteredSW: () => {
-      // eslint-disable-next-line no-console
-      console.info('[pwa] SW registrado');
-    },
-    onRegisterError: (err: unknown) => {
-      // eslint-disable-next-line no-console
-      console.warn('[pwa] falha ao registrar SW', err);
-    },
+/**
+ * Registra o SW de forma fire-and-forget. Retorna uma função que aciona update,
+ * que resolve quando o SW estiver pronto. Em ambientes sem PWA, retorna noop.
+ */
+export const registerPwa = (cb: PwaCallbacks): (() => Promise<void>) => {
+  let updateSW: (() => Promise<void>) | null = null;
+  _swPromise.then(register => {
+    if (!register) return;
+    updateSW = register({
+      onNeedRefresh: cb.onNeedRefresh,
+      onOfflineReady: cb.onOfflineReady,
+      onRegisteredSW: () => {
+        // eslint-disable-next-line no-console
+        console.info('[pwa] SW registrado');
+      },
+      onRegisterError: (err: unknown) => {
+        // eslint-disable-next-line no-console
+        console.warn('[pwa] falha ao registrar SW', err);
+      },
+    });
   });
+  return async () => { if (updateSW) await updateSW(); };
 };
 
 // ====== INSTALL PROMPT (beforeinstallprompt) ======
