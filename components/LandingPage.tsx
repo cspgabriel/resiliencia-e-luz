@@ -13,6 +13,7 @@ interface Props {
 const LandingPage: React.FC<Props> = ({ onStart }) => {
   const [scrolled, setScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -70,7 +71,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
           <a href="#top" className="flex items-center gap-2.5 group">
             <div className="relative">
               <div className="absolute inset-0 bg-brand-400 rounded-xl blur-md opacity-50 group-hover:opacity-70 transition" />
-              <img src="/icon.svg" alt="" className="relative w-10 h-10" />
+              <img src={asset('icon.svg')} alt="" className="relative w-10 h-10" />
             </div>
             <span className="font-bold text-brand-700 dark:text-brand-200 text-lg tracking-tight">{APP_NAME}</span>
           </a>
@@ -574,7 +575,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
           <div className="grid md:grid-cols-4 gap-6 mb-8">
             <div className="md:col-span-2">
               <div className="flex items-center gap-2.5 mb-3">
-                <img src="/icon.svg" alt="" className="w-9 h-9" />
+                <img src={asset('icon.svg')} alt="" className="w-9 h-9" />
                 <span className="font-bold text-brand-700 dark:text-brand-200 text-lg">{APP_NAME}</span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-300 max-w-sm leading-relaxed">

@@ -13,6 +13,7 @@ interface Props {
 }
 
 const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
+  const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
   const items = [
     { v: ViewState.HOME,         label: 'Início',     icon: Home },
     { v: ViewState.CHAT,         label: 'Conversar',  icon: MessageCircle },
@@ -38,7 +39,7 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
       <div className="hidden md:flex items-center gap-2.5 p-5">
         <div className="relative">
           <div className="absolute inset-0 bg-brand-400 rounded-xl blur-md opacity-40" />
-          <img src="/icon.svg" alt="" className="relative w-9 h-9" />
+          <img src={asset('icon.svg')} alt="" className="relative w-9 h-9" />
         </div>
         <span className="font-bold text-brand-700 dark:text-brand-200 tracking-tight">{APP_NAME}</span>
       </div>

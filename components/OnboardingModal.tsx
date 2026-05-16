@@ -13,6 +13,7 @@ const OnboardingModal: React.FC<Props> = ({ onComplete }) => {
   const [consent, setConsent] = useState(false);
   const [acceptDisclaimer, setAcceptDisclaimer] = useState(false);
   const [allowAiProcessing, setAllowAiProcessing] = useState(false);
+  const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
   const canFinish = age && consent && acceptDisclaimer;
 
@@ -37,7 +38,7 @@ const OnboardingModal: React.FC<Props> = ({ onComplete }) => {
 
         <div className="relative mx-auto w-20 h-20 mb-4">
           <div className="absolute inset-0 bg-gradient-to-br from-brand-300 to-brand-600 rounded-full blur-xl opacity-40 animate-breathe" />
-          <img src="/icon.svg" alt="" className="relative w-20 h-20" />
+          <img src={asset('icon.svg')} alt="" className="relative w-20 h-20" />
         </div>
 
         {step === 1 && (

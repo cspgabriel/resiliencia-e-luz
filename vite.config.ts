@@ -5,7 +5,10 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
-  const baseUrl = mode === 'production' ? '/resiliencia-e-luz/' : '/';
+  const rawBase = env.VITE_BASE_PATH || '/';
+  const baseUrl = rawBase === '/'
+    ? '/'
+    : `/${rawBase.replace(/^\/+|\/+$/g, '')}/`;
   return {
     base: baseUrl,
     server: { port: 3000, host: '0.0.0.0' },
