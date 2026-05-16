@@ -4,7 +4,7 @@ Firebase Auth + Firestore para auth anônima, sync opt-in, social features (dupl
 
 ## 1. Configurar o projeto Firebase
 
-No [Firebase Console](https://console.firebase.google.com) (projeto `animaxx-1f371`):
+No [Firebase Console](https://console.firebase.google.com) (projeto `primeval-jet-326417`):
 
 1. **Authentication** → habilite:
    - **Anônimo** (obrigatório)
@@ -18,9 +18,9 @@ Em `.env.local`:
 
 ```
 VITE_FIREBASE_API_KEY=AIza...
-VITE_FIREBASE_AUTH_DOMAIN=animaxx-1f371.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=animaxx-1f371
-VITE_FIREBASE_STORAGE_BUCKET=animaxx-1f371.appspot.com
+VITE_FIREBASE_AUTH_DOMAIN=primeval-jet-326417.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=primeval-jet-326417
+VITE_FIREBASE_STORAGE_BUCKET=primeval-jet-326417.firebasestorage.app
 VITE_FIREBASE_MESSAGING_SENDER_ID=...
 VITE_FIREBASE_APP_ID=...
 ```
@@ -30,7 +30,7 @@ VITE_FIREBASE_APP_ID=...
 ```bash
 npm install -g firebase-tools
 firebase login
-firebase use animaxx-1f371
+firebase use primeval-jet-326417
 
 firebase deploy --only firestore:rules
 firebase deploy --only firestore:indexes
