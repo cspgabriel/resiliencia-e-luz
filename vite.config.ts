@@ -5,7 +5,9 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
+  const baseUrl = mode === 'production' ? '/resiliencia-e-luz/' : '/';
   return {
+    base: baseUrl,
     server: { port: 3000, host: '0.0.0.0' },
     publicDir: 'public',
     plugins: [
@@ -21,8 +23,8 @@ export default defineConfig(({ mode }) => {
           description: 'Frases, reflexões e bem-estar diário para cultivar resiliência e leveza no seu dia a dia.',
           lang: 'pt-BR',
           dir: 'ltr',
-          start_url: '/?source=pwa',
-          scope: '/',
+          start_url: `${baseUrl}?source=pwa`,
+          scope: baseUrl,
           display: 'standalone',
           display_override: ['window-controls-overlay', 'standalone'],
           orientation: 'portrait',
@@ -30,23 +32,23 @@ export default defineConfig(({ mode }) => {
           theme_color: '#1a3f8f',
           categories: ['health', 'lifestyle', 'medical'],
           icons: [
-            { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-            { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
-            { src: '/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-            { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-            { src: '/icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+            { src: `${baseUrl}icon.svg`, sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+            { src: `${baseUrl}icon.svg`, sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
+            { src: `${baseUrl}icon-192.png`, sizes: '192x192', type: 'image/png', purpose: 'any' },
+            { src: `${baseUrl}icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'any' },
+            { src: `${baseUrl}icon-512-maskable.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
           ],
           shortcuts: [
-            { name: 'Check-in', short_name: 'Check-in', description: 'Como você tá agora?', url: '/?action=checkin', icons: [{ src: '/icon.svg', sizes: '96x96' }] },
-            { name: 'SOS Ansiedade', short_name: 'SOS', description: 'Ajuda imediata', url: '/?action=sos', icons: [{ src: '/icon.svg', sizes: '96x96' }] },
-            { name: 'Conversar com Luz', short_name: 'Chat', description: 'Conversa com IA', url: '/?action=chat', icons: [{ src: '/icon.svg', sizes: '96x96' }] },
-            { name: 'Respirar agora', short_name: 'Respirar', description: 'Respiração 4-7-8', url: '/?action=breathe', icons: [{ src: '/icon.svg', sizes: '96x96' }] },
+            { name: 'Check-in', short_name: 'Check-in', description: 'Como você tá agora?', url: `${baseUrl}?action=checkin`, icons: [{ src: `${baseUrl}icon.svg`, sizes: '96x96' }] },
+            { name: 'SOS Ansiedade', short_name: 'SOS', description: 'Ajuda imediata', url: `${baseUrl}?action=sos`, icons: [{ src: `${baseUrl}icon.svg`, sizes: '96x96' }] },
+            { name: 'Conversar com Luz', short_name: 'Chat', description: 'Conversa com IA', url: `${baseUrl}?action=chat`, icons: [{ src: `${baseUrl}icon.svg`, sizes: '96x96' }] },
+            { name: 'Respirar agora', short_name: 'Respirar', description: 'Respiração 4-7-8', url: `${baseUrl}?action=breathe`, icons: [{ src: `${baseUrl}icon.svg`, sizes: '96x96' }] },
           ],
-          share_target: { action: '/?share=1', method: 'GET', params: { title: 'title', text: 'text', url: 'url' } },
+          share_target: { action: `${baseUrl}?share=1`, method: 'GET', params: { title: 'title', text: 'text', url: 'url' } },
           prefer_related_applications: false,
         },
         workbox: {
-          navigateFallback: '/index.html',
+          navigateFallback: `${baseUrl}index.html`,
           navigateFallbackDenylist: [/^\/api\//, /^\/sw\.js/],
           globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,json}'],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
