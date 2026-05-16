@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { ViewState, CheckIn, MOOD_META, UserSettings, ExerciseLog, Exercise } from '../types';
 import {
   MessageCircle, Wind, BookOpen, AlertCircle, ArrowRight, Sparkles,
-  TrendingUp, Map, BarChart3, Target, Mail, Waves, Trophy, Flame, Star
+  TrendingUp, Map, BarChart3, Target, Mail, Waves, Trophy, Flame, Star, Quote
 } from 'lucide-react';
 import { FREE_LIMITS, getDailyPlan, EXERCISES, MINI_TRAILS } from '../constants';
 import { today } from '../services/date';
@@ -93,6 +93,21 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins
           <DailyAffirmationCard settings={settings} onXpGain={onXpGain || (() => {})} />
         </div>
 
+        <button
+          onClick={() => onNavigate(ViewState.BIBLE)}
+          className="w-full glass-strong rounded-2xl p-5 mb-5 text-left flex items-center gap-4 hover:-translate-y-0.5 transition"
+        >
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center shrink-0 shadow-md">
+            <Quote className="w-5 h-5 text-white" />
+          </div>
+          <div className="flex-1">
+            <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300">Novo</p>
+            <p className="font-bold text-slate-900 dark:text-white">Bíblia da Resiliência</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">Pílulas diárias, capítulos e jornada de 21 dias para compartilhar.</p>
+          </div>
+          <ArrowRight className="w-5 h-5 text-slate-400" />
+        </button>
+
         {/* STREAK */}
         {(streak?.current || 0) > 0 && (
           <button
@@ -163,6 +178,7 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins
         {/* QUICK ACTIONS */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
           {[
+            { v: ViewState.BIBLE,        icon: Quote,          color: 'from-amber-400 to-rose-500',   title: 'Pílulas',       sub: 'Bíblia da resiliência' },
             { v: ViewState.CHAT,         icon: MessageCircle, color: 'from-teal-400 to-emerald-500',  title: 'Conversar',     sub: settings.allowAiProcessing ? `${msgsLeft} mensagens hoje` : 'Ative IA nos ajustes' },
             { v: ViewState.EXERCISES,    icon: Wind,          color: 'from-sky-400 to-cyan-500',      title: 'Exercícios',    sub: `${todayExercises.length} feitos hoje` },
             { v: ViewState.TRAILS,       icon: Map,           color: 'from-violet-400 to-purple-500', title: 'Trilhas',       sub: '7, 14 e 21 dias' },

@@ -129,6 +129,7 @@ export enum ViewState {
   LANDING = 'LANDING',
   ONBOARDING = 'ONBOARDING',
   HOME = 'HOME',
+  BIBLE = 'BIBLE',
   CHECKIN = 'CHECKIN',
   CHAT = 'CHAT',
   EXERCISES = 'EXERCISES',

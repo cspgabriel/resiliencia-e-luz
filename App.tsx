@@ -26,6 +26,7 @@ import ChatInterface from './components/ChatInterface';
 import ExercisesList from './components/ExercisesList';
 import ExerciseDetail from './components/ExerciseDetail';
 import Trails from './components/Trails';
+import ResilienceBible from './components/ResilienceBible';
 import Insights from './components/Insights';
 import Diary from './components/Diary';
 import Paywall from './components/Paywall';
@@ -323,6 +324,16 @@ const App: React.FC = () => {
         )}
         {bgView === ViewState.COMPANION && (
           <LevelProgress onBack={() => setView(ViewState.HOME)} settings={settings} />
+        )}
+        {bgView === ViewState.BIBLE && (
+          <ResilienceBible
+            onBack={() => setView(ViewState.HOME)}
+            onNavigate={setView}
+            settings={settings}
+            progress={trailProgress}
+            onCompleteDay={handleCompleteTrailDay}
+            onXpGain={(xp) => gainXp(xp)}
+          />
         )}
         {bgView === ViewState.LETTERS && (
           <Letters onBack={() => setView(ViewState.HOME)} settings={settings}

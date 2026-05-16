@@ -2,7 +2,7 @@ import React from 'react';
 import { ViewState, UserSettings } from '../types';
 import {
   Home, MessageCircle, Wind, BookOpen, Settings, AlertCircle,
-  Sparkles, Map, BarChart3, Mail, Trophy, UserPlus, Waves, Users, Gift, Star
+  Sparkles, Map, BarChart3, Mail, Trophy, UserPlus, Waves, Users, Gift, Star, Quote
 } from 'lucide-react';
 import { APP_NAME } from '../constants';
 
@@ -16,6 +16,7 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
   const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
   const items = [
     { v: ViewState.HOME,         label: 'Início',     icon: Home },
+    { v: ViewState.BIBLE,        label: 'Pílulas',    icon: Quote },
     { v: ViewState.CHAT,         label: 'Conversar',  icon: MessageCircle },
     { v: ViewState.COMPANION,    label: 'Meu nível',  icon: Star },
     { v: ViewState.EXERCISES,    label: 'Exercícios', icon: Wind },

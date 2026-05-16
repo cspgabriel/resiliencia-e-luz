@@ -385,6 +385,7 @@ export interface Trail {
 }
 
 export const TRAILS: Trail[] = [
+  { id: 'jornada-resiliencia-21', title: 'Jornada da Resiliência - 21 dias', description: 'Uma pílula prática por dia para fortalecer mente, fé, coragem e recomeço.', days: 21, isPremium: false, iconName: 'Sparkles' },
   { id: 'trilha-ansiedade-7',  title: 'Calma em 7 dias',     description: 'Reduzir aceleração do corpo com check-in + 1 prática por dia.', days: 7,  isPremium: false, iconName: 'Wind' },
   { id: 'trilha-sono-14',      title: 'Sono em paz - 14 dias', description: 'Ritual noturno + diário para preparar melhor a noite.',  days: 14, isPremium: true,  iconName: 'Moon' },
   { id: 'trilha-autoestima-21', title: 'Autoestima - 21 dias', description: 'Diário guiado para fortalecer autoaceitação, sem cobrança.', days: 21, isPremium: true,  iconName: 'Heart' },
@@ -393,6 +394,29 @@ export const TRAILS: Trail[] = [
 
 export const getTrailTask = (trailId: string, day: number): string => {
   const tasks: Record<string, string[]> = {
+    'jornada-resiliencia-21': [
+      'Leia a pílula do dia e escreva uma frase de força para repetir hoje.',
+      'Escolha uma pequena atitude que prove para você que ainda existe caminho.',
+      'Transforme uma cobrança em uma pergunta: qual é o próximo passo possível?',
+      'Envie uma frase de luz para alguém que precisa atravessar um dia difícil.',
+      'Faça 2 minutos de respiração e nomeie o que você está sentindo sem brigar com isso.',
+      'Anote uma queda antiga que virou aprendizado, mesmo que tenha doído.',
+      'Revise a semana: o que te sustentou quando você pensou em desistir?',
+      'Escolha uma coisa para soltar hoje: culpa, pressa, comparação ou controle.',
+      'Faça uma pausa consciente antes de responder algo que mexeu com você.',
+      'Escreva uma promessa realista para as próximas 24 horas.',
+      'Procure um sinal de beleza no dia e registre em uma linha.',
+      'Pratique gratidão específica: cite uma pessoa, um gesto e um detalhe.',
+      'Troque "eu falhei" por "eu estou aprendendo a recomeçar".',
+      'Crie um lembrete de luz para amanhã de manhã.',
+      'Faça um check-in honesto e escolha um exercício curto para o seu estado atual.',
+      'Escreva uma carta curta para a versão de você que quase desistiu.',
+      'Compartilhe uma pílula de resiliência nos status ou com alguém de confiança.',
+      'Faça uma ação de 5 minutos que seu futuro eu vai agradecer.',
+      'Liste três limites que protegem sua paz.',
+      'Releia sua frase favorita da jornada e transforme em mantra.',
+      'Celebre o fim da jornada: registre o que mudou 1% em você.',
+    ],
     'trilha-ansiedade-7': [
       'Faça um check-in e a Respiração 4-7-8.',
       'Teste o Grounding 5-4-3-2-1.',
@@ -520,6 +544,325 @@ export const getDailyAffirmation = (dateKey: string): typeof AFFIRMATIONS[number
   for (let i = 0; i < dateKey.length; i++) h = (h * 31 + dateKey.charCodeAt(i)) >>> 0;
   return AFFIRMATIONS[h % AFFIRMATIONS.length];
 };
+
+// ============================================================
+// BÍBLIA DA RESILIÊNCIA — pílulas, capítulos e compartilhamento
+// ============================================================
+
+export interface ResiliencePill {
+  id: string;
+  day: number;
+  chapter: string;
+  title: string;
+  text: string;
+  reflection: string;
+  practice: string;
+  shareText: string;
+  palette: [string, string];
+  tags: string[];
+}
+
+export interface ViralGrowthResource {
+  id: string;
+  title: string;
+  description: string;
+  template: string;
+  cta: string;
+}
+
+export const RESILIENCE_CHAPTERS = [
+  { id: 'todos', label: 'Todos' },
+  { id: 'recomeco', label: 'Recomeço' },
+  { id: 'coragem', label: 'Coragem' },
+  { id: 'paz', label: 'Paz' },
+  { id: 'fe', label: 'Fé prática' },
+  { id: 'gratidao', label: 'Gratidão' },
+];
+
+export const RESILIENCE_PILLS: ResiliencePill[] = [
+  {
+    id: 'pill-001',
+    day: 1,
+    chapter: 'recomeco',
+    title: 'O dia não precisa nascer perfeito',
+    text: 'A luz começa pequena. Um passo honesto já muda a direção do dia.',
+    reflection: 'Onde você pode parar de exigir perfeição e permitir um começo simples?',
+    practice: 'Escolha uma tarefa de 5 minutos e faça sem negociar com a culpa.',
+    shareText: 'A luz começa pequena. Um passo honesto já muda a direção do dia.',
+    palette: ['#FDE68A', '#BFDBFE'],
+    tags: ['manhã', 'recomeço', 'leveza'],
+  },
+  {
+    id: 'pill-002',
+    day: 2,
+    chapter: 'coragem',
+    title: 'Coragem também treme',
+    text: 'Ser forte não é não sentir medo. É continuar respirando enquanto escolhe o próximo passo.',
+    reflection: 'Qual medo você pode carregar sem deixar que ele dirija tudo?',
+    practice: 'Nomeie o medo em uma frase e escreva ao lado: mesmo assim, eu posso dar um passo.',
+    shareText: 'Coragem também treme. Ela só não entrega o volante.',
+    palette: ['#FCA5A5', '#C7D2FE'],
+    tags: ['coragem', 'medo', 'ação'],
+  },
+  {
+    id: 'pill-003',
+    day: 3,
+    chapter: 'paz',
+    title: 'Paz começa no corpo',
+    text: 'Antes de resolver a vida inteira, volte para a respiração. O agora é menor que a ansiedade imagina.',
+    reflection: 'O que seu corpo está tentando te contar hoje?',
+    practice: 'Faça 4 ciclos de respiração 4-7-8 antes de abrir outra aba, mensagem ou cobrança.',
+    shareText: 'Antes de resolver a vida inteira, volte para a respiração.',
+    palette: ['#A5F3FC', '#A7F3D0'],
+    tags: ['paz', 'ansiedade', 'respiração'],
+  },
+  {
+    id: 'pill-004',
+    day: 4,
+    chapter: 'fe',
+    title: 'Fé prática',
+    text: 'Fé não é fingir que está fácil. É agir pequeno mesmo quando o coração ainda não entendeu.',
+    reflection: 'Qual atitude pequena sustentaria sua esperança hoje?',
+    practice: 'Faça uma coisa que prova cuidado: beber água, caminhar 5 minutos ou pedir ajuda.',
+    shareText: 'Fé não é fingir que está fácil. É agir pequeno mesmo assim.',
+    palette: ['#DDD6FE', '#FDE68A'],
+    tags: ['fé', 'esperança', 'ação'],
+  },
+  {
+    id: 'pill-005',
+    day: 5,
+    chapter: 'gratidao',
+    title: 'Gratidão específica cura a pressa',
+    text: 'Não procure uma vida perfeita para agradecer. Procure um detalhe que ainda está de pé.',
+    reflection: 'Qual detalhe simples te sustentou nas últimas 24 horas?',
+    practice: 'Escreva três gratidões específicas: pessoa, gesto e sensação.',
+    shareText: 'Não procure uma vida perfeita para agradecer. Procure um detalhe de pé.',
+    palette: ['#BBF7D0', '#FED7AA'],
+    tags: ['gratidão', 'presença', 'calma'],
+  },
+  {
+    id: 'pill-006',
+    day: 6,
+    chapter: 'recomeco',
+    title: 'Recomeçar não apaga a história',
+    text: 'Você não precisa negar o que doeu. Só precisa não morar para sempre no lugar da queda.',
+    reflection: 'Que parte da sua história pede respeito, não prisão?',
+    practice: 'Anote uma frase começando com: eu honro o que vivi e sigo com...',
+    shareText: 'Você não precisa negar o que doeu. Só precisa não morar na queda.',
+    palette: ['#FBCFE8', '#BFDBFE'],
+    tags: ['recomeço', 'cura', 'história'],
+  },
+  {
+    id: 'pill-007',
+    day: 7,
+    chapter: 'coragem',
+    title: 'O próximo passo vale mais que o plano perfeito',
+    text: 'Planos longos aliviam a mente por um minuto. Passos pequenos constroem chão.',
+    reflection: 'Qual passo pequeno você consegue cumprir hoje com honestidade?',
+    practice: 'Defina uma ação de 10 minutos e deixe o restante para depois.',
+    shareText: 'Passos pequenos constroem chão.',
+    palette: ['#C7D2FE', '#A7F3D0'],
+    tags: ['disciplina', 'coragem', 'ação'],
+  },
+  {
+    id: 'pill-008',
+    day: 8,
+    chapter: 'paz',
+    title: 'Nem todo pensamento merece palco',
+    text: 'A mente fala muito quando está cansada. Você pode ouvir sem obedecer tudo.',
+    reflection: 'Que pensamento você pode observar sem transformar em verdade final?',
+    practice: 'Escreva o pensamento difícil e acrescente: isso é um pensamento, não uma sentença.',
+    shareText: 'Você pode ouvir a mente sem obedecer tudo.',
+    palette: ['#BFDBFE', '#E0E7FF'],
+    tags: ['paz', 'pensamentos', 'clareza'],
+  },
+  {
+    id: 'pill-009',
+    day: 9,
+    chapter: 'fe',
+    title: 'A luz volta por frestas',
+    text: 'Quando tudo parece fechado, procure a menor fresta: uma conversa, uma pausa, uma oração, um banho.',
+    reflection: 'Qual fresta de cuidado está disponível agora?',
+    practice: 'Escolha uma fresta e faça dela seu compromisso de hoje.',
+    shareText: 'A luz volta por frestas.',
+    palette: ['#FDE68A', '#FBCFE8'],
+    tags: ['fé', 'luz', 'cuidado'],
+  },
+  {
+    id: 'pill-010',
+    day: 10,
+    chapter: 'gratidao',
+    title: 'Seu esforço invisível também conta',
+    text: 'Nem todo progresso aparece para os outros. Alguns dias, vencer é só não desistir de si.',
+    reflection: 'Que esforço ninguém viu, mas você sabe que existiu?',
+    practice: 'Registre uma vitória invisível no diário.',
+    shareText: 'Alguns dias, vencer é só não desistir de si.',
+    palette: ['#FED7AA', '#A5F3FC'],
+    tags: ['gratidão', 'vitória', 'autoestima'],
+  },
+  {
+    id: 'pill-011',
+    day: 11,
+    chapter: 'recomeco',
+    title: 'Você pode voltar devagar',
+    text: 'Retomar não precisa ser dramático. Voltar com gentileza também é disciplina.',
+    reflection: 'Onde você está tentando voltar com força demais?',
+    practice: 'Escolha uma rotina abandonada e faça só a versão mínima dela.',
+    shareText: 'Voltar com gentileza também é disciplina.',
+    palette: ['#A7F3D0', '#DDD6FE'],
+    tags: ['recomeço', 'rotina', 'gentileza'],
+  },
+  {
+    id: 'pill-012',
+    day: 12,
+    chapter: 'coragem',
+    title: 'Limite é uma forma de amor',
+    text: 'Dizer não ao que te quebra é dizer sim ao que ainda precisa florescer.',
+    reflection: 'Qual limite protegeria sua paz hoje?',
+    practice: 'Escreva uma frase simples de limite e treine dizer sem justificar demais.',
+    shareText: 'Dizer não ao que te quebra é dizer sim ao que precisa florescer.',
+    palette: ['#FCA5A5', '#BBF7D0'],
+    tags: ['limites', 'coragem', 'paz'],
+  },
+  {
+    id: 'pill-013',
+    day: 13,
+    chapter: 'paz',
+    title: 'Descanso não é atraso',
+    text: 'Uma mente exausta transforma tudo em ameaça. Descansar também é estratégia.',
+    reflection: 'Qual pausa você está adiando como se fosse prêmio?',
+    practice: 'Bloqueie 15 minutos sem tela e sem cobrança.',
+    shareText: 'Descansar também é estratégia.',
+    palette: ['#E0E7FF', '#FED7AA'],
+    tags: ['descanso', 'paz', 'energia'],
+  },
+  {
+    id: 'pill-014',
+    day: 14,
+    chapter: 'fe',
+    title: 'Esperança é manutenção',
+    text: 'Esperança não aparece pronta. Ela é alimentada por pequenos gestos repetidos.',
+    reflection: 'Qual gesto simples alimenta sua esperança?',
+    practice: 'Repita hoje um gesto que te aproxima de quem você quer ser.',
+    shareText: 'Esperança é manutenção.',
+    palette: ['#FDE68A', '#A7F3D0'],
+    tags: ['esperança', 'fé', 'constância'],
+  },
+  {
+    id: 'pill-015',
+    day: 15,
+    chapter: 'gratidao',
+    title: 'Existe chão no que permanece',
+    text: 'Quando muito muda, olhe para o que ainda permanece: valores, pessoas, respiração, presença.',
+    reflection: 'O que permaneceu mesmo no caos?',
+    practice: 'Liste três coisas que continuam sendo chão.',
+    shareText: 'Existe chão no que permanece.',
+    palette: ['#BFDBFE', '#BBF7D0'],
+    tags: ['gratidão', 'chão', 'presença'],
+  },
+  {
+    id: 'pill-016',
+    day: 16,
+    chapter: 'recomeco',
+    title: 'A versão de hoje não precisa pagar pela de ontem',
+    text: 'Você pode aprender com ontem sem se condenar a repetir a mesma sentença.',
+    reflection: 'Qual culpa já cumpriu seu papel de ensinar e agora pode ir embora?',
+    practice: 'Escreva: eu aprendo com isso sem me destruir por isso.',
+    shareText: 'Aprenda com ontem sem se condenar a viver nele.',
+    palette: ['#FBCFE8', '#FDE68A'],
+    tags: ['culpa', 'recomeço', 'autocompaixão'],
+  },
+  {
+    id: 'pill-017',
+    day: 17,
+    chapter: 'coragem',
+    title: 'Peça ajuda antes de quebrar',
+    text: 'Autonomia não é carregar tudo sozinho. Maturidade também é saber chamar alguém.',
+    reflection: 'Quem poderia te ouvir sem precisar resolver tudo?',
+    practice: 'Envie uma mensagem simples: hoje não estou bem, você pode falar comigo?',
+    shareText: 'Maturidade também é saber chamar alguém.',
+    palette: ['#C7D2FE', '#FCA5A5'],
+    tags: ['ajuda', 'coragem', 'vínculo'],
+  },
+  {
+    id: 'pill-018',
+    day: 18,
+    chapter: 'paz',
+    title: 'Menos ruído, mais direção',
+    text: 'O excesso de opinião rouba a sua escuta interna. Silêncio também organiza.',
+    reflection: 'Que ruído você pode reduzir hoje?',
+    practice: 'Faça 20 minutos sem rede social e observe como sua mente responde.',
+    shareText: 'Silêncio também organiza.',
+    palette: ['#A5F3FC', '#DDD6FE'],
+    tags: ['foco', 'paz', 'silêncio'],
+  },
+  {
+    id: 'pill-019',
+    day: 19,
+    chapter: 'fe',
+    title: 'O cuidado vira caminho',
+    text: 'Você não encontra força esperando sentir força. Você encontra força praticando cuidado.',
+    reflection: 'Qual cuidado vira caminho quando você repete?',
+    practice: 'Repita uma prática que já te ajudou antes.',
+    shareText: 'Você encontra força praticando cuidado.',
+    palette: ['#A7F3D0', '#BFDBFE'],
+    tags: ['força', 'fé', 'prática'],
+  },
+  {
+    id: 'pill-020',
+    day: 20,
+    chapter: 'gratidao',
+    title: 'Compartilhar luz multiplica presença',
+    text: 'Uma frase certa no momento certo pode ser o apoio que alguém não soube pedir.',
+    reflection: 'Quem precisa receber uma palavra de coragem hoje?',
+    practice: 'Compartilhe uma pílula com alguém ou nos seus status.',
+    shareText: 'Uma frase certa no momento certo pode virar apoio.',
+    palette: ['#FED7AA', '#FBCFE8'],
+    tags: ['viral', 'partilha', 'gratidão'],
+  },
+  {
+    id: 'pill-021',
+    day: 21,
+    chapter: 'recomeco',
+    title: 'Resiliência é voltar para a vida',
+    text: 'Você não é só o que te feriu. Você também é tudo que ainda escolhe florescer.',
+    reflection: 'O que em você continua escolhendo vida?',
+    practice: 'Finalize a jornada escrevendo sua própria pílula de resiliência.',
+    shareText: 'Você não é só o que te feriu. Você também é tudo que escolhe florescer.',
+    palette: ['#FDE68A', '#A7F3D0'],
+    tags: ['resiliência', 'jornada', 'florescer'],
+  },
+];
+
+export const getDailyResiliencePill = (dateKey: string): ResiliencePill => {
+  let h = 0;
+  for (let i = 0; i < dateKey.length; i++) h = (h * 33 + dateKey.charCodeAt(i)) >>> 0;
+  return RESILIENCE_PILLS[h % RESILIENCE_PILLS.length];
+};
+
+export const VIRAL_GROWTH_RESOURCES: ViralGrowthResource[] = [
+  {
+    id: 'status-24h',
+    title: 'Status de 24h',
+    description: 'Texto curto para WhatsApp/Instagram com assinatura suave do app.',
+    cta: 'Copiar status',
+    template: 'Pílula de Resiliência de hoje: {pill}\n\nRecebi no Resiliência e Luz.',
+  },
+  {
+    id: 'desafio-7',
+    title: 'Desafio 7 dias de luz',
+    description: 'Convite simples para amigos começarem uma sequência diária.',
+    cta: 'Copiar convite',
+    template: 'Topa fazer comigo 7 dias de pílulas de resiliência? Uma frase por dia, uma prática pequena e zero cobrança.',
+  },
+  {
+    id: 'reflexao-grupo',
+    title: 'Pergunta para grupo',
+    description: 'Gera conversa leve em grupos sem expor dor íntima.',
+    cta: 'Copiar pergunta',
+    template: 'Pergunta do dia: qual pequeno cuidado te ajudou a atravessar uma semana difícil?',
+  },
+];
 
 // ============================================================
 // MINI-TRILHAS DE 3 DIAS — baixa ativação

@@ -22,11 +22,11 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
   }, []);
 
   const features = [
-    { icon: MessageCircle, color: 'from-teal-400 to-emerald-500',  title: 'Conversa que acolhe',    text: 'Sereno te escuta em pt-BR, sem julgamento. Trained pra empatia, não pra produtividade.' },
-    { icon: Wind,          color: 'from-sky-400 to-cyan-500',       title: 'Respiração guiada',      text: '12 exercícios de TCC, mindfulness e grounding. Funciona offline, no seu ritmo.' },
-    { icon: Brain,         color: 'from-violet-400 to-fuchsia-500', title: 'Padrões da sua semana',  text: 'Check-ins viram insights gentis sobre sono, energia e gatilhos — sem rótulo clínico.' },
-    { icon: Moon,          color: 'from-indigo-400 to-purple-500',  title: 'Trilhas de 7 a 21 dias', text: 'Programas curtos pra calma, sono, autoestima e raiva. Um passo pequeno por dia.' },
-    { icon: BookOpen,      color: 'from-rose-400 to-pink-500',      title: 'Diário inteligente',     text: 'Escreva como pensa. O app organiza, sem expor seus segredos pra ninguém.' },
+    { icon: BookOpen,      color: 'from-amber-400 to-rose-500',     title: 'Bíblia da Resiliência',  text: 'Capítulos de recomeço, coragem, paz, fé prática e gratidão para abrir todo dia.' },
+    { icon: Sparkles,      color: 'from-violet-400 to-fuchsia-500', title: 'Pílula diária',          text: 'Uma frase forte, uma reflexão e uma prática pequena para aplicar em minutos.' },
+    { icon: Moon,          color: 'from-indigo-400 to-purple-500',  title: 'Jornada de 21 dias',     text: 'Sequência guiada para fortalecer resiliência sem pressão e sem perfeccionismo.' },
+    { icon: Zap,           color: 'from-orange-400 to-rose-500',    title: 'Cards virais',           text: 'Compartilhe pílulas nos status, convide amigos e espalhe luz sem expor sua intimidade.' },
+    { icon: MessageCircle, color: 'from-teal-400 to-emerald-500',   title: 'Conversa que acolhe',    text: 'A Luz te escuta em pt-BR, sem julgamento e sem prometer diagnóstico.' },
     { icon: AlertCircle,   color: 'from-amber-400 to-orange-500',   title: 'SOS com proteção real',  text: 'Detector de crise + CVV 188, SAMU 192 e contato de confiança a um toque.' },
   ];
 
@@ -34,13 +34,13 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
     { icon: Lock,        text: 'Dados no seu device' },
     { icon: ShieldCheck, text: 'LGPD-compliant' },
     { icon: Smartphone, text: 'Funciona offline' },
-    { icon: Heart,      text: 'Sem ads, sem venda de dados' },
+    { icon: Heart,      text: 'Cards compartilháveis' },
   ];
 
   const steps = [
-    { n: '01', title: 'Check-in em 30 segundos',   text: 'Você diz como tá. Humor, sono, energia e o que pegou.' },
-    { n: '02', title: 'Plano gentil pra hoje',     text: 'O app sugere 1 exercício ou prática, do tamanho do seu dia.' },
-    { n: '03', title: 'Volta amanhã, sem cobrança', text: 'Streak gentil, freezes e insights que aparecem com o tempo.' },
+    { n: '01', title: 'Abra a pílula de hoje',     text: 'Uma leitura curta com frase, reflexão e prática para agora.' },
+    { n: '02', title: 'Siga a jornada de 21 dias', text: 'Cada dia tem uma ação simples para treinar resiliência real.' },
+    { n: '03', title: 'Compartilhe luz',           text: 'Gere cards e textos para status, grupos e pessoas próximas.' },
   ];
 
   const testimonials = [
@@ -50,7 +50,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
   ];
 
   const faqs = [
-    { q: 'O Serenamente substitui psicólogo ou psiquiatra?', a: 'Não. É apoio emocional do dia a dia — pra organizar sentimentos, respirar, dormir melhor. Não diagnostica, não trata e não substitui acompanhamento profissional. Em crise, direcionamos pra CVV 188, SAMU 192 ou contato de confiança.' },
+    { q: 'O Resiliência e Luz substitui psicólogo ou psiquiatra?', a: 'Não. É apoio emocional do dia a dia — para frases, reflexões, respiração e organização de sentimentos. Não diagnostica, não trata e não substitui acompanhamento profissional. Em crise, direcionamos pra CVV 188, SAMU 192 ou contato de confiança.' },
     { q: 'Meus dados ficam onde?',                            a: 'Por padrão, tudo (check-ins, diário, histórico) fica salvo só no seu dispositivo. Se você ativar sincronização na nuvem, o dado vai criptografado pro Firebase. Você pode apagar tudo a qualquer momento em Ajustes → Apagar dados.' },
     { q: 'Como funciona a IA? Ela aprende com o que eu digo?', a: 'A conversa com IA é opt-in (você ativa quando quiser). As mensagens passam por um provedor externo (Google Gemini) só pra gerar a resposta. Não treinamos modelos com seu conteúdo e não vendemos seus dados.' },
     { q: 'Preciso pagar pra começar?',                        a: 'Não. O plano grátis tem check-in ilimitado, 5 exercícios essenciais, 8 mensagens/dia com a IA, diário de 7 dias e 1 trilha completa. Plus é opcional pra quem quer mais profundidade.' },
@@ -103,22 +103,22 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              Apoio emocional com IA · feito no Brasil
+              Pílulas diárias · jornada de 21 dias · feito no Brasil
             </div>
 
             <h1 className="reveal reveal-1 text-4xl sm:text-5xl lg:text-[64px] leading-[1.05] font-bold tracking-tight text-slate-900 dark:text-white mb-6">
-              Sua mente em paz, <br className="hidden sm:block" />
-              <span className="font-serif italic text-brand-gradient">todo dia.</span>
+              Uma bíblia online <br className="hidden sm:block" />
+              <span className="font-serif italic text-brand-gradient">de resiliência.</span>
             </h1>
 
             <p className="reveal reveal-2 text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-xl leading-relaxed">
-              Converse, respire, organize seus pensamentos.
-              <span className="text-slate-800 dark:text-slate-100 font-medium"> Um espaço só seu pra cuidar da mente</span> — sem julgamento, sem cobrança, sem promessas vazias.
+              Abra uma pílula de luz por dia, siga uma jornada prática e compartilhe frases que ajudam outras pessoas a atravessar melhor a vida.
+              <span className="text-slate-800 dark:text-slate-100 font-medium"> Motivação diária sem julgamento e sem promessas vazias.</span>
             </p>
 
             <div className="reveal reveal-3 flex flex-col sm:flex-row gap-3 mb-8">
               <button onClick={onStart} className="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base">
-                Começar grátis agora <ArrowRight className="w-5 h-5" />
+                Ler pílula de hoje <ArrowRight className="w-5 h-5" />
               </button>
               <a href="#how" className="btn-ghost inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base">
                 Como funciona
