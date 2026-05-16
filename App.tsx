@@ -10,7 +10,7 @@ import {
 import { today } from './services/date';
 import { trackSafeEvent } from './services/analytics';
 import { isFirebaseConfigured } from './services/firebase';
-import { ensureAnonymousUser, watchUser } from './services/firebaseAuth';
+import { watchUser } from './services/firebaseAuth';
 import { backfillAll, wipeCloudData, syncCompanion, syncAchievements } from './services/cloudSync';
 import { applyXp, checkUnlocks, XpSource } from './services/gamification';
 import { recordDailyRetention, recordFunnelStep } from './services/metrics';
@@ -112,11 +112,10 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Firebase: sign-in anônimo + tracking do uid no settings
+  // Firebase: acompanha o usuário já autenticado; login anônimo fica sob demanda
   useEffect(() => {
     if (!isFirebaseConfigured()) return;
     let mounted = true;
-    ensureAnonymousUser().catch(() => {});
     const unsub = watchUser(user => {
       if (!mounted) return;
       const uid = user?.uid;
