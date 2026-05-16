@@ -22,38 +22,38 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
   }, []);
 
   const features = [
-    { icon: BookOpen,      color: 'from-amber-400 to-rose-500',     title: 'Bíblia da Resiliência',  text: 'Capítulos de recomeço, coragem, paz, fé prática e gratidão para abrir todo dia.' },
-    { icon: Sparkles,      color: 'from-violet-400 to-fuchsia-500', title: 'Pílula diária',          text: 'Uma frase forte, uma reflexão e uma prática pequena para aplicar em minutos.' },
-    { icon: Moon,          color: 'from-indigo-400 to-purple-500',  title: 'Jornada de 21 dias',     text: 'Sequência guiada para fortalecer resiliência sem pressão e sem perfeccionismo.' },
-    { icon: Zap,           color: 'from-orange-400 to-rose-500',    title: 'Cards virais',           text: 'Compartilhe pílulas nos status, convide amigos e espalhe luz sem expor sua intimidade.' },
-    { icon: MessageCircle, color: 'from-teal-400 to-emerald-500',   title: 'Conversa que acolhe',    text: 'A Luz te escuta em pt-BR, sem julgamento e sem prometer diagnóstico.' },
-    { icon: AlertCircle,   color: 'from-amber-400 to-orange-500',   title: 'SOS com proteção real',  text: 'Detector de crise + CVV 188, SAMU 192 e contato de confiança a um toque.' },
+    { icon: Sparkles,      color: 'from-amber-400 to-rose-500',     title: 'Sua pílula diária',      text: 'Uma frase que encontra a dor, uma reflexão que organiza o peito e uma prática pequena para hoje.' },
+    { icon: BookOpen,      color: 'from-violet-400 to-fuchsia-500', title: 'Temas para o que dói',   text: 'Recomeço, coragem, paz, fé prática, limites e gratidão para quando você não sabe por onde começar.' },
+    { icon: Moon,          color: 'from-indigo-400 to-purple-500',  title: 'Jornada de 21 dias',     text: 'Um caminho guiado para voltar a confiar em si, sem pressão, sem cobrança e sem perfeccionismo.' },
+    { icon: Zap,           color: 'from-orange-400 to-rose-500',    title: 'Cards que acolhem',      text: 'Compartilhe pílulas nos status ou com alguém que também está segurando muita coisa sozinho.' },
+    { icon: MessageCircle, color: 'from-teal-400 to-emerald-500',   title: 'Conversa que não te julga', text: 'A Luz escuta em pt-BR, valida o que você sente e sugere um próximo passo possível.' },
+    { icon: AlertCircle,   color: 'from-amber-400 to-orange-500',   title: 'SOS com proteção real',  text: 'Quando passar do limite, o app aponta respiração, CVV 188, SAMU 192 e contato de confiança.' },
   ];
 
   const trust = [
     { icon: Lock,        text: 'Dados no seu device' },
     { icon: ShieldCheck, text: 'LGPD-compliant' },
     { icon: Smartphone, text: 'Funciona offline' },
-    { icon: Heart,      text: 'Cards compartilháveis' },
+    { icon: Heart,      text: 'Acolhimento em 30s' },
   ];
 
   const steps = [
-    { n: '01', title: 'Abra a pílula de hoje',     text: 'Uma leitura curta com frase, reflexão e prática para agora.' },
-    { n: '02', title: 'Siga a jornada de 21 dias', text: 'Cada dia tem uma ação simples para treinar resiliência real.' },
-    { n: '03', title: 'Compartilhe luz',           text: 'Gere cards e textos para status, grupos e pessoas próximas.' },
+    { n: '01', title: 'Diga como o dia está pesando', text: 'Sem se explicar demais. Só reconheça o que está apertando por dentro.' },
+    { n: '02', title: 'Receba uma pílula para agora', text: 'Frase, reflexão e prática curta para transformar caos em um próximo passo.' },
+    { n: '03', title: 'Construa força em sequência',  text: 'A jornada de 21 dias te ajuda a recomeçar pequeno, antes de querer resolver a vida inteira.' },
   ];
 
   const testimonials = [
-    { name: 'Mariana, 27',  loc: 'São Paulo',     stars: 5, text: 'Era pra ser só pra testar. Hoje é a primeira coisa que abro de manhã. Não me sinto cobrada, me sinto cuidada.' },
-    { name: 'Rafael, 34',   loc: 'Rio de Janeiro', stars: 5, text: 'Eu sofria de insônia há anos. O ritual noturno + os exercícios de respiração mudaram a minha relação com o sono.' },
-    { name: 'Camila, 22',   loc: 'Recife',         stars: 5, text: 'O melhor é que ele não tenta me consertar. Ele só escuta. E quando preciso de ajuda real, ele me direciona pra ajuda real.' },
+    { name: 'Mariana, 27',  loc: 'São Paulo',       stars: 5, text: 'Abro quando acordo com aquele aperto que ninguém vê. A pílula não resolve minha vida, mas me dá um chão para começar o dia.' },
+    { name: 'Rafael, 34',   loc: 'Rio de Janeiro',  stars: 5, text: 'Eu vivia empurrando tudo no automático. A jornada me fez parar dois minutos por dia e perceber o que eu estava carregando.' },
+    { name: 'Camila, 22',   loc: 'Recife',          stars: 5, text: 'Gosto porque não fala comigo como se eu estivesse quebrada. Parece que entende a bagunça e me entrega um passo pequeno.' },
   ];
 
   const faqs = [
     { q: 'O Resiliência e Luz substitui psicólogo ou psiquiatra?', a: 'Não. É apoio emocional do dia a dia — para frases, reflexões, respiração e organização de sentimentos. Não diagnostica, não trata e não substitui acompanhamento profissional. Em crise, direcionamos pra CVV 188, SAMU 192 ou contato de confiança.' },
     { q: 'Meus dados ficam onde?',                            a: 'Por padrão, tudo (check-ins, diário, histórico) fica salvo só no seu dispositivo. Se você ativar sincronização na nuvem, o dado vai criptografado pro Firebase. Você pode apagar tudo a qualquer momento em Ajustes → Apagar dados.' },
     { q: 'Como funciona a IA? Ela aprende com o que eu digo?', a: 'A conversa com IA é opt-in (você ativa quando quiser). As mensagens passam por um provedor externo (Google Gemini) só pra gerar a resposta. Não treinamos modelos com seu conteúdo e não vendemos seus dados.' },
-    { q: 'Preciso pagar pra começar?',                        a: 'Não. O plano grátis tem check-in ilimitado, 5 exercícios essenciais, 8 mensagens/dia com a IA, diário de 7 dias e 1 trilha completa. Plus é opcional pra quem quer mais profundidade.' },
+    { q: 'Preciso pagar pra começar?',                        a: 'Não. O plano grátis tem pílulas diárias, check-in ilimitado, 5 exercícios essenciais, 8 mensagens/dia com a IA, diário de 7 dias e uma jornada completa. Plus é opcional pra quem quer mais profundidade.' },
     { q: 'Funciona offline?',                                 a: 'Sim. Como é um PWA leve, o app fica disponível mesmo sem internet pra check-in, diário, exercícios e leitura do histórico. A IA precisa de conexão pra responder.' },
     { q: 'E se eu estiver em crise agora?',                    a: 'Abre o SOS direto na tela inicial: tem respiração guiada, contatos de emergência (CVV 188, SAMU 192), e você pode adicionar uma pessoa de confiança. Em risco imediato: ligue 188 ou 192 antes de qualquer coisa.' },
   ];
@@ -103,22 +103,22 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              Pílulas diárias · jornada de 21 dias · feito no Brasil
+              Para dias pesados · pílulas diárias · feito no Brasil
             </div>
 
             <h1 className="reveal reveal-1 text-4xl sm:text-5xl lg:text-[64px] leading-[1.05] font-bold tracking-tight text-slate-900 dark:text-white mb-6">
-              Uma bíblia online <br className="hidden sm:block" />
+              Sua pílula diária <br className="hidden sm:block" />
               <span className="font-serif italic text-brand-gradient">de resiliência.</span>
             </h1>
 
             <p className="reveal reveal-2 text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-xl leading-relaxed">
-              Abra uma pílula de luz por dia, siga uma jornada prática e compartilhe frases que ajudam outras pessoas a atravessar melhor a vida.
-              <span className="text-slate-800 dark:text-slate-100 font-medium"> Motivação diária sem julgamento e sem promessas vazias.</span>
+              Para quando a cabeça pesa, o peito aperta e você precisa de uma frase que não finja que está tudo bem.
+              <span className="text-slate-800 dark:text-slate-100 font-medium"> Todo dia, uma reflexão curta e uma prática simples para atravessar melhor o que ninguém vê.</span>
             </p>
 
             <div className="reveal reveal-3 flex flex-col sm:flex-row gap-3 mb-8">
               <button onClick={onStart} className="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base">
-                Ler pílula de hoje <ArrowRight className="w-5 h-5" />
+                Receber minha pílula de hoje <ArrowRight className="w-5 h-5" />
               </button>
               <a href="#how" className="btn-ghost inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base">
                 Como funciona
@@ -133,7 +133,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Funciona offline
               </div>
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Em 30 segundos
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Sem se explicar
               </div>
             </div>
 
@@ -151,7 +151,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
                   <span className="text-slate-700 dark:text-slate-200 font-semibold ml-1">4.9</span>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">+12 mil pessoas cuidando da mente</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">+12 mil pessoas atravessando um dia por vez</p>
               </div>
             </div>
           </div>
@@ -194,14 +194,14 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
                     {/* user */}
                     <div className="flex justify-end">
                       <div className="max-w-[85%] bg-gradient-to-br from-brand-600 to-brand-700 text-white px-4 py-2.5 rounded-2xl rounded-br-md shadow-sm">
-                        <p className="text-sm">Tô meio sobrecarregada hoje, ansiedade alta…</p>
+                        <p className="text-sm">Hoje eu acordei cansada de ser forte…</p>
                       </div>
                     </div>
                     {/* sereno */}
                     <div className="flex justify-start">
                       <div className="max-w-[88%] bg-white dark:bg-slate-800 px-4 py-2.5 rounded-2xl rounded-bl-md shadow-sm border border-slate-100 dark:border-slate-700">
                         <p className="text-sm text-slate-700 dark:text-slate-200">
-                          Faz sentido se sentir assim com tanta coisa em cima. Antes da gente conversar, que tal 2 minutos de respiração 4-7-8?
+                          Você não precisa fingir leveza para merecer cuidado. Hoje, vamos só encontrar um próximo passo possível.
                         </p>
                       </div>
                     </div>
@@ -244,7 +244,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
               <div className="hidden lg:flex absolute -left-10 top-24 glass rounded-2xl p-3 shadow-glass animate-float w-44 items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xl">🔥</div>
                 <div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Sequência</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Jornada</p>
                   <p className="text-sm font-bold text-slate-900 dark:text-white">12 dias</p>
                 </div>
               </div>
@@ -253,8 +253,8 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
               <div className="hidden lg:flex absolute -right-8 bottom-24 glass rounded-2xl p-3 shadow-glass animate-float-slow w-48 items-center gap-3">
                 <div className="text-2xl">🌿</div>
                 <div className="flex-1">
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Hoje você está</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">Mais calmo(a)</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Pílula de hoje</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">Recomeçar pequeno</p>
                 </div>
                 <Activity className="w-4 h-4 text-emerald-500" />
               </div>
@@ -280,10 +280,10 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
           <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300 mb-3">Como funciona</p>
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-            Três passos pequenos, <span className="font-serif italic text-brand-gradient">todo dia.</span>
+            Quando estiver pesado, <span className="font-serif italic text-brand-gradient">comece pequeno.</span>
           </h2>
           <p className="text-slate-600 dark:text-slate-300 text-lg">
-            Nada de transformação radical. Só um cuidado simples que cabe na sua rotina.
+            Você não precisa resolver a vida inteira hoje. Precisa só de um próximo passo que caiba no seu fôlego.
           </p>
         </div>
 
@@ -311,7 +311,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
           <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300 mb-3">Recursos</p>
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-            Tudo o que você precisa, <br /><span className="font-serif italic text-brand-gradient">nada que você não precisa.</span>
+            Feito para quem sente muito, <br /><span className="font-serif italic text-brand-gradient">mas continua tentando.</span>
           </h2>
         </div>
 
@@ -333,10 +333,10 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300 mb-3">Diferencial</p>
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-            Por que não usar ChatGPT <span className="font-serif italic text-brand-gradient">pra isso?</span>
+            Por que uma pílula diária <span className="font-serif italic text-brand-gradient">funciona melhor?</span>
           </h2>
           <p className="text-slate-600 dark:text-slate-300 text-lg">
-            Saúde emocional não é tarefa. Precisa de tom, memória e proteção.
+            Porque dor emocional não precisa de palestra. Precisa de reconhecimento, direção pequena e repetição gentil.
           </p>
         </div>
 
@@ -349,12 +349,12 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
                   <span className="text-slate-500 font-bold text-sm">AI</span>
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-500 dark:text-slate-400 text-sm">ChatGPT genérico</p>
-                  <p className="text-[11px] text-slate-400">caixa de entrada vazia</p>
+                    <p className="font-semibold text-slate-500 dark:text-slate-400 text-sm">Conselho genérico</p>
+                    <p className="text-[11px] text-slate-400">parece distante da sua dor</p>
                 </div>
               </div>
               <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300">
-                {['Tom corporativo, lista interminável','Esquece sua semana, conversa solta','Sem detecção de crise','Sem trilhas, sem rituais, sem rotina','Treina IA com o seu desabafo','Sem CVV, sem contatos de emergência'].map((t, i) => (
+                {['Fala bonito, mas não toca no que dói','Dá lista longa quando você mal tem energia','Trata todo cansaço como falta de produtividade','Não cria ritual, sequência ou retorno diário','Não separa apoio emocional de crise real','Não vira uma frase simples para carregar no dia'].map((t, i) => (
                   <li key={i} className="flex gap-2.5 items-start">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0 mt-2" />
                     <span>{t}</span>
@@ -377,7 +377,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
                   </div>
                 </div>
                 <ul className="space-y-3 text-sm text-slate-800 dark:text-slate-100">
-                  {['Acolhedor, valida antes de sugerir','Lembra do seu humor, sono e gatilhos','Direciona CVV 188 em crise grave','Trilhas de 7, 14 ou 21 dias','Seu dado fica no celular, sob seu controle','SOS com contato de confiança a um toque'].map((t, i) => (
+                  {['Começa validando o que você sente','Transforma o peso em uma prática de 2 minutos','Entrega uma pílula diária para repetir quando apertar','Cria jornada de 21 dias para fortalecer constância','Gera cards para compartilhar sem se expor','Direciona CVV 188 e SAMU 192 em crise grave'].map((t, i) => (
                     <li key={i} className="flex gap-2.5 items-start">
                       <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                       <span>{t}</span>
@@ -395,7 +395,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300 mb-3">Quem usa diz</p>
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">
-            Pessoas reais, <span className="font-serif italic text-brand-gradient">dias melhores.</span>
+            Pessoas reais, <span className="font-serif italic text-brand-gradient">dores reais.</span>
           </h2>
         </div>
 
@@ -422,7 +422,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         {/* Métricas */}
         <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { n: '12k+',  l: 'pessoas cuidando da mente' },
+            { n: '12k+',  l: 'pessoas atravessando dias difíceis' },
             { n: '4.9★',  l: 'avaliação média' },
             { n: '92%',   l: 'voltam no segundo dia' },
             { n: '0',     l: 'dado vendido. Nunca.' },
@@ -440,9 +440,9 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300 mb-3">Planos</p>
           <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-            Comece grátis. <span className="font-serif italic text-brand-gradient">Cresça no seu tempo.</span>
+            Comece grátis. <span className="font-serif italic text-brand-gradient">Recomece no seu ritmo.</span>
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 text-lg">Sem mensalidade abusiva. Sem pegadinha. Cancele quando quiser.</p>
+          <p className="text-slate-600 dark:text-slate-300 text-lg">Sem pressão. Sem prometer cura. Só um cuidado diário para você não atravessar tudo sozinho.</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-5 items-stretch">
@@ -459,12 +459,12 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
               <p className="text-sm text-slate-500 mt-1">para sempre</p>
             </div>
             <ul className="space-y-3 text-sm text-slate-700 dark:text-slate-200 mb-7 flex-1">
-              {['Check-in diário ilimitado','5 exercícios essenciais','Chat com IA — 8 mensagens/dia','Diário dos últimos 7 dias','1 trilha completa (Calma em 7 dias)','SOS e contatos de emergência'].map((t, i) => (
+              {['Pílula diária de resiliência','Check-in diário ilimitado','5 exercícios essenciais','Chat com IA — 8 mensagens/dia','Diário dos últimos 7 dias','1 jornada completa de 21 dias','SOS e contatos de emergência'].map((t, i) => (
                 <li key={i} className="flex gap-2.5"><CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />{t}</li>
               ))}
             </ul>
             <button onClick={onStart} className="btn-ghost rounded-full px-6 py-3 inline-flex items-center justify-center gap-2">
-              Começar grátis <ArrowRight className="w-4 h-4" />
+              Receber pílula grátis <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
@@ -495,13 +495,13 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
             </div>
 
             <ul className="relative space-y-3 text-sm mb-7 flex-1">
-              {['Tudo do grátis','Chat ilimitado com Sereno','12 exercícios completos + áudios','Diário ilimitado + gráficos de insights','4 trilhas guiadas (sono, ansiedade, autoestima, raiva)','Exportar PDF pro psicólogo','Sem ads, prioridade no suporte'].map((t, i) => (
+              {['Tudo do grátis','Pílulas e jornadas mais profundas','Chat ilimitado com a Luz','12 exercícios completos + áudios','Diário ilimitado + gráficos de insights','Trilhas guiadas para sono, ansiedade, autoestima e raiva','Exportar PDF pro psicólogo','Sem ads, prioridade no suporte'].map((t, i) => (
                 <li key={i} className="flex gap-2.5"><CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0 mt-0.5" />{t}</li>
               ))}
             </ul>
 
             <button onClick={onStart} className="relative bg-white text-brand-700 font-bold rounded-full px-6 py-3 inline-flex items-center justify-center gap-2 hover:bg-amber-50 transition shadow-lg">
-              Experimentar Plus 7 dias grátis <ArrowRight className="w-4 h-4" />
+              Aprofundar minha jornada <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -552,14 +552,14 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
               <Award className="w-3.5 h-3.5" /> Comece hoje. Sem fricção.
             </div>
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-5 leading-tight">
-              Um pequeno cuidado <br /><span className="font-serif italic">muda o dia inteiro.</span>
+              Você não precisa vencer o dia. <br /><span className="font-serif italic">Só precisa atravessar com cuidado.</span>
             </h2>
             <p className="text-white/85 text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-              Faça seu primeiro check-in em 30 segundos. Sem cartão, sem cadastro complicado.
+              Receba uma pílula de resiliência agora. Sem cartão, sem cadastro complicado, sem se explicar.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button onClick={onStart} className="bg-white text-brand-700 font-bold rounded-full px-8 py-4 inline-flex items-center justify-center gap-2 hover:bg-amber-50 transition shadow-lg">
-                Começar grátis agora <ArrowRight className="w-5 h-5" />
+                Receber pílula grátis <ArrowRight className="w-5 h-5" />
               </button>
               <a href="#how" className="bg-white/15 backdrop-blur text-white font-semibold rounded-full px-8 py-4 inline-flex items-center justify-center gap-2 hover:bg-white/25 transition border border-white/25">
                 Ver como funciona
@@ -579,7 +579,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
                 <span className="font-bold text-brand-700 dark:text-brand-200 text-lg">{APP_NAME}</span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-300 max-w-sm leading-relaxed">
-                Sua mente em paz, todo dia. Apoio emocional diário com IA, feito com cuidado no Brasil.
+                Sua pílula diária de resiliência para quando a vida pesa e você precisa de um próximo passo possível.
               </p>
             </div>
             <div>
@@ -612,7 +612,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
       {/* CTA sticky mobile */}
       <div className="md:hidden fixed bottom-4 inset-x-4 z-30">
         <button onClick={onStart} className="btn-primary w-full rounded-full px-6 py-3.5 inline-flex items-center justify-center gap-2 text-base shadow-2xl">
-          Começar grátis <ArrowRight className="w-5 h-5" />
+          Receber pílula de hoje <ArrowRight className="w-5 h-5" />
         </button>
       </div>
     </div>

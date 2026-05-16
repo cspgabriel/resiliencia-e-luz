@@ -91,8 +91,8 @@ const ResilienceBible: React.FC<Props> = ({ onBack, onNavigate, settings, progre
           <ArrowLeft />
         </button>
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300">Bíblia da Resiliência</p>
-          <h1 className="font-bold text-slate-900 dark:text-white text-2xl">Pílulas diárias para atravessar melhor o dia</h1>
+          <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300">Sua pílula diária de resiliência</p>
+          <h1 className="font-bold text-slate-900 dark:text-white text-2xl">Uma frase, uma reflexão e um passo possível para hoje</h1>
         </div>
       </header>
 
@@ -174,8 +174,8 @@ const ResilienceBible: React.FC<Props> = ({ onBack, onNavigate, settings, progre
         <section className="lg:col-span-2 glass-strong rounded-3xl p-5 min-w-0">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300">Capítulos</p>
-              <h2 className="font-bold text-slate-900 dark:text-white text-xl">Leia como uma bíblia online de motivação diária</h2>
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300">Pílulas por tema</p>
+              <h2 className="font-bold text-slate-900 dark:text-white text-xl">Escolha o que está doendo hoje e comece por uma frase</h2>
             </div>
             <BookOpen className="w-6 h-6 text-brand-600 dark:text-brand-300 shrink-0" />
           </div>
