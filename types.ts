@@ -1,4 +1,4 @@
-// Serenamente - tipos centrais do app de bem-estar
+// Resiliência e Luz - tipos centrais do app de bem-estar
 
 export enum Mood {
   OTIMO = 'OTIMO',

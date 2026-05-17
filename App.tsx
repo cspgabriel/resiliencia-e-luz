@@ -318,6 +318,7 @@ const App: React.FC = () => {
             onSelectExercise={handleSelectExercise}
             checkins={checkins}
             exerciseLog={exerciseLog}
+            trailProgress={trailProgress}
             settings={settings}
             onXpGain={(xp) => gainXp(xp)}
           />

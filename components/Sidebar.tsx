@@ -2,7 +2,7 @@ import React from 'react';
 import { ViewState, UserSettings } from '../types';
 import {
   Home, MessageCircle, Wind, BookOpen, Settings, AlertCircle,
-  Sparkles, Map, BarChart3, Mail, Trophy, UserPlus, Waves, Users, Gift, Star, Quote
+  Sparkles, Map, BarChart3, Trophy, Star, Quote, Target
 } from 'lucide-react';
 import { APP_NAME } from '../constants';
 
@@ -15,22 +15,19 @@ interface Props {
 const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
   const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
   const items = [
-    { v: ViewState.HOME,         label: 'Início',     icon: Home },
-    { v: ViewState.BIBLE,        label: 'Pílulas',    icon: Quote },
-    { v: ViewState.CHAT,         label: 'Conversar',  icon: MessageCircle },
-    { v: ViewState.COMPANION,    label: 'Meu nível',  icon: Star },
-    { v: ViewState.EXERCISES,    label: 'Exercícios', icon: Wind },
-    { v: ViewState.TRAILS,       label: 'Trilhas',    icon: Map },
-    { v: ViewState.LETTERS,      label: 'Cartas',     icon: Mail },
-    { v: ViewState.COLECTIVA,    label: 'Calma viva', icon: Waves },
-    { v: ViewState.BUDDY,        label: 'Dupla',      icon: Users },
-    { v: ViewState.ANON_FEED,    label: 'Sentindo',   icon: BookOpen },
-    { v: ViewState.INSIGHTS,     label: 'Insights',   icon: BarChart3 },
-    { v: ViewState.WRAPPED,      label: 'Wrapped',    icon: Gift },
+    { v: ViewState.HOME,      label: 'Hoje',     icon: Home },
+    { v: ViewState.BIBLE,     label: 'Pílula',   icon: Quote },
+    { v: ViewState.CHECKIN,   label: 'Check-in', icon: Target },
+    { v: ViewState.TRAILS,    label: 'Jornada',  icon: Map },
+    { v: ViewState.EXERCISES, label: 'Respirar', icon: Wind },
+    { v: ViewState.DIARY,     label: 'Diário',   icon: BookOpen },
+    { v: ViewState.CHAT,      label: 'Luz',      icon: MessageCircle },
+    { v: ViewState.SOS,       label: 'SOS',      icon: AlertCircle, danger: true },
+  ];
+  const secondaryItems = [
+    { v: ViewState.INSIGHTS,     label: 'Padrões',    icon: BarChart3 },
     { v: ViewState.ACHIEVEMENTS, label: 'Conquistas', icon: Trophy },
-    { v: ViewState.DIARY,        label: 'Diário',     icon: BookOpen },
-    { v: ViewState.INVITE,       label: 'Convidar',   icon: UserPlus },
-    { v: ViewState.SOS,          label: 'SOS',        icon: AlertCircle, danger: true },
+    { v: ViewState.COMPANION,    label: 'Nível',      icon: Star },
   ];
 
   return (
@@ -68,6 +65,27 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, settings }) => {
               )}
               <it.icon className="w-5 h-5 md:w-4 md:h-4 shrink-0" />
               <span className="text-[10px] md:text-sm font-medium">{it.label}</span>
+            </button>
+          );
+        })}
+        <div className="hidden md:block h-px bg-slate-200/70 dark:bg-slate-800 my-2" />
+        {secondaryItems.map(it => {
+          const active = current === it.v;
+          return (
+            <button
+              key={it.v}
+              onClick={() => onNavigate(it.v)}
+              className={`hidden md:flex relative items-center gap-3 px-4 py-2.5 rounded-xl transition ${
+                active
+                  ? 'text-brand-700 dark:text-brand-200 bg-brand-50/80 dark:bg-brand-800/40 font-semibold'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-brand-700 dark:hover:text-brand-200 hover:bg-white/40 dark:hover:bg-slate-800/40'
+              }`}
+            >
+              {active && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-gradient-to-b from-brand-400 to-brand-700" />
+              )}
+              <it.icon className="w-4 h-4 shrink-0" />
+              <span className="text-sm font-medium">{it.label}</span>
             </button>
           );
         })}

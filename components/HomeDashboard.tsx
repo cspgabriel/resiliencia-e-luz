@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
-import { ViewState, CheckIn, MOOD_META, UserSettings, ExerciseLog, Exercise } from '../types';
+import { ViewState, CheckIn, MOOD_META, UserSettings, ExerciseLog, Exercise, TrailProgress } from '../types';
 import {
   MessageCircle, Wind, BookOpen, AlertCircle, ArrowRight, Sparkles,
-  TrendingUp, Map, BarChart3, Target, Mail, Waves, Trophy, Flame, Star, Quote
+  Map, BarChart3, Target, Mail, Trophy, Flame, Star, Quote, CheckCircle2,
+  Heart, Send, PenLine, CalendarDays, ShieldCheck, Users
 } from 'lucide-react';
-import { FREE_LIMITS, getDailyPlan, EXERCISES, MINI_TRAILS } from '../constants';
+import { FREE_LIMITS, getDailyPlan, EXERCISES, getDailyResiliencePill, getTrailTask } from '../constants';
 import { today } from '../services/date';
 import { computeLevel } from '../services/gamification';
-import DailyAffirmationCard from './DailyAffirmationCard';
 import AdSlot from './AdSlot';
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
   onSelectExercise: (e: Exercise) => void;
   checkins: CheckIn[];
   exerciseLog: ExerciseLog[];
+  trailProgress: TrailProgress[];
   settings: UserSettings;
   onXpGain?: (xp: number) => void;
 }
@@ -27,21 +28,28 @@ const greeting = (): string => {
   return 'Boa noite';
 };
 
-const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins, exerciseLog, settings, onXpGain }) => {
-  const level   = computeLevel(settings.totalXp || 0);
-  const streak  = settings.streak;
-  const xpPct   = level.xpToNext > 0 ? Math.min(100, (level.xpInLevel / level.xpToNext) * 100) : 100;
+const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins, exerciseLog, trailProgress, settings }) => {
+  const level = computeLevel(settings.totalXp || 0);
+  const streak = settings.streak;
   const todayStr = today();
-  const todayCheck     = checkins.find(c => c.date === todayStr);
+  const todayCheck = checkins.find(c => c.date === todayStr);
   const todayExercises = exerciseLog.filter(e => e.date === todayStr);
-  const last7   = useMemo(() => checkins.slice(0, 7).reverse(), [checkins]);
-
+  const last7 = useMemo(() => checkins.slice(0, 7).reverse(), [checkins]);
+  const dailyPill = getDailyResiliencePill(todayStr);
+  const plan = getDailyPlan(todayCheck?.mood, todayCheck?.energy, todayCheck?.sleep);
+  const journeyProgress = trailProgress.find(p => p.trailId === 'jornada-resiliencia-21');
+  const completedJourneyDays = journeyProgress?.completedDays.length || 0;
+  const nextJourneyDay = Math.min(completedJourneyDays + 1, 21);
+  const journeyTouchedToday = journeyProgress?.updatedAt
+    ? new Date(journeyProgress.updatedAt).toDateString() === new Date().toDateString()
+    : false;
+  const ritualDone = [Boolean(todayCheck), todayExercises.length > 0, journeyTouchedToday].filter(Boolean).length;
+  const ritualPct = Math.round((ritualDone / 3) * 100);
   const avg = last7.length > 0
     ? (last7.reduce((s, c) => s + MOOD_META[c.mood].score, 0) / last7.length).toFixed(1)
     : null;
-
   const msgsLeft = settings.isPro ? '∞' : Math.max(0, FREE_LIMITS.messagesPerDay - settings.messagesUsedToday);
-  const plan = getDailyPlan(todayCheck?.mood, todayCheck?.energy, todayCheck?.sleep);
+  const breath = EXERCISES.find(e => e.id === 'resp-478');
 
   const startPlan = () => {
     if (plan.exerciseId) {
@@ -54,246 +62,236 @@ const HomeDashboard: React.FC<Props> = ({ onNavigate, onSelectExercise, checkins
     onNavigate(plan.targetView);
   };
 
-  return (
-    <div className="min-h-screen mesh-soft pb-28 md:pb-12 relative overflow-x-hidden">
-      {/* Blobs decorativos sutis */}
-      <div aria-hidden className="pointer-events-none absolute top-0 right-0 w-[420px] h-[420px] rounded-full bg-brand-300/15 blur-[120px]" />
-      <div aria-hidden className="pointer-events-none absolute top-[60%] -left-20 w-[360px] h-[360px] rounded-full bg-sky-200/20 blur-[100px]" />
+  const startBreathing = () => {
+    if (breath) onSelectExercise(breath);
+    else onNavigate(ViewState.EXERCISES);
+  };
 
-      <div className="max-w-4xl mx-auto px-5 pt-8 md:pt-12 relative">
-        {/* HEADER */}
-        <header className="mb-6 flex items-start justify-between gap-3">
-          <div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{greeting()}</p>
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {settings.name ? <>Como você tá, <span className="font-serif italic text-brand-gradient">{settings.name}</span>?</> : <>Como você tá <span className="font-serif italic text-brand-gradient">hoje?</span></>}
+  const ritualSteps = [
+    {
+      title: 'Nomear o peso',
+      text: todayCheck ? `Você registrou: ${MOOD_META[todayCheck.mood].label}` : 'Check-in de 30 segundos para parar de engolir tudo no automático.',
+      done: Boolean(todayCheck),
+      action: () => onNavigate(ViewState.CHECKIN),
+    },
+    {
+      title: 'Regular o corpo',
+      text: todayExercises.length ? `${todayExercises.length} prática feita hoje` : 'Respiração curta para diminuir a ativação antes de pensar em solução.',
+      done: todayExercises.length > 0,
+      action: startBreathing,
+    },
+    {
+      title: 'Continuar a jornada',
+      text: journeyTouchedToday ? 'Dia da jornada marcado.' : `Dia ${nextJourneyDay}: ${getTrailTask('jornada-resiliencia-21', nextJourneyDay)}`,
+      done: journeyTouchedToday,
+      action: () => onNavigate(ViewState.TRAILS),
+    },
+  ];
+
+  const groups = [
+    {
+      label: 'Aliviar agora',
+      note: 'Quando o corpo está acelerado e pensar dói.',
+      items: [
+        { title: 'Respirar 2 min', sub: 'Baixar o pico agora', icon: Wind, color: 'from-cyan-400 to-sky-500', action: startBreathing },
+        { title: 'SOS ansiedade', sub: 'Ajuda humana + grounding', icon: AlertCircle, color: 'from-rose-500 to-red-600', action: () => onNavigate(ViewState.SOS), danger: true },
+        { title: 'Falar com a Luz', sub: settings.allowAiProcessing ? `${msgsLeft} mensagens hoje` : 'Ative IA nos ajustes', icon: MessageCircle, color: 'from-emerald-400 to-teal-600', action: () => onNavigate(ViewState.CHAT) },
+      ],
+    },
+    {
+      label: 'Entender o que está acontecendo',
+      note: 'Dar nome ao que você sente sem transformar isso em sentença.',
+      items: [
+        { title: 'Check-in', sub: todayCheck ? 'Editar registro de hoje' : 'Começar por uma palavra', icon: Target, color: 'from-blue-500 to-cyan-500', action: () => onNavigate(ViewState.CHECKIN) },
+        { title: 'Diário de descarga', sub: 'Tirar da cabeça e pôr no papel', icon: PenLine, color: 'from-indigo-500 to-blue-600', action: () => onNavigate(ViewState.DIARY) },
+        { title: 'Padrões', sub: avg ? `Média semanal ${avg}/5` : 'Insights sem diagnóstico', icon: BarChart3, color: 'from-amber-400 to-orange-500', action: () => onNavigate(ViewState.INSIGHTS) },
+      ],
+    },
+    {
+      label: 'Voltar amanhã',
+      note: 'O app precisa virar ritual, não mais uma cobrança.',
+      items: [
+        { title: 'Jornada 21 dias', sub: `${completedJourneyDays}/21 concluídos`, icon: Map, color: 'from-violet-500 to-fuchsia-500', action: () => onNavigate(ViewState.TRAILS) },
+        { title: 'Carta para você', sub: 'Uma mensagem para o futuro', icon: Mail, color: 'from-rose-400 to-pink-500', action: () => onNavigate(ViewState.LETTERS) },
+        { title: 'Conquistas', sub: `Nível ${level.level} · ${level.title}`, icon: Trophy, color: 'from-yellow-400 to-amber-500', action: () => onNavigate(ViewState.ACHIEVEMENTS) },
+      ],
+    },
+    {
+      label: 'Compartilhar sem se expor',
+      note: 'Levar luz para alguém sem precisar contar sua história inteira.',
+      items: [
+        { title: 'Pílulas', sub: 'Cards e frases de hoje', icon: Quote, color: 'from-amber-400 to-rose-500', action: () => onNavigate(ViewState.BIBLE) },
+        { title: 'Convidar alguém', sub: 'Começar junto por 7 dias', icon: Send, color: 'from-lime-400 to-emerald-500', action: () => onNavigate(ViewState.INVITE) },
+        { title: 'Dupla de cuidado', sub: 'Ping simples de presença', icon: Users, color: 'from-teal-400 to-cyan-500', action: () => onNavigate(ViewState.BUDDY) },
+      ],
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#F7FBFA] dark:bg-[#041112] pb-28 md:pb-12 overflow-x-hidden">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-5 md:pt-8">
+        <header className="flex items-start justify-between gap-4 mb-5">
+          <div className="min-w-0">
+            <p className="text-sm text-slate-500 dark:text-slate-400">{greeting()}{settings.name ? `, ${settings.name}` : ''}</p>
+            <h1 className="mt-1 text-2xl md:text-4xl font-bold tracking-tight text-slate-950 dark:text-white">
+              Qual peso você quer aliviar primeiro?
             </h1>
           </div>
           <button
             onClick={() => onNavigate(ViewState.COMPANION)}
-            className="group flex items-center gap-2 px-3 py-2 rounded-2xl text-white shadow-brand-soft active:scale-95 transition"
-            style={{ background: 'linear-gradient(135deg, #1A6B73 0%, #5EB8B3 100%)' }}
+            className="shrink-0 rounded-2xl bg-white dark:bg-slate-900 border border-cyan-100 dark:border-cyan-900/50 px-3 py-2 shadow-sm flex items-center gap-2"
           >
-            <div className="relative">
-              <Star className="w-7 h-7 text-amber-300" fill="currentColor" strokeWidth={2} />
-              <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-brand-900">{level.level}</span>
-            </div>
-            <div className="text-left">
-              <p className="text-[10px] opacity-90 leading-none">Nível</p>
-              <p className="text-sm font-bold leading-tight">{level.title}</p>
-              <div className="w-16 h-1 bg-white/30 rounded-full mt-1 overflow-hidden">
-                <div className="h-full bg-amber-300" style={{ width: `${xpPct}%` }} />
-              </div>
+            <Star className="w-5 h-5 text-amber-400" fill="currentColor" />
+            <div className="hidden sm:block text-left">
+              <p className="text-[10px] uppercase tracking-widest text-slate-500">Nível {level.level}</p>
+              <p className="text-xs font-bold text-slate-900 dark:text-white">{level.title}</p>
             </div>
           </button>
         </header>
 
-        {/* AFIRMAÇÃO DIÁRIA */}
-        <div className="mb-5">
-          <DailyAffirmationCard settings={settings} onXpGain={onXpGain || (() => {})} />
-        </div>
-
-        <button
-          onClick={() => onNavigate(ViewState.BIBLE)}
-          className="w-full glass-strong rounded-2xl p-5 mb-5 text-left flex items-center gap-4 hover:-translate-y-0.5 transition"
-        >
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center shrink-0 shadow-md">
-            <Quote className="w-5 h-5 text-white" />
-          </div>
-          <div className="flex-1">
-            <p className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300">Novo</p>
-            <p className="font-bold text-slate-900 dark:text-white">Sua pílula diária de resiliência</p>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">Frases, reflexões e uma jornada para quando o dia pesar.</p>
-          </div>
-          <ArrowRight className="w-5 h-5 text-slate-400" />
-        </button>
-
-        {/* STREAK */}
-        {(streak?.current || 0) > 0 && (
-          <button
-            onClick={() => onNavigate(ViewState.ACHIEVEMENTS)}
-            className="w-full glass rounded-2xl p-4 mb-5 flex items-center gap-3 hover:-translate-y-0.5 transition"
-          >
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
-              <Flame className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex-1 text-left">
-              <p className="font-semibold text-slate-900 dark:text-white text-sm">{streak!.current} dias seguidos 🔥</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">{streak!.freezesAvailable} freezes disponíveis este mês</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-slate-400" />
-          </button>
-        )}
-
-        {/* CHECK-IN STATUS */}
-        {!todayCheck ? (
-          <button
-            onClick={() => onNavigate(ViewState.CHECKIN)}
-            className="relative w-full p-5 md:p-6 rounded-3xl mb-5 text-left flex items-center justify-between overflow-hidden text-white shadow-brand-glow active:scale-[0.98] transition"
-            style={{ background: 'linear-gradient(135deg, #0E4D54 0%, #1A6B73 50%, #5EB8B3 100%)' }}
-          >
-            <div aria-hidden className="absolute inset-0 dot-grid opacity-15" />
-            <div aria-hidden className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-emerald-300/15 blur-3xl" />
+        <section className="grid lg:grid-cols-[1.2fr_0.8fr] gap-4 md:gap-5">
+          <div className="relative overflow-hidden rounded-[2rem] bg-[#071B20] text-white p-5 md:p-7 shadow-2xl">
+            <div aria-hidden className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300" />
             <div className="relative">
-              <p className="text-xs opacity-85 uppercase tracking-widest font-semibold mb-1">Ainda não fez o check-in</p>
-              <p className="font-bold text-xl md:text-2xl">Como você se sente agora?</p>
-              <p className="text-xs opacity-85 mt-1">Leva 30 segundos. Você se conhece melhor depois.</p>
-            </div>
-            <div className="relative w-12 h-12 rounded-full bg-white/15 backdrop-blur flex items-center justify-center">
-              <ArrowRight className="w-5 h-5" />
-            </div>
-          </button>
-        ) : (
-          <div className="glass-strong rounded-2xl p-5 mb-5 flex items-center gap-4">
-            <div className="text-5xl">{MOOD_META[todayCheck.mood].emoji}</div>
-            <div className="flex-1">
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-widest">Você tá</p>
-              <p className="font-bold text-slate-900 dark:text-white">{MOOD_META[todayCheck.mood].label}</p>
-              {todayCheck.triggerTags && todayCheck.triggerTags.length > 0 && (
-                <p className="text-xs text-slate-500 mt-1">{todayCheck.triggerTags.join(' · ')}</p>
-              )}
-              {todayCheck.note && <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 italic line-clamp-2">"{todayCheck.note}"</p>}
-            </div>
-            <button onClick={() => onNavigate(ViewState.CHECKIN)} className="text-xs text-brand-600 dark:text-brand-300 font-semibold underline">
-              Editar
-            </button>
-          </div>
-        )}
-
-        {/* PLANO DO DIA */}
-        <button
-          onClick={startPlan}
-          className="w-full glass rounded-2xl p-5 mb-5 text-left flex items-start gap-4 hover:-translate-y-0.5 transition"
-        >
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center shrink-0 shadow-md">
-            <Target className="w-5 h-5 text-white" />
-          </div>
-          <div className="flex-1">
-            <p className="font-bold text-slate-900 dark:text-white">{plan.title}</p>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{plan.message}</p>
-            <p className="text-sm font-semibold text-brand-600 dark:text-brand-300 mt-3 inline-flex items-center gap-1">{plan.actionLabel} <ArrowRight className="w-3.5 h-3.5" /></p>
-          </div>
-        </button>
-
-        {/* QUICK ACTIONS */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-          {[
-            { v: ViewState.BIBLE,        icon: Quote,          color: 'from-amber-400 to-rose-500',   title: 'Pílulas',       sub: 'Resiliência diária' },
-            { v: ViewState.CHAT,         icon: MessageCircle, color: 'from-teal-400 to-emerald-500',  title: 'Conversar',     sub: settings.allowAiProcessing ? `${msgsLeft} mensagens hoje` : 'Ative IA nos ajustes' },
-            { v: ViewState.EXERCISES,    icon: Wind,          color: 'from-sky-400 to-cyan-500',      title: 'Exercícios',    sub: `${todayExercises.length} feitos hoje` },
-            { v: ViewState.TRAILS,       icon: Map,           color: 'from-violet-400 to-purple-500', title: 'Trilhas',       sub: '7, 14 e 21 dias' },
-            { v: ViewState.DIARY,        icon: BookOpen,      color: 'from-indigo-400 to-blue-500',   title: 'Meu Diário',    sub: 'Escreva o que sentiu' },
-            { v: ViewState.INSIGHTS,     icon: BarChart3,     color: 'from-amber-400 to-orange-500',  title: 'Insights',      sub: 'Padrões, sem diagnóstico' },
-            { v: ViewState.LETTERS,      icon: Mail,          color: 'from-rose-400 to-pink-500',     title: 'Cartas',        sub: 'Escreva pra você' },
-            { v: ViewState.COLECTIVA,    icon: Waves,         color: 'from-cyan-400 to-sky-600',      title: 'Calma viva',    sub: 'Respirar junto às 22h' },
-            { v: ViewState.ACHIEVEMENTS, icon: Trophy,        color: 'from-yellow-400 to-amber-500',  title: 'Conquistas',    sub: `Nível ${level.level} · ${level.title}` },
-          ].map((a) => (
-            <button
-              key={a.v}
-              onClick={() => onNavigate(a.v)}
-              className="glass rounded-2xl p-4 text-left active:scale-[0.97] hover:-translate-y-0.5 transition"
-            >
-              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${a.color} flex items-center justify-center mb-3 shadow-sm`}>
-                <a.icon className="w-5 h-5 text-white" />
+              <div className="flex flex-wrap items-center gap-2 mb-5">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-cyan-100">
+                  <Quote className="w-3.5 h-3.5" /> Pílula de hoje
+                </span>
+                {(streak?.current || 0) > 0 && (
+                  <span className="inline-flex items-center gap-2 rounded-full bg-amber-300/15 px-3 py-1.5 text-xs font-semibold text-amber-100">
+                    <Flame className="w-3.5 h-3.5" /> {streak!.current} dias seguidos
+                  </span>
+                )}
               </div>
-              <p className="font-semibold text-slate-900 dark:text-white text-sm">{a.title}</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{a.sub}</p>
-            </button>
-          ))}
+              <h2 className="font-serif text-4xl md:text-6xl leading-[0.95] max-w-2xl">
+                {dailyPill.title}
+              </h2>
+              <p className="mt-5 text-lg md:text-xl text-cyan-50/90 max-w-2xl leading-relaxed">
+                "{dailyPill.text}"
+              </p>
+              <div className="mt-6 grid sm:grid-cols-2 gap-3 max-w-2xl">
+                <div className="rounded-2xl bg-white/10 border border-white/10 p-4">
+                  <p className="text-[10px] uppercase tracking-widest text-cyan-100 font-bold">Reflexão</p>
+                  <p className="mt-2 text-sm text-white/90">{dailyPill.reflection}</p>
+                </div>
+                <div className="rounded-2xl bg-white/10 border border-white/10 p-4">
+                  <p className="text-[10px] uppercase tracking-widest text-cyan-100 font-bold">Prática</p>
+                  <p className="mt-2 text-sm text-white/90">{dailyPill.practice}</p>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <button onClick={() => onNavigate(ViewState.BIBLE)} className="cursor-pointer rounded-full bg-white text-[#071B20] px-5 py-3 font-bold inline-flex items-center justify-center gap-2 hover:bg-cyan-50 transition-colors">
+                  Abrir pílula completa <ArrowRight className="w-4 h-4" />
+                </button>
+                <button onClick={startPlan} className="cursor-pointer rounded-full bg-cyan-400/15 text-cyan-50 border border-cyan-200/20 px-5 py-3 font-semibold inline-flex items-center justify-center gap-2 hover:bg-cyan-400/25 transition-colors">
+                  {plan.actionLabel} <Target className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
 
-          <button
-            onClick={() => onNavigate(ViewState.SOS)}
-            className="col-span-2 md:col-span-3 rounded-2xl p-4 text-left active:scale-[0.97] hover:-translate-y-0.5 transition flex items-center gap-4"
-            style={{ background: 'linear-gradient(135deg, rgba(254,226,226,0.85) 0%, rgba(252,165,165,0.7) 100%)' }}
-          >
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-md">
-              <AlertCircle className="w-6 h-6 text-white" />
+          <aside className="rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 md:p-6 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[10px] uppercase tracking-widest font-bold text-cyan-700 dark:text-cyan-300">Ritual de retorno</p>
+                <h2 className="text-xl font-bold text-slate-950 dark:text-white">3 passos para hoje</h2>
+              </div>
+              <div className="w-14 h-14 rounded-2xl bg-cyan-50 dark:bg-cyan-950/50 flex items-center justify-center">
+                <CalendarDays className="w-6 h-6 text-cyan-700 dark:text-cyan-300" />
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="font-bold text-red-900 text-sm">SOS Ansiedade</p>
-              <p className="text-xs text-red-800/80">Respiração guiada + ajuda humana em um toque</p>
+            <div className="mt-5">
+              <div className="flex justify-between text-xs text-slate-500 mb-1">
+                <span>{ritualDone}/3 concluídos</span>
+                <span>{ritualPct}%</span>
+              </div>
+              <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                <div className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500" style={{ width: `${ritualPct}%` }} />
+              </div>
             </div>
-            <ArrowRight className="w-5 h-5 text-red-700" />
+            <div className="mt-5 space-y-3">
+              {ritualSteps.map((step) => (
+                <button key={step.title} onClick={step.action} className="cursor-pointer w-full text-left rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 hover:border-cyan-200 dark:hover:border-cyan-800 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <div className={`mt-0.5 w-6 h-6 rounded-full flex items-center justify-center ${step.done ? 'bg-emerald-500 text-white' : 'bg-white dark:bg-slate-900 text-slate-400 border border-slate-200 dark:border-slate-700'}`}>
+                      {step.done ? <CheckCircle2 className="w-4 h-4" /> : <span className="w-2 h-2 rounded-full bg-current" />}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-slate-950 dark:text-white">{step.title}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{step.text}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </aside>
+        </section>
+
+        <section className="mt-5 grid md:grid-cols-3 gap-3">
+          <button onClick={() => onNavigate(ViewState.CHECKIN)} className="cursor-pointer rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 text-left hover:border-cyan-200 dark:hover:border-cyan-800 transition-colors">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-slate-500">Estado atual</p>
+            <p className="mt-2 text-lg font-bold text-slate-950 dark:text-white">{todayCheck ? MOOD_META[todayCheck.mood].label : 'Ainda sem check-in'}</p>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{todayCheck?.note || 'Registrar o que pesa reduz a confusão.'}</p>
           </button>
-        </div>
+          <button onClick={() => onNavigate(ViewState.TRAILS)} className="cursor-pointer rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 text-left hover:border-cyan-200 dark:hover:border-cyan-800 transition-colors">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-slate-500">Jornada</p>
+            <p className="mt-2 text-lg font-bold text-slate-950 dark:text-white">Dia {nextJourneyDay}</p>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{completedJourneyDays}/21 passos de resiliência.</p>
+          </button>
+          <button onClick={() => onNavigate(ViewState.ACHIEVEMENTS)} className="cursor-pointer rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 text-left hover:border-cyan-200 dark:hover:border-cyan-800 transition-colors">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-slate-500">Constância</p>
+            <p className="mt-2 text-lg font-bold text-slate-950 dark:text-white">{streak?.current || 0} dias seguidos</p>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Voltar conta mais que fazer perfeito.</p>
+          </button>
+        </section>
 
-        {/* ANÚNCIO (some pra Plus / pode ser ocultado) */}
         <AdSlot slotId="home_mid" format="banner" settings={settings} onNavigate={onNavigate} />
 
-        {/* MINI-TRILHAS DE 3 DIAS */}
-        <div className="glass-strong rounded-2xl p-5 mb-5">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Para começar pequeno (3 dias)</h3>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-brand-600 dark:text-brand-300">Baixa fricção</span>
-          </div>
-          <div className="space-y-2">
-            {MINI_TRAILS.map(t => (
-              <button
-                key={t.id}
-                onClick={() => onNavigate(ViewState.TRAILS)}
-                className="w-full text-left p-3 rounded-xl bg-white/50 hover:bg-white/80 dark:bg-slate-800/50 dark:hover:bg-slate-800/80 transition flex items-center gap-3"
-              >
-                <div className="w-9 h-9 rounded-lg bg-brand-50 dark:bg-brand-800/40 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-brand-700 dark:text-brand-200" />
+        <section className="mt-6 space-y-6">
+          {groups.map((group) => (
+            <div key={group.label}>
+              <div className="flex items-end justify-between gap-4 mb-3">
+                <div>
+                  <h2 className="text-lg font-bold text-slate-950 dark:text-white">{group.label}</h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{group.note}</p>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">{t.title}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{t.description}</p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* HUMOR DA SEMANA */}
-        {last7.length >= 2 && (
-          <div className="glass-strong rounded-2xl p-5 mb-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-brand-600 dark:text-brand-300" />
-                <p className="text-sm font-bold text-slate-900 dark:text-white">Sua semana</p>
               </div>
-              {avg && <span className="text-xs text-slate-500">Média {avg}/5</span>}
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {group.items.map((item) => (
+                  <button
+                    key={item.title}
+                    onClick={item.action}
+                    className={`cursor-pointer rounded-3xl p-4 text-left border transition-colors bg-white dark:bg-slate-900 ${
+                      item.danger
+                        ? 'border-rose-200 dark:border-rose-900/60 hover:border-rose-300'
+                        : 'border-slate-200 dark:border-slate-800 hover:border-cyan-200 dark:hover:border-cyan-800'
+                    }`}
+                  >
+                    <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}>
+                      <item.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <p className="font-bold text-slate-950 dark:text-white">{item.title}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{item.sub}</p>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex items-end gap-1.5 h-24">
-              {last7.map((c, i) => {
-                const m = MOOD_META[c.mood];
-                const height = (m.score / 5) * 100;
-                return (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <div
-                      className="w-full rounded-t-lg transition-all"
-                      style={{ height: `${height}%`, background: `linear-gradient(180deg, ${m.color}, ${m.color}cc)`, minHeight: '10px' }}
-                    />
-                    <span className="text-[10px]">{m.emoji}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+          ))}
+        </section>
 
-        {/* CTA PLUS */}
         {!settings.isPro && (
           <button
             onClick={() => onNavigate(ViewState.PAYWALL)}
-            className="relative w-full p-5 rounded-3xl text-left flex items-center justify-between overflow-hidden text-white shadow-brand-glow"
-            style={{ background: 'linear-gradient(135deg, #0E4D54 0%, #1A6B73 50%, #5EB8B3 100%)' }}
+            className="cursor-pointer mt-6 w-full rounded-[2rem] bg-gradient-to-r from-[#06252C] via-[#0B4B55] to-[#0F766E] text-white p-5 md:p-6 text-left flex items-center justify-between gap-4 shadow-xl"
           >
-            <div aria-hidden className="absolute inset-0 dot-grid opacity-15" />
-            <div aria-hidden className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-amber-300/20 blur-3xl" />
-            <div className="relative">
-              <div className="flex items-center gap-2 mb-1">
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <p className="text-xs font-bold uppercase tracking-widest opacity-95">Plus</p>
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-cyan-100">
+                <ShieldCheck className="w-4 h-4" /> Plus
               </div>
-              <p className="font-bold text-lg">Chat ilimitado + trilhas + PDF</p>
-              <p className="text-xs opacity-90 mt-0.5">A partir de R$ 9,90/mês no plano anual · 7 dias grátis</p>
+              <p className="mt-2 text-xl font-bold">Mais profundidade quando a rotina começar a virar ritual.</p>
+              <p className="text-sm text-white/75 mt-1">Pílulas avançadas, chat maior, trilhas e diário completo.</p>
             </div>
-            <div className="relative w-12 h-12 rounded-full bg-white/15 backdrop-blur flex items-center justify-center">
-              <ArrowRight className="w-5 h-5" />
-            </div>
+            <ArrowRight className="w-6 h-6 shrink-0" />
           </button>
         )}
       </div>

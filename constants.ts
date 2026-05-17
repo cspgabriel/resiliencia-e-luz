@@ -5,8 +5,8 @@ import {
 } from 'lucide-react';
 
 export const APP_NAME = "Resiliência e Luz";
-export const APP_TAGLINE = "Seja a mudança que você quer ver.";
-export const APP_DESCRIPTION = "Frases, reflexões e bem-estar diário para cultivar resiliência, fé e leveza no seu dia a dia.";
+export const APP_TAGLINE = "Sua pílula diária de resiliência.";
+export const APP_DESCRIPTION = "Frases, reflexões e práticas curtas para atravessar dias pesados com mais clareza, presença e cuidado.";
 
 export const ICON_MAP: Record<string, any> = {
   Wind, Sparkles, BookOpen, Heart, Moon, Brain, AlertCircle,
@@ -546,7 +546,7 @@ export const getDailyAffirmation = (dateKey: string): typeof AFFIRMATIONS[number
 };
 
 // ============================================================
-// BÍBLIA DA RESILIÊNCIA — pílulas, capítulos e compartilhamento
+// PÍLULAS DE RESILIÊNCIA — pílulas, jornadas e compartilhamento
 // ============================================================
 
 export interface ResiliencePill {

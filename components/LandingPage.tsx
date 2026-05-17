@@ -59,13 +59,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
   ];
 
   return (
-    <div className="min-h-screen mesh-bg relative overflow-x-hidden">
-      {/* Blobs decorativos */}
-      <div aria-hidden className="pointer-events-none absolute top-0 -left-20 w-[480px] h-[480px] rounded-full bg-brand-300/30 blur-[120px] animate-float-slow" />
-      <div aria-hidden className="pointer-events-none absolute top-40 -right-20 w-[420px] h-[420px] rounded-full bg-emerald-200/40 blur-[100px] animate-float" />
-      <div aria-hidden className="pointer-events-none absolute top-[60%] left-1/4 w-[360px] h-[360px] rounded-full bg-sky-200/30 blur-[100px] animate-float-slow" />
-
-      {/* ===== HEADER ===== */}
+    <div className="min-h-screen bg-[#F6FBFA] text-slate-900 dark:bg-[#041112] dark:text-white relative overflow-x-hidden">
       <header className={`sticky top-0 z-30 transition-all duration-300 ${scrolled ? 'glass-strong shadow-sm' : ''}`}>
         <div className="max-w-6xl mx-auto px-5 md:px-8 py-3.5 flex items-center justify-between">
           <a href="#top" className="flex items-center gap-2.5 group">
@@ -93,177 +87,102 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         </div>
       </header>
 
-      {/* ===== HERO ===== */}
-      <section id="top" className="relative max-w-6xl mx-auto px-5 md:px-8 pt-12 md:pt-20 pb-20 md:pb-28">
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          {/* COL ESQ */}
-          <div className="lg:col-span-7">
-            <div className="reveal inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs font-medium text-brand-700 dark:text-brand-200 mb-6">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+      <section id="top" className="relative max-w-6xl mx-auto px-5 md:px-8 pt-10 md:pt-16 pb-12 md:pb-16">
+        <div className="reveal max-w-4xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-200 bg-white/80 text-xs font-semibold text-emerald-800 dark:border-emerald-700/50 dark:bg-emerald-950/40 dark:text-emerald-200 mb-6">
+            <Sparkles className="w-3.5 h-3.5" />
+            Para dias pesados · pílulas diárias · feito no Brasil
+          </div>
+
+          <h1 className="reveal reveal-1 text-4xl sm:text-5xl lg:text-[68px] leading-[1.02] font-bold tracking-tight text-slate-950 dark:text-white mb-6">
+            Sua pílula diária <br className="hidden sm:block" />
+            <span className="font-serif italic text-brand-gradient">de resiliência.</span>
+          </h1>
+
+          <p className="reveal reveal-2 text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-2xl leading-relaxed">
+            Para quando a cabeça pesa, o peito aperta e você precisa de uma frase que não finja que está tudo bem.
+            <span className="text-slate-800 dark:text-slate-100 font-medium"> Todo dia, uma reflexão curta e uma prática simples para atravessar melhor o que ninguém vê.</span>
+          </p>
+
+          <div className="reveal reveal-3 flex flex-col sm:flex-row gap-3 mb-8">
+            <button onClick={onStart} className="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base">
+              Receber minha pílula de hoje <ArrowRight className="w-5 h-5" />
+            </button>
+            <a href="#how" className="btn-ghost inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base">
+              Como funciona
+            </a>
+          </div>
+
+          <div className="reveal reveal-4 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+            {['Sem cartão', 'Funciona offline', 'Sem se explicar', '+12 mil pessoas atravessando um dia por vez'].map((item) => (
+              <span key={item} className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 dark:border-slate-800 dark:bg-slate-900">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> {item}
               </span>
-              Para dias pesados · pílulas diárias · feito no Brasil
+            ))}
+          </div>
+        </div>
+
+        <div className="reveal reveal-5 mt-10 grid lg:grid-cols-[1.15fr_0.85fr] gap-4 md:gap-5 items-stretch">
+          <div className="rounded-2xl bg-[#0B2F35] text-white p-5 md:p-7 shadow-brand-soft overflow-hidden">
+            <div className="flex items-start justify-between gap-4 mb-8">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-cyan-100/70 mb-2">Pílula de hoje</p>
+                <h2 className="text-2xl md:text-4xl font-bold leading-tight max-w-2xl">
+                  Você não é só o que te feriu. Você também é tudo que ainda escolhe florescer.
+                </h2>
+              </div>
+              <BookOpen className="w-8 h-8 text-cyan-200 shrink-0" />
             </div>
 
-            <h1 className="reveal reveal-1 text-4xl sm:text-5xl lg:text-[64px] leading-[1.05] font-bold tracking-tight text-slate-900 dark:text-white mb-6">
-              Sua pílula diária <br className="hidden sm:block" />
-              <span className="font-serif italic text-brand-gradient">de resiliência.</span>
-            </h1>
-
-            <p className="reveal reveal-2 text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-xl leading-relaxed">
-              Para quando a cabeça pesa, o peito aperta e você precisa de uma frase que não finja que está tudo bem.
-              <span className="text-slate-800 dark:text-slate-100 font-medium"> Todo dia, uma reflexão curta e uma prática simples para atravessar melhor o que ninguém vê.</span>
-            </p>
-
-            <div className="reveal reveal-3 flex flex-col sm:flex-row gap-3 mb-8">
-              <button onClick={onStart} className="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base">
-                Receber minha pílula de hoje <ArrowRight className="w-5 h-5" />
-              </button>
-              <a href="#how" className="btn-ghost inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base">
-                Como funciona
-              </a>
-            </div>
-
-            <div className="reveal reveal-4 flex items-center gap-5 text-xs text-slate-500 dark:text-slate-400">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Sem cartão
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Funciona offline
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Sem se explicar
-              </div>
-            </div>
-
-            {/* Prova social inline */}
-            <div className="reveal reveal-5 mt-10 flex items-center gap-4">
-              <div className="flex -space-x-2.5">
-                {['#5EB8B3','#A7F3D0','#BFDBFE','#FBCFE8','#FDE68A'].map((c, i) => (
-                  <div key={i} className="w-9 h-9 rounded-full border-2 border-white dark:border-slate-900 flex items-center justify-center text-white text-xs font-bold" style={{ background: `linear-gradient(135deg, ${c}, #1A6B73)` }}>
-                    {['M','R','C','J','L'][i]}
-                  </div>
-                ))}
-              </div>
-              <div className="text-sm">
-                <div className="flex items-center gap-1 text-amber-500">
-                  {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
-                  <span className="text-slate-700 dark:text-slate-200 font-semibold ml-1">4.9</span>
+            <div className="grid md:grid-cols-3 gap-3">
+              {[
+                { title: 'Reflexão', text: 'O que em você continua escolhendo vida?', icon: Heart },
+                { title: 'Prática', text: 'Escreva uma frase curta para repetir hoje.', icon: Activity },
+                { title: 'Compartilhar', text: 'Vira card de status sem expor sua dor.', icon: Zap },
+              ].map((item) => (
+                <div key={item.title} className="rounded-xl border border-white/10 bg-white/10 p-4">
+                  <item.icon className="w-5 h-5 text-cyan-200 mb-3" />
+                  <p className="text-sm font-bold">{item.title}</p>
+                  <p className="text-sm text-cyan-50/80 mt-1 leading-relaxed">{item.text}</p>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">+12 mil pessoas atravessando um dia por vez</p>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* COL DIR — MOCKUP CHAT */}
-          <div className="lg:col-span-5 relative">
-            <div className="reveal reveal-3 relative mx-auto max-w-sm lg:max-w-none">
-              {/* Glow */}
-              <div aria-hidden className="absolute -inset-6 bg-gradient-to-tr from-brand-400/40 via-emerald-300/30 to-sky-300/30 rounded-[3rem] blur-3xl animate-breathe" />
-
-              {/* Frame do "celular" */}
-              <div className="relative glass-strong rounded-[2.5rem] p-3 shadow-brand-glow">
-                <div className="bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden border border-white/60 dark:border-slate-700/60">
-                  {/* Status bar fake */}
-                  <div className="flex items-center justify-between px-6 py-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
-                    <span>9:41</span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-3.5 h-2 rounded-sm bg-slate-700/80 dark:bg-slate-300/80" />
-                      <span className="w-1 h-1 rounded-full bg-slate-700/80 dark:bg-slate-300/80" />
-                    </div>
-                  </div>
-
-                  {/* Header do chat */}
-                  <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                    <div className="relative">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center">
-                        <Sparkles className="w-5 h-5 text-white" />
-                      </div>
-                      <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-white dark:border-slate-900" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-bold text-slate-900 dark:text-white">Sereno</p>
-                      <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">online · acolhedor</p>
-                    </div>
-                    <ShieldCheck className="w-4 h-4 text-slate-400" />
-                  </div>
-
-                  {/* Mensagens */}
-                  <div className="p-5 space-y-3 bg-gradient-to-b from-brand-50/40 to-sky-50/40 dark:from-slate-900 dark:to-slate-800 min-h-[340px]">
-                    {/* user */}
-                    <div className="flex justify-end">
-                      <div className="max-w-[85%] bg-gradient-to-br from-brand-600 to-brand-700 text-white px-4 py-2.5 rounded-2xl rounded-br-md shadow-sm">
-                        <p className="text-sm">Hoje eu acordei cansada de ser forte…</p>
-                      </div>
-                    </div>
-                    {/* sereno */}
-                    <div className="flex justify-start">
-                      <div className="max-w-[88%] bg-white dark:bg-slate-800 px-4 py-2.5 rounded-2xl rounded-bl-md shadow-sm border border-slate-100 dark:border-slate-700">
-                        <p className="text-sm text-slate-700 dark:text-slate-200">
-                          Você não precisa fingir leveza para merecer cuidado. Hoje, vamos só encontrar um próximo passo possível.
-                        </p>
-                      </div>
-                    </div>
-                    {/* card de ação */}
-                    <div className="flex justify-start">
-                      <div className="max-w-[88%] glass rounded-2xl p-3 flex items-center gap-3 border border-brand-200 dark:border-brand-700">
-                        <div className="w-9 h-9 rounded-xl bg-brand-100 dark:bg-brand-800 flex items-center justify-center">
-                          <Wind className="w-5 h-5 text-brand-700 dark:text-brand-200" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xs font-semibold text-slate-900 dark:text-white">Respiração 4-7-8</p>
-                          <p className="text-[11px] text-slate-500">2 min · reduz ativação</p>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-brand-600 dark:text-brand-300" />
-                      </div>
-                    </div>
-                    {/* typing */}
-                    <div className="flex justify-start">
-                      <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-bl-md shadow-sm border border-slate-100 dark:border-slate-700">
-                        <div className="flex gap-1.5 items-center">
-                          <span className="typing-dot" />
-                          <span className="typing-dot" />
-                          <span className="typing-dot" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Input fake */}
-                  <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
-                    <div className="flex-1 px-4 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs text-slate-400">Conta pra mim…</div>
-                    <button className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-md">
-                      <ArrowRight className="w-4 h-4 text-white" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card flutuante: streak */}
-              <div className="hidden lg:flex absolute -left-10 top-24 glass rounded-2xl p-3 shadow-glass animate-float w-44 items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xl">🔥</div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-4 md:gap-5">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Jornada</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">12 dias</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Jornada 21 dias</p>
+                  <p className="text-lg font-bold text-slate-950 dark:text-white">12 dias concluídos</p>
                 </div>
+                <Moon className="w-6 h-6 text-brand-600 dark:text-brand-300" />
               </div>
+              <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                <div className="h-full w-[57%] bg-gradient-to-r from-cyan-500 to-emerald-500" />
+              </div>
+              <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">O app puxa você de volta com uma tarefa pequena, não com culpa.</p>
+            </div>
 
-              {/* Card flutuante: humor */}
-              <div className="hidden lg:flex absolute -right-8 bottom-24 glass rounded-2xl p-3 shadow-glass animate-float-slow w-48 items-center gap-3">
-                <div className="text-2xl">🌿</div>
-                <div className="flex-1">
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Pílula de hoje</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">Recomeçar pequeno</p>
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">Ritual em 3 passos</p>
+              {[
+                { label: 'Nomear o peso', icon: Activity },
+                { label: 'Regular o corpo', icon: Wind },
+                { label: 'Levar uma frase', icon: Sparkles },
+              ].map((step, i) => (
+                <div key={step.label} className="flex items-center gap-3 py-2">
+                  <div className="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-800/40 flex items-center justify-center">
+                    <step.icon className="w-4 h-4 text-brand-700 dark:text-brand-200" />
+                  </div>
+                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">{i + 1}. {step.label}</span>
                 </div>
-                <Activity className="w-4 h-4 text-emerald-500" />
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Trust bar */}
-        <div className="mt-14 lg:mt-20 glass rounded-2xl p-4 md:p-5 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div className="mt-8 glass rounded-2xl p-4 md:p-5 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {trust.map((t, i) => (
             <div key={i} className="flex items-center gap-2.5 justify-center md:justify-start text-sm text-slate-700 dark:text-slate-200">
               <div className="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-800/40 flex items-center justify-center">
@@ -363,10 +282,9 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
               </ul>
             </div>
 
-            {/* Serenamente */}
-            <div className="relative">
-              <div className="absolute -inset-3 bg-gradient-to-tr from-brand-200/40 to-emerald-200/40 dark:from-brand-700/30 dark:to-emerald-700/20 rounded-3xl blur-xl" />
-              <div className="relative">
+              {/* Resiliência e Luz */}
+            <div>
+              <div>
                 <div className="flex items-center gap-2 mb-5">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-white" />
@@ -423,7 +341,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { n: '12k+',  l: 'pessoas atravessando dias difíceis' },
-            { n: '4.9★',  l: 'avaliação média' },
+            { n: '4.9/5',  l: 'avaliação média' },
             { n: '92%',   l: 'voltam no segundo dia' },
             { n: '0',     l: 'dado vendido. Nunca.' },
           ].map((m, i) => (
@@ -472,8 +390,6 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
           <div className="relative rounded-3xl p-7 md:p-8 flex flex-col text-white overflow-hidden shadow-brand-glow"
                style={{ background: 'linear-gradient(135deg, #0E4D54 0%, #155B62 45%, #1A6B73 100%)' }}>
             <div aria-hidden className="absolute inset-0 dot-grid opacity-20" />
-            <div aria-hidden className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-emerald-300/20 blur-3xl" />
-
             <div className="relative flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center">
@@ -495,7 +411,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
             </div>
 
             <ul className="relative space-y-3 text-sm mb-7 flex-1">
-              {['Tudo do grátis','Pílulas e jornadas mais profundas','Chat ilimitado com a Luz','12 exercícios completos + áudios','Diário ilimitado + gráficos de insights','Trilhas guiadas para sono, ansiedade, autoestima e raiva','Exportar PDF pro psicólogo','Sem ads, prioridade no suporte'].map((t, i) => (
+              {['Tudo do grátis','Pílulas e jornadas mais profundas','Chat ilimitado com a Luz','12 exercícios completos + áudios','Diário ilimitado + gráficos de insights','Trilhas guiadas para sono, ansiedade, autoestima e raiva','Exportar PDF para revisar em terapia','Sem ads, prioridade no suporte'].map((t, i) => (
                 <li key={i} className="flex gap-2.5"><CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0 mt-0.5" />{t}</li>
               ))}
             </ul>
@@ -544,9 +460,6 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         <div className="relative overflow-hidden rounded-[2rem] p-8 md:p-16 text-center shadow-brand-glow"
              style={{ background: 'linear-gradient(135deg, #0E4D54 0%, #1A6B73 50%, #5EB8B3 100%)' }}>
           <div aria-hidden className="absolute inset-0 dot-grid opacity-20" />
-          <div aria-hidden className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-emerald-300/20 blur-3xl animate-breathe" />
-          <div aria-hidden className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-amber-300/15 blur-3xl animate-float-slow" />
-
           <div className="relative">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur text-xs font-medium text-white mb-6">
               <Award className="w-3.5 h-3.5" /> Comece hoje. Sem fricção.
@@ -604,7 +517,7 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
             {DISCLAIMER}
           </p>
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-3">
-            © {new Date().getFullYear()} {APP_NAME} · Feito com cuidado no Brasil 💚
+            © {new Date().getFullYear()} {APP_NAME} · Feito com cuidado no Brasil
           </p>
         </div>
       </footer>
